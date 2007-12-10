@@ -1,0 +1,353 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectType>Local</ProjectType>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F45E9F9E-48E5-4A1E-8730-64A9E05483D3}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ApplicationIcon>
+    </ApplicationIcon>
+    <AssemblyKeyContainerName>
+    </AssemblyKeyContainerName>
+    <AssemblyName>AgentSimth</AssemblyName>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+    <DefaultClientScript>JScript</DefaultClientScript>
+    <DefaultHTMLPageLayout>Grid</DefaultHTMLPageLayout>
+    <DefaultTargetSchema>IE50</DefaultTargetSchema>
+    <DelaySign>false</DelaySign>
+    <OutputType>Library</OutputType>
+    <RootNamespace>AgentSmith</RootNamespace>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartupObject>
+    </StartupObject>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>true</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>false</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <BaseAddress>285212672</BaseAddress>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
+    <ConfigurationOverrideFile>
+    </ConfigurationOverrideFile>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>
+    </DocumentationFile>
+    <DebugSymbols>false</DebugSymbols>
+    <FileAlignment>4096</FileAlignment>
+    <NoStdLib>false</NoStdLib>
+    <NoWarn>
+    </NoWarn>
+    <Optimize>true</Optimize>
+    <RegisterForComInterop>false</RegisterForComInterop>
+    <RemoveIntegerChecks>false</RemoveIntegerChecks>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningLevel>4</WarningLevel>
+    <DebugType>none</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.ActionManagement, Version=3.0.553.1, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ActionManagement.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.AbstractTreeBuilder">
+      <Name>JetBrains.ReSharper.AbstractTreeBuilder</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.AbstractTreeBuilder.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.CodeInsight, Version=2.0.265.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.CodeInsight.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.CodeInsight.Services">
+      <Name>JetBrains.ReSharper.CodeInsight.Services</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.CodeInsight.Services.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.CodeInsight.Services.CSharp, Version=3.0.517.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\JetBrains.ReSharper.CodeInsight.Services.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.CodeView, Version=2.5.301.113, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.CodeView.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.CommonActions, Version=2.0.265.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.CommonActions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Daemon">
+      <Name>JetBrains.ReSharper.Daemon</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.Daemon.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Daemon.CSharp">
+      <Name>JetBrains.ReSharper.Daemon.CSharp</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.Daemon.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.DocumentManager">
+      <Name>JetBrains.ReSharper.DocumentManager</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.DocumentManager.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.DocumentModel">
+      <Name>JetBrains.ReSharper.DocumentModel</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.DocumentModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.IDECore">
+      <Name>JetBrains.ReSharper.IDECore</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.IDECore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.LiveTemplates">
+      <Name>JetBrains.ReSharper.LiveTemplates</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.LiveTemplates.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.NewRefactorings, Version=3.0.553.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.NewRefactorings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.ProjectModel">
+      <Name>JetBrains.ReSharper.ProjectModel</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.ProjectModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Psi">
+      <Name>JetBrains.ReSharper.Psi</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.Psi.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Psi.CSharp, Version=2.5.301.113, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.Psi.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Refactorings">
+      <Name>JetBrains.ReSharper.Refactorings</Name>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.Refactorings.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Refactorings.CSharp, Version=3.0.553.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.Refactorings.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.TextControl, Version=3.0.553.1, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.ReSharper.TextControl.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Shell, Version=3.0.553.1, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.Shell.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="JetBrains.UI, Version=3.0.553.1, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.UI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="JetBrains.Util, Version=3.0.553.1, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\JetBrains.Util.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL" />
+    <Reference Include="System">
+      <Name>System</Name>
+    </Reference>
+    <Reference Include="System.Data">
+      <Name>System.Data</Name>
+    </Reference>
+    <Reference Include="System.Drawing">
+      <Name>system.drawing</Name>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <Name>system.windows.forms</Name>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Name>System.XML</Name>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Comments\AddToDictionaryBulbItem.cs" />
+    <Compile Include="Comments\CommentAnalyzer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Comments\NetSpell\SpellChecker.cs">
+    </Compile>
+    <Compile Include="Comments\NetSpell\SuggestionEnum.cs" />
+    <Compile Include="Comments\ReplaceWordWithBulbItem.cs" />
+    <Compile Include="Comments\NetSpell\Affix\AffixEntry.cs" />
+    <Compile Include="Comments\NetSpell\Affix\AffixRule.cs" />
+    <Compile Include="Comments\NetSpell\Affix\AffixUtility.cs" />
+    <Compile Include="Comments\NetSpell\ContainsResult.cs" />
+    <Compile Include="Comments\NetSpell\Phonetic\PhoneticRule.cs" />
+    <Compile Include="Comments\NetSpell\Phonetic\PhoneticUtility.cs" />
+    <Compile Include="Comments\NetSpell\Word.cs" />
+    <Compile Include="Comments\NetSpell\WordDictionary.cs">
+    </Compile>
+    <Compile Include="Comments\WordIsNotInDictionarySuggestion.cs" />
+    <Compile Include="Comments\WordLexer.cs" />
+    <Compile Include="Comments\WordLexerTest.cs" />
+    <Compile Include="Comments\XmlCommentQuickFix.cs" />
+    <Compile Include="Comments\XmlCommentSyntaxQuickFix.cs" />
+    <Compile Include="Comments\XmlDocLexer.cs" />
+    <Compile Include="Comments\FixCommentSuggestion.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MemberMatch\ComplexMatchEvaluator.cs" />
+    <Compile Include="MemberMatch\FuzzyBool.cs" />
+    <Compile Include="SuggestionBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="IDeclarationAnalyzer.cs" />
+    <Compile Include="MemberMatch\AccessLevelMap.cs" />
+    <Compile Include="MemberMatch\MatchDeclarationDescription.cs" />
+    <Compile Include="NamingConventions\NamingConventionQuickFix.cs" />
+    <Compile Include="NamingConventions\NamingConventionsSuggestion.cs" />
+    <Compile Include="MemberMatch\AccessLevels.cs" />
+    <Compile Include="MemberMatch\Declaration.cs" />
+    <Compile Include="MemberMatch\DeclarationDescription.cs" />
+    <Compile Include="MemberMatch\Match.cs" />
+    <Compile Include="DaemonProcess.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DaemonStage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NamingConventions\NamingConventionRule.cs" />
+    <Compile Include="NamingConventions\RuleKind.cs" />
+    <Compile Include="MemberMatch\AccessLevelDescription.cs" />
+    <Compile Include="MemberMatch\TypeDeclarationMap.cs" />
+    <Compile Include="Options\CommentsSettings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Options\Constants.cs" />
+    <Compile Include="Options\MatchCollectionEdit.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Options\MatchCollectionEdit.Designer.cs">
+      <DependentUpon>MatchCollectionEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\MatchOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options\MatchOptions.Designer.cs">
+      <DependentUpon>MatchOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\AgentSmithSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Options\AgentSmithSettingsPage.Designer.cs">
+      <DependentUpon>AgentSmithSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\EditRule.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options\EditRule.Designer.cs">
+      <DependentUpon>EditRule.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\NamingConvetionSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Options\NamingConvetionSettingsPage.Designer.cs">
+      <DependentUpon>NamingConvetionSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\NamingConventionSettings.cs" />
+    <Compile Include="Options\CodeStyleSettings.cs" />
+    <Compile Include="NamingConventions\NamingConventionsBulbItem.cs" />
+    <Compile Include="NamingConventions\NamingConventionsAnalyzer.cs" />
+    <Compile Include="NamingConventions\RuleKindDescription.cs" />
+    <Compile Include="Options\SortedListBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Options\SortedListBox.Designer.cs">
+      <DependentUpon>SortedListBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="HighlightingRegistrar.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Options\MatchCollectionEdit.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MatchCollectionEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options\MatchOptions.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MatchOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options\AgentSmithSettingsPage.resx">
+      <DependentUpon>AgentSmithSettingsPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options\EditRule.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditRule.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options\NamingConvetionSettingsPage.resx">
+      <DependentUpon>NamingConvetionSettingsPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options\samplePage.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Options\SortedListBox.resx">
+      <DependentUpon>SortedListBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Options\DefaultNamingConventionSettings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="LegalNotices.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
