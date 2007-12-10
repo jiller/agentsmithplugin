@@ -1,3 +1,7 @@
+/* Copyright (c) 2003, Paul Welter
+*  All rights reserved.
+*/
+
 using System;
 using System.Collections.Generic;
 
