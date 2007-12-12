@@ -1,0 +1,2 @@
+Visual Studio plugin.
+http://www.jetbrains.com/resharper
