@@ -22,10 +22,7 @@ namespace AgentSmith
             _analyzers = new IDeclarationAnalyzer[]
                 {
                     new NamingConventionsAnalyzer(styleSettings.NamingConventionSettings, _process.Solution),
-                    //new ExceptionAnalyzer(_process.Solution, styleSettings.CatchOrSpecifySettings),
-                    new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),
-                    //new ClassStructureAnalyzer(styleSettings.MemberOrderSettings),
-                    //new SpellAnalyzer()
+                    new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),                    
                 };
         }
         
