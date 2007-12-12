@@ -1,6 +1,31 @@
+#region Copyright
+
 /* Copyright (c) 2003, Paul Welter
-*  All rights reserved.
-*/
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*     * Redistributions of source code must retain the above copyright
+*       notice, this list of conditions and the following disclaimer.
+*     * Redistributions in binary form must reproduce the above copyright
+*       notice, this list of conditions and the following disclaimer in the
+*       documentation and/or other materials provided with the distribution.
+*     * Neither the name of the <organization> nor the
+*       names of its contributors may be used to endorse or promote products
+*       derived from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY <copyright holder> ``AS IS'' AND ANY
+* EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+* WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
+* DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+* (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+* LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+* ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+* (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
+#endregion Copyright
 
 using System;
 using System.Globalization;
@@ -29,52 +54,52 @@ namespace AgentSmith.Comments.NetSpell.Phonetic
         public static void EncodeRule(string ruleText, ref PhoneticRule rule)
         {
             // clear the conditions array
-            for (int i=0; i < rule.Condition.Length; i++)
+            for (int i = 0; i < rule.Condition.Length; i++)
             {
                 rule.Condition[i] = 0;
             }
 
-            bool group = false;  /* group indicator */
-            bool end = false;   /* end condition indicator */
+            bool group = false; /* group indicator */
+            bool end = false; /* end condition indicator */
 
-            char [] memberChars = new char[200];
-            int numMember = 0;   /* number of member in group */
+            char[] memberChars = new char[200];
+            int numMember = 0; /* number of member in group */
 
             foreach (char cond in ruleText)
             {
-                switch (cond) 
+                switch (cond)
                 {
-                    case '(' :
+                    case '(':
                         group = true;
                         break;
-                    case ')' :
+                    case ')':
                         end = true;
                         break;
-                    case '^' :
+                    case '^':
                         rule.BeginningOnly = true;
                         break;
-                    case '$' :
+                    case '$':
                         rule.EndOnly = true;
                         break;
-                    case '-' :
+                    case '-':
                         rule.ConsumeCount++;
                         break;
-                    case '<' :
+                    case '<':
                         rule.ReplaceMode = true;
                         break;
-                    case '0' :
-                    case '1' :
-                    case '2' :
-                    case '3' :
-                    case '4' :
-                    case '5' :
-                    case '6' :
-                    case '7' :
-                    case '8' :
-                    case '9' :
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
                         rule.Priority = int.Parse(cond.ToString(CultureInfo.CurrentUICulture));
                         break;
-                    default :
+                    default:
                         if (group)
                         {
                             // add chars to group
@@ -93,7 +118,7 @@ namespace AgentSmith.Comments.NetSpell.Phonetic
                     if (group)
                     {
                         // turn on chars in member group
-                        for (int j=0; j < numMember; j++) 
+                        for (int j = 0; j < numMember; j++)
                         {
                             int charCode = memberChars[j];
                             rule.Condition[charCode] = rule.Condition[charCode] | (1 << rule.ConditionCount);
