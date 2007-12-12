@@ -113,11 +113,7 @@ namespace AgentSmith.NamingConventions
 
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
-            RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
-            //WorkflowProcessor executor = new WorkflowProcessor(wf, solution);
-            //executor.Initialize(new DataContext(null, _declaration.DeclaredElement, textControl));
-            //wf.SetName(_newName, NullProgressIndicator.INSTANCE, false);
-            //executor.Execute();
+            RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();            
             if (wf.Initialize(new DataContext(null, _declaration.DeclaredElement, textControl), null))
             {
                 wf.SetName(_newName, NullProgressIndicator.INSTANCE, false);
@@ -129,25 +125,7 @@ namespace AgentSmith.NamingConventions
                 {
                     wf.Execute(NullProgressIndicator.INSTANCE);
                 }
-            }
-            /*AtomicRename rename = new AtomicRename(_declaration.DeclaredElement, _newName);
-            RenameRefactoring renameRefactoring = new RenameRefactoring(new AtomicRename[] { rename, });
-            renameRefactoring.SearchReferences(NullProgressIndicator.INSTANCE);
-            renameRefactoring.IncludeOverrides(NullProgressIndicator.INSTANCE);
-            IConflictSearcher searcher = renameRefactoring.GetConflictSearcher();
-            if (searcher != null)
-            {
-                ConflictSearchResult result = searcher.SearchConflicts(NullProgressIndicator.INSTANCE);
-                if (result.Conflicts.Count > 0)
-                {
-                    return;
-                }
-            }
-            using (WriteLockCookie.Create())
-            {
-                renameRefactoring.Execute(NullProgressIndicator.INSTANCE);
-            }
-             * */
+            }            
         }
 
         private ModificationCookie ensureWritable()

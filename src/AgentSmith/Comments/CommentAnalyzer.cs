@@ -200,37 +200,7 @@ namespace AgentSmith.Comments
                     return true;
                 }
             }
-            return false;
-            /*if (decl.GetAccessRights() != AccessRights.PRIVATE &&
-                decl.GetXMLDoc(true) == null)
-            {
-                bool shouldAddComment = true;
-                ICSharpTypeDeclaration type = decl.GetContainingTypeDeclaration();
-                if (type != null && type.IsSealed && decl.GetAccessRights() == AccessRights.PROTECTED)
-                {
-                    shouldAddComment = false;
-                }
-                else
-                {
-                    while (type != null)
-                    {
-                        if (type.GetAccessRights() == AccessRights.PRIVATE)
-                        {
-                            shouldAddComment = false;
-                            break;
-                        }
-                        type = type.GetContainingTypeDeclaration();
-                    }
-                }
-
-                if (shouldAddComment)
-                {
-                    FixCommentSuggestion suggestion = new FixCommentSuggestion(decl, "Non private member should have comment.");
-                    highlightings.Add(suggestion);
-                    return true;
-                }
-            }*/
-            //return false;
+            return false;                        
         }
 
         #region Nested type: Range

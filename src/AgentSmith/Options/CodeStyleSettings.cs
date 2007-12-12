@@ -15,21 +15,13 @@ namespace AgentSmith.Options
     public class CodeStyleSettings : IXmlExternalizable, ICloneable
     {
         private NamingConventionSettings _namingConventionSettings = new NamingConventionSettings();
-        //private CatchOrSpecifySettings _catchOrSpecifySettings = new CatchOrSpecifySettings();
         private CommentsSettings _commentsSettings = new CommentsSettings();
-        //private MemberOrderSettings _memberOrderSettings = new MemberOrderSettings();
-
+        
         public CodeStyleSettings()
         {
             _namingConventionSettings.LoadDefaults();
         }
-
-        /*public MemberOrderSettings MemberOrderSettings
-        {
-            get { return _memberOrderSettings; }
-            set { _memberOrderSettings = value; }
-        }*/
-
+       
         public CommentsSettings CommentsSettings
         {
             get { return _commentsSettings; }
@@ -41,13 +33,7 @@ namespace AgentSmith.Options
             get { return _namingConventionSettings; }
             set { _namingConventionSettings = value; }
         }
-
-        /*public CatchOrSpecifySettings CatchOrSpecifySettings
-        {
-            get { return _catchOrSpecifySettings; }
-            set { _catchOrSpecifySettings = value; }
-        }*/
-
+       
         public static CodeStyleSettings GetInstance(ISolution solution)
         {
             JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = Shell.Instance.IsTestShell ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
@@ -65,9 +51,7 @@ namespace AgentSmith.Options
                     XmlSerializer serializer = new XmlSerializer(GetType());
                     XmlReader reader = XmlReader.Create(new StringReader(element.InnerXml));
                     CodeStyleSettings settings = (CodeStyleSettings)serializer.Deserialize(reader);
-                    _namingConventionSettings = settings.NamingConventionSettings;
-                    //_catchOrSpecifySettings = settings.CatchOrSpecifySettings;
-                    //_memberOrderSettings = settings.MemberOrderSettings;
+                    _namingConventionSettings = settings.NamingConventionSettings;                   
                     _commentsSettings = settings.CommentsSettings;     
                     if (_commentsSettings == null)
                     {
@@ -75,8 +59,9 @@ namespace AgentSmith.Options
                         _commentsSettings.CommentMatch = new Match[]{new Match(Declaration.Any, AccessLevels.Public) };                        
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Logger.LogException("Failed to load Agent Smith settings", ex);
                 }
             }            
         }
