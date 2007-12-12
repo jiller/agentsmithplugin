@@ -53,13 +53,9 @@ namespace AgentSmith.NamingConventions
                                     else
                                     {
                                         PsiManager manager = PsiManager.GetInstance(solution);
-                                        manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });
-                                        //wf.Execute(NullProgressIndicator.INSTANCE);
+                                        manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });                                 
                                     }
-                                }
-
-                                //PsiManager manager = PsiManager.GetInstance(solution);
-                                //manager.DoTransaction(delegate { ExecuteEx(solution, textControl); });
+                                }                                
                             }
                         }
                     }
