@@ -1,0 +1,2 @@
+Part of this plugin is based on the NetSpell library 
+http://www.codeproject.com/cs/library/netspell.asp
