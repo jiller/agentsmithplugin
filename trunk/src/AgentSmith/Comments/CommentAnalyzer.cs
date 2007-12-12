@@ -18,16 +18,14 @@ using JetBrains.Util;
 namespace AgentSmith.Comments
 {
     public class CommentAnalyzer : IDeclarationAnalyzer
-    {
-        //private readonly bool _publicMembersMustHaveComments;
+    {        
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
         private readonly SpellChecker _spellChecker;
 
         public CommentAnalyzer(CommentsSettings settings, ISolution solution)
         {
-            _settings = settings;
-            //_publicMembersMustHaveComments = settings.PublicMembersMustHaveComments;
+            _settings = settings;            
             _solution = solution;
             _spellChecker = SpellChecker.GetInstance(_settings.DictionaryName);
             if (_spellChecker != null)
@@ -78,13 +76,7 @@ namespace AgentSmith.Comments
         }
 
         #endregion
-
-        /// <summary>I I I me I 1
-        ///  fff III I <c>aa</c> kkk<code/>precee        
-        /// </summary>
-        /// <param name="decl">asdfasdf1 aa 1</param>
-        /// <param name="highlightings">hella23</param>
-        /// <returns>It's me again</returns>
+      
         private void checkCommentSpelling(IClassMemberDeclaration decl,
                                           ICollection<CSharpHighlightingBase> highlightings)
         {
