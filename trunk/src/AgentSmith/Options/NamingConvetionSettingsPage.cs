@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using AgentSmith.NamingConventions;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
-
 using JetBrains.UI.Options;
 
 namespace AgentSmith.Options
@@ -17,13 +16,13 @@ namespace AgentSmith.Options
         )]
     public partial class NamingConventionsSettingsPage : UserControl, IOptionsPage
     {
-        private readonly IOptionsDialog _ui;
+        private readonly IOptionsDialog _optionsDialog;
 
-        public NamingConventionsSettingsPage(IOptionsDialog ui)
+        public NamingConventionsSettingsPage(IOptionsDialog optionsDialog)
         {
             InitializeComponent();
-            _ui = ui;
-            InitializeUI();
+            _optionsDialog = optionsDialog;
+            initializeUI();
         }
 
         public string Id
@@ -35,11 +34,13 @@ namespace AgentSmith.Options
         {
             get
             {
-                 return ((CodeStyleSharingPage) _ui.GetPage(Constants.CODE_STYLE_PAGE_ID)).CodeStyleSettings.Get<CodeStyleSettings>();                
+                return
+                    ((CodeStyleSharingPage) _optionsDialog.GetPage(Constants.CODE_STYLE_PAGE_ID)).CodeStyleSettings.Get
+                        <CodeStyleSettings>();
             }
         }
 
-        public void InitializeUI()
+        private void initializeUI()
         {
             bindView();
             _sceExclusions.Strings = Settings.NamingConventionSettings.Exclusions;
@@ -81,7 +82,7 @@ namespace AgentSmith.Options
         {
             if (_lvRules.SelectedItems.Count == 1)
             {
-                NamingConventionRule rule = (NamingConventionRule)_lvRules.SelectedItems[0].Tag;
+                NamingConventionRule rule = (NamingConventionRule) _lvRules.SelectedItems[0].Tag;
                 if (new EditRule(rule).ShowDialog() == DialogResult.OK)
                 {
                     _lvRules.SelectedItems[0].Text = rule.Description;
@@ -94,12 +95,12 @@ namespace AgentSmith.Options
             if (e.KeyCode == Keys.Delete && _lvRules.SelectedItems.Count == 1)
             {
                 removeItem(_lvRules.SelectedItems[0]);
-            }            
+            }
         }
 
         private void removeItem(ListViewItem item)
         {
-            NamingConventionRule rule = (NamingConventionRule)item.Tag;
+            NamingConventionRule rule = (NamingConventionRule) item.Tag;
             List<NamingConventionRule> rules = new List<NamingConventionRule>(Settings.NamingConventionSettings.Rules);
             rules.Remove(rule);
             Settings.NamingConventionSettings.Rules = rules.ToArray();
@@ -124,7 +125,7 @@ namespace AgentSmith.Options
                 _lvRules.Items.Add(item);
             }
         }
-      
+
         private void btnUp_Click(object sender, EventArgs e)
         {
             if (_lvRules.SelectedItems.Count == 1 && _lvRules.SelectedItems[0].Index > 0)
@@ -139,8 +140,8 @@ namespace AgentSmith.Options
         private void move(ListViewItem item, int newIndex)
         {
             List<NamingConventionRule> rules = new List<NamingConventionRule>(Settings.NamingConventionSettings.Rules);
-            rules.Remove((NamingConventionRule)item.Tag);
-            rules.Insert(newIndex, (NamingConventionRule)item.Tag);
+            rules.Remove((NamingConventionRule) item.Tag);
+            rules.Insert(newIndex, (NamingConventionRule) item.Tag);
             Settings.NamingConventionSettings.Rules = rules.ToArray();
 
             _lvRules.Items.Remove(item);
@@ -168,12 +169,12 @@ namespace AgentSmith.Options
             if (_lvRules.SelectedItems.Count == 1)
             {
                 removeItem(_lvRules.SelectedItems[0]);
-            }            
+            }
         }
 
         private void lvRules_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            ((NamingConventionRule)e.Item.Tag).IsDisabled = !e.Item.Checked;
+            ((NamingConventionRule) e.Item.Tag).IsDisabled = !e.Item.Checked;
         }
     }
 }

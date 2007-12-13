@@ -32,23 +32,23 @@ namespace AgentSmith.Options
         private void InitializeComponent()
         {
             this._tbDescription = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
+            this._lbDescription = new System.Windows.Forms.Label();
             this._sceMustHaveSuffix = new JetBrains.CommonControls.StringCollectionEdit();
             this._sceMustNotHavePrefix = new JetBrains.CommonControls.StringCollectionEdit();
             this._sceMustHavePrefix = new JetBrains.CommonControls.StringCollectionEdit();
             this._sceMustNotHaveSuffix = new JetBrains.CommonControls.StringCollectionEdit();
-            this.label4 = new System.Windows.Forms.Label();
+            this._lbStyle = new System.Windows.Forms.Label();
             this._cbStyle = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
+            this._lbMustNotHavePrefix = new System.Windows.Forms.Label();
+            this._lbMustHavePrefix = new System.Windows.Forms.Label();
+            this._lbMustHaveSuffix = new System.Windows.Forms.Label();
+            this._lbMustNotHaveSuffix = new System.Windows.Forms.Label();
+            this._lbRegEx = new System.Windows.Forms.Label();
             this._tbRegex = new System.Windows.Forms.TextBox();
             this._btnOK = new System.Windows.Forms.Button();
             this._btnCancel = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this._lbMatches = new System.Windows.Forms.Label();
+            this._lbNotMatches = new System.Windows.Forms.Label();
             this._cbDisabled = new System.Windows.Forms.CheckBox();
             this._mceNotMatches = new AgentSmith.Options.MatchCollectionEdit();
             this._mceMatches = new AgentSmith.Options.MatchCollectionEdit();
@@ -61,14 +61,14 @@ namespace AgentSmith.Options
             this._tbDescription.Size = new System.Drawing.Size(543, 20);
             this._tbDescription.TabIndex = 34;
             // 
-            // label3
+            // _lbDescription
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(312, 13);
-            this.label3.TabIndex = 33;
-            this.label3.Text = "Description (this text will appear as description of the highlighting)";
+            this._lbDescription.AutoSize = true;
+            this._lbDescription.Location = new System.Drawing.Point(12, 9);
+            this._lbDescription.Name = "_lbDescription";
+            this._lbDescription.Size = new System.Drawing.Size(312, 13);
+            this._lbDescription.TabIndex = 33;
+            this._lbDescription.Text = "Description (this text will appear as description of the highlighting)";
             // 
             // _sceMustHaveSuffix
             // 
@@ -102,14 +102,14 @@ namespace AgentSmith.Options
             this._sceMustNotHaveSuffix.Strings = new string[0];
             this._sceMustNotHaveSuffix.TabIndex = 40;
             // 
-            // label4
+            // _lbStyle
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 247);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(30, 13);
-            this.label4.TabIndex = 36;
-            this.label4.Text = "Style";
+            this._lbStyle.AutoSize = true;
+            this._lbStyle.Location = new System.Drawing.Point(12, 247);
+            this._lbStyle.Name = "_lbStyle";
+            this._lbStyle.Size = new System.Drawing.Size(30, 13);
+            this._lbStyle.TabIndex = 36;
+            this._lbStyle.Text = "Style";
             // 
             // _cbStyle
             // 
@@ -125,52 +125,50 @@ namespace AgentSmith.Options
             this._cbStyle.TabIndex = 35;
             this._cbStyle.SelectedValueChanged += new System.EventHandler(this.cbStyle_SelectedValueChanged);
             // 
-            // label1
+            // _lbMustNotHavePrefix
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(323, 156);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(103, 13);
-            this.label1.TabIndex = 46;
-            this.label1.Text = "Must not have prefix";
+            this._lbMustNotHavePrefix.AutoSize = true;
+            this._lbMustNotHavePrefix.Location = new System.Drawing.Point(323, 156);
+            this._lbMustNotHavePrefix.Name = "_lbMustNotHavePrefix";
+            this._lbMustNotHavePrefix.Size = new System.Drawing.Size(103, 13);
+            this._lbMustNotHavePrefix.TabIndex = 46;
+            this._lbMustNotHavePrefix.Text = "Must not have prefix";
             // 
-            // label2
+            // _lbMustHavePrefix
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 156);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 13);
-            this.label2.TabIndex = 47;
-            this.label2.Text = "Must have prefix";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
+            this._lbMustHavePrefix.AutoSize = true;
+            this._lbMustHavePrefix.Location = new System.Drawing.Point(12, 156);
+            this._lbMustHavePrefix.Name = "_lbMustHavePrefix";
+            this._lbMustHavePrefix.Size = new System.Drawing.Size(85, 13);
+            this._lbMustHavePrefix.TabIndex = 47;
+            this._lbMustHavePrefix.Text = "Must have prefix";            
             // 
-            // label5
+            // _lbMustHaveSuffix
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(12, 293);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(84, 13);
-            this.label5.TabIndex = 48;
-            this.label5.Text = "Must have suffix";
-            this.label5.Click += new System.EventHandler(this.label5_Click);
+            this._lbMustHaveSuffix.AutoSize = true;
+            this._lbMustHaveSuffix.Location = new System.Drawing.Point(12, 293);
+            this._lbMustHaveSuffix.Name = "_lbMustHaveSuffix";
+            this._lbMustHaveSuffix.Size = new System.Drawing.Size(84, 13);
+            this._lbMustHaveSuffix.TabIndex = 48;
+            this._lbMustHaveSuffix.Text = "Must have suffix";            
             // 
-            // label6
+            // _lbMustNotHaveSuffix
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(323, 293);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(102, 13);
-            this.label6.TabIndex = 49;
-            this.label6.Text = "Must not have suffix";
+            this._lbMustNotHaveSuffix.AutoSize = true;
+            this._lbMustNotHaveSuffix.Location = new System.Drawing.Point(323, 293);
+            this._lbMustNotHaveSuffix.Name = "_lbMustNotHaveSuffix";
+            this._lbMustNotHaveSuffix.Size = new System.Drawing.Size(102, 13);
+            this._lbMustNotHaveSuffix.TabIndex = 49;
+            this._lbMustNotHaveSuffix.Text = "Must not have suffix";
             // 
-            // label7
+            // _lbRegEx
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(323, 247);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(98, 13);
-            this.label7.TabIndex = 50;
-            this.label7.Text = "Regular Expression";
+            this._lbRegEx.AutoSize = true;
+            this._lbRegEx.Location = new System.Drawing.Point(323, 247);
+            this._lbRegEx.Name = "_lbRegEx";
+            this._lbRegEx.Size = new System.Drawing.Size(98, 13);
+            this._lbRegEx.TabIndex = 50;
+            this._lbRegEx.Text = "Regular Expression";
             // 
             // _tbRegex
             // 
@@ -200,23 +198,23 @@ namespace AgentSmith.Options
             this._btnCancel.Text = "Cancel";
             this._btnCancel.UseVisualStyleBackColor = true;
             // 
-            // label8
+            // _lbMatches
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(12, 53);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(202, 13);
-            this.label8.TabIndex = 54;
-            this.label8.Text = "Matches (declarations this rule applied to)";
+            this._lbMatches.AutoSize = true;
+            this._lbMatches.Location = new System.Drawing.Point(12, 53);
+            this._lbMatches.Name = "_lbMatches";
+            this._lbMatches.Size = new System.Drawing.Size(202, 13);
+            this._lbMatches.TabIndex = 54;
+            this._lbMatches.Text = "Matches (declarations this rule applied to)";
             // 
-            // label9
+            // _lbNotMatches
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(323, 53);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(222, 13);
-            this.label9.TabIndex = 56;
-            this.label9.Text = "Except (declarations this rule doesn\'t apply to)";
+            this._lbNotMatches.AutoSize = true;
+            this._lbNotMatches.Location = new System.Drawing.Point(323, 53);
+            this._lbNotMatches.Name = "_lbNotMatches";
+            this._lbNotMatches.Size = new System.Drawing.Size(222, 13);
+            this._lbNotMatches.TabIndex = 56;
+            this._lbNotMatches.Text = "Except (declarations this rule doesn\'t apply to)";
             // 
             // _cbDisabled
             // 
@@ -252,24 +250,24 @@ namespace AgentSmith.Options
             this.Controls.Add(this._mceNotMatches);
             this.Controls.Add(this._mceMatches);
             this.Controls.Add(this._cbDisabled);
-            this.Controls.Add(this.label9);
-            this.Controls.Add(this.label8);
+            this.Controls.Add(this._lbNotMatches);
+            this.Controls.Add(this._lbMatches);
             this.Controls.Add(this._btnCancel);
             this.Controls.Add(this._btnOK);
             this.Controls.Add(this._tbRegex);
-            this.Controls.Add(this.label7);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this._lbRegEx);
+            this.Controls.Add(this._lbMustNotHaveSuffix);
+            this.Controls.Add(this._lbMustHaveSuffix);
+            this.Controls.Add(this._lbMustHavePrefix);
+            this.Controls.Add(this._lbMustNotHavePrefix);
             this.Controls.Add(this._sceMustHaveSuffix);
             this.Controls.Add(this._sceMustNotHavePrefix);
             this.Controls.Add(this._sceMustHavePrefix);
             this.Controls.Add(this._sceMustNotHaveSuffix);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this._lbStyle);
             this.Controls.Add(this._cbStyle);
             this.Controls.Add(this._tbDescription);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this._lbDescription);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -284,23 +282,23 @@ namespace AgentSmith.Options
         #endregion
 
         private System.Windows.Forms.TextBox _tbDescription;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label _lbDescription;
         private StringCollectionEdit _sceMustHaveSuffix;
         private StringCollectionEdit _sceMustNotHavePrefix;
         private StringCollectionEdit _sceMustHavePrefix;
         private StringCollectionEdit _sceMustNotHaveSuffix;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label _lbStyle;
         private System.Windows.Forms.ComboBox _cbStyle;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label _lbMustNotHavePrefix;
+        private System.Windows.Forms.Label _lbMustHavePrefix;
+        private System.Windows.Forms.Label _lbMustHaveSuffix;
+        private System.Windows.Forms.Label _lbMustNotHaveSuffix;
+        private System.Windows.Forms.Label _lbRegEx;
         private System.Windows.Forms.TextBox _tbRegex;
         private System.Windows.Forms.Button _btnOK;
         private System.Windows.Forms.Button _btnCancel;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label _lbMatches;
+        private System.Windows.Forms.Label _lbNotMatches;
         private System.Windows.Forms.CheckBox _cbDisabled;
         private MatchCollectionEdit _mceMatches;
         private MatchCollectionEdit _mceNotMatches;

@@ -50,12 +50,12 @@ namespace AgentSmith.Comments.NetSpell
         private readonly Dictionary<string, AffixRule> _prefixRules = new Dictionary<string, AffixRule>();
         private readonly List<string> _replaceCharacters = new List<string>();
         private readonly Dictionary<string, AffixRule> _suffixRules = new Dictionary<string, AffixRule>();
-        private readonly HashSet<string> _userWords = new HashSet<string>();
+        //private readonly HashSet<string> _userWords = new HashSet<string>();
         private string _tryCharacters = "";
 
         /// <summary>
-        ///     Initializes the dictionary by loading and parsing the
-        ///     dictionary file and the user file.
+        /// Initializes the dictionary by loading and parsing the
+        /// dictionary file and the user file.
         /// </summary>
         public WordDictionary(TextReader inputDictionary)
         {
@@ -187,7 +187,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     The collection of base words for the dictionary.
+        /// The collection of base words for the dictionary.
         /// </summary>		
         public Dictionary<string, Word> BaseWords
         {
@@ -195,7 +195,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Collection of phonetic rules for this dictionary.
+        /// Collection of phonetic rules for this dictionary.
         /// </summary>		
         public List<PhoneticRule> PhoneticRules
         {
@@ -203,7 +203,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Collection of affix prefixes for the base words in this dictionary.
+        /// Collection of affix prefixes for the base words in this dictionary.
         /// </summary>		
         public Dictionary<string, AffixRule> PrefixRules
         {
@@ -211,7 +211,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     List of characters to use when generating suggestions using the near miss strategy.
+        /// List of characters to use when generating suggestions using the near miss strategy.
         /// </summary>		
         public List<string> ReplaceCharacters
         {
@@ -219,7 +219,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Collection of affix suffixes for the base words in this dictionary.
+        /// Collection of affix suffixes for the base words in this dictionary.
         /// </summary>		
         public Dictionary<string, AffixRule> SuffixRules
         {
@@ -227,7 +227,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     List of characters to try when generating suggestions using the near miss strategy.
+        /// List of characters to try when generating suggestions using the near miss strategy.
         /// </summary>		
         public string TryCharacters
         {
@@ -236,34 +236,18 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     List of user entered words in this dictionary
-        /// </summary>		
-        public HashSet<string> UserWords
-        {
-            get { return _userWords; }
-        }
-
-        /// <summary>
-        ///     Searches all contained word lists for word
+        /// Searches all contained word lists for word
         /// </summary>
         /// <param name="word" type="string">
-        ///     <para>
-        ///         The word to search for
-        ///     </para>
+        /// The word to search for.        
         /// </param>
         /// <returns>
-        ///     Returns true if word is found
+        /// Returns true if word is found.
         /// </returns>
         public ContainsResult Contains(string word)
         {
             // clean up possible base word list
             List<string> possibleBaseWords = new List<string>();
-
-            // Step 1 Search UserWords
-            if (_userWords.Contains(word))
-            {
-                return new ContainsResult(true, null);
-            }
 
             // Step 2 Search BaseWords
             if (_baseWords.ContainsKey(word))
@@ -337,15 +321,13 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Expands an affix compressed base word
+        /// Expands an affix compressed base word.
         /// </summary>
         /// <param name="word" type="NetSpell.SpellChecker.Dictionary.Word">
-        ///     <para>
-        ///         The word to expand
-        ///     </para>
+        /// The word to expand.        
         /// </param>
         /// <returns>
-        ///     A <see cref="List<string>"/> of words expanded from base word
+        /// A <see cref="List<string>"/> of words expanded from base word.
         /// </returns>
         public List<string> ExpandWord(Word word)
         {
@@ -402,15 +384,13 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Generates a phonetic code of how the word sounds
+        /// Generates a phonetic code of how the word sounds.
         /// </summary>
-        /// <param name="word" type="string">
-        ///     <para>
-        ///         The word to generated the sound code from
-        ///     </para>
+        /// <param name="word" type="string">        
+        /// The word to generated the sound code from.        
         /// </param>
         /// <returns>
-        ///     A code of how the word sounds
+        /// A code of how the word sounds.
         /// </returns>
         public string PhoneticCode(string word)
         {
@@ -476,20 +456,16 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Verifies the base word has the affix key
+        /// Verifies the base word has the affix key.
         /// </summary>
-        /// <param name="word" type="string">
-        ///     <para>
-        ///         Base word to check
-        ///     </para>
+        /// <param name="word" type="string">        
+        /// Base word to check.        
         /// </param>
-        /// <param name="affixKey" type="string">
-        ///     <para>
-        ///         Affix key to check 
-        ///     </para>
+        /// <param name="affixKey" type="string">        
+        /// Affix key to check .        
         /// </param>
         /// <returns>
-        ///     True if word contains affix key
+        /// True if word contains affix key.
         /// </returns>
         private bool verifyAffixKey(string word, char affixKey)
         {

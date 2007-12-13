@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Xml;
 using AgentSmith.Comments.NetSpell;
 using AgentSmith.MemberMatch;
 using AgentSmith.Options;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
@@ -21,18 +19,14 @@ namespace AgentSmith.Comments
     {        
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
-        private readonly SpellChecker _spellChecker;
+        private readonly ISpellChecker _spellChecker;
 
         public CommentAnalyzer(CommentsSettings settings, ISolution solution)
         {
             _settings = settings;            
             _solution = solution;
-            _spellChecker = SpellChecker.GetInstance(_settings.DictionaryName);
-            if (_spellChecker != null)
-            {
-                _spellChecker.SetUserWords(settings.UserWords.Split('\n'));
-            }
-
+            _spellChecker = SpellChecker.GetInstance(solution);
+            
             if (_settings.CommentMatch != null)
             {
                 foreach (Match match in _settings.CommentMatch)
@@ -63,16 +57,11 @@ namespace AgentSmith.Comments
              {
                  return _highlightings.ToArray();
              }*/
-            if ( /*_publicMembersMustHaveComments &&*/
-                checkPublicMembersHaveComments((IClassMemberDeclaration) declaration, highlightings))
+            if (checkPublicMembersHaveComments((IClassMemberDeclaration) declaration, highlightings))
             {
                 return highlightings.ToArray();
             }
             return highlightings.ToArray();
-        }
-
-        public void Dispose()
-        {
         }
 
         #endregion
@@ -161,7 +150,7 @@ namespace AgentSmith.Comments
             return false;
         }
 
-        private bool checkCommentIsCorrect(IClassMemberDeclaration decl, IList<IHighlighting> highlightings)
+        /*private bool checkCommentIsCorrect(IClassMemberDeclaration decl, IList<IHighlighting> highlightings)
         {
             if (decl.GetXMLDoc(false) != null)
             {
@@ -182,7 +171,7 @@ namespace AgentSmith.Comments
                 }
             }
             return false;
-        }
+        }*/
 
         private bool checkPublicMembersHaveComments(IClassMemberDeclaration decl,
                                                     List<CSharpHighlightingBase> highlightings)

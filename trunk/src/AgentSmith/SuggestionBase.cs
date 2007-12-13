@@ -7,6 +7,9 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith
 {
+    /// <summary>
+    /// Base suggestion for Agent Smith suggestions.
+    /// </summary>
     public abstract class SuggestionBase : CSharpHighlightingBase, IHighlighting
     {
         private readonly IElement _element;

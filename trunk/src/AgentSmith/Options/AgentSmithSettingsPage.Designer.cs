@@ -1,4 +1,3 @@
-using JetBrains.CommonControls;
 using Match=AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Options
@@ -32,7 +31,7 @@ namespace AgentSmith.Options
         private void InitializeComponent()
         {
             this._tbUserDictionary = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this._userWords = new System.Windows.Forms.Label();
             this._cbDictionary = new System.Windows.Forms.ComboBox();
             this._lbDictionary = new System.Windows.Forms.Label();
             this._lbMustHaveComments = new System.Windows.Forms.Label();
@@ -42,8 +41,8 @@ namespace AgentSmith.Options
             this.panel1 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this._lbPPS = new System.Windows.Forms.Label();
+            this._lbPS = new System.Windows.Forms.Label();
             this._cbLookAtBase = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
@@ -58,14 +57,14 @@ namespace AgentSmith.Options
             this._tbUserDictionary.TabIndex = 5;
             this._tbUserDictionary.WordWrap = false;
             // 
-            // label1
+            // _userWords
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 239);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "User dictionary words";
+            this._userWords.AutoSize = true;
+            this._userWords.Location = new System.Drawing.Point(12, 239);
+            this._userWords.Name = "_userWords";
+            this._userWords.Size = new System.Drawing.Size(108, 13);
+            this._userWords.TabIndex = 6;
+            this._userWords.Text = "User dictionary words";
             // 
             // _cbDictionary
             // 
@@ -147,24 +146,24 @@ namespace AgentSmith.Options
             this.label3.TabIndex = 63;
             this.label3.Text = "XML comment validation.";
             // 
-            // label4
+            // _lbPPS
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 472);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(492, 13);
-            this.label4.TabIndex = 64;
-            this.label4.Text = "* To enable/disable XML comment validation or spell checking please go to the Ins" +
+            this._lbPPS.AutoSize = true;
+            this._lbPPS.Location = new System.Drawing.Point(12, 472);
+            this._lbPPS.Name = "_lbPPS";
+            this._lbPPS.Size = new System.Drawing.Size(492, 13);
+            this._lbPPS.TabIndex = 64;
+            this._lbPPS.Text = "* To enable/disable XML comment validation or spell checking please go to the Ins" +
                 "pection Severity tab";
             // 
-            // label5
+            // _lbPS
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 489);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(289, 13);
-            this.label5.TabIndex = 65;
-            this.label5.Text = " and select appropriate level for an Agent Smith highlighting.";
+            this._lbPS.AutoSize = true;
+            this._lbPS.Location = new System.Drawing.Point(15, 489);
+            this._lbPS.Name = "_lbPS";
+            this._lbPS.Size = new System.Drawing.Size(289, 13);
+            this._lbPS.TabIndex = 65;
+            this._lbPS.Text = " and select appropriate level for an Agent Smith highlighting.";
             // 
             // _cbLookAtBase
             // 
@@ -179,8 +178,8 @@ namespace AgentSmith.Options
             // AgentSmithSettingsPage
             // 
             this.Controls.Add(this._cbLookAtBase);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
+            this.Controls.Add(this._lbPS);
+            this.Controls.Add(this._lbPPS);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.panel1);
@@ -190,24 +189,19 @@ namespace AgentSmith.Options
             this.Controls.Add(this._lbMustHaveComments);
             this.Controls.Add(this._lbDictionary);
             this.Controls.Add(this._cbDictionary);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this._userWords);
             this.Controls.Add(this._tbUserDictionary);
             this.Name = "AgentSmithSettingsPage";
-            this.Size = new System.Drawing.Size(552, 498);
-            this.Load += new System.EventHandler(this.AgentSmithSettingsPage_Load);
+            this.Size = new System.Drawing.Size(552, 498);            
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        //private System.Windows.Forms.CheckBox checkBox1;
-        //private System.Windows.Forms.CheckBox _cbCatchOrDocument;
-        //private StringCollectionEdit _sceExceptionExclusions;
-        //private System.Windows.Forms.Label label1;
+        
         private System.Windows.Forms.TextBox _tbUserDictionary;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label _userWords;
         private System.Windows.Forms.ComboBox _cbDictionary;
         private System.Windows.Forms.Label _lbDictionary;
         private System.Windows.Forms.Label _lbMustHaveComments;
@@ -217,8 +211,8 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label _lbPPS;
+        private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.CheckBox _cbLookAtBase;
     }
 }

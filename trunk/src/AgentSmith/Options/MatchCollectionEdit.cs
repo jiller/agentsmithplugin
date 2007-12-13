@@ -19,7 +19,7 @@ namespace AgentSmith.Options
             get { return _matches.ToArray(); }
             set
             {
-                _matches = value == null ? new List<Match>() :new List<Match>(value);
+                _matches = value == null ? new List<Match>() : new List<Match>(value);
                 bindView();
             }
         }
@@ -43,7 +43,7 @@ namespace AgentSmith.Options
         {
             if (_lvMatches.SelectedItems.Count == 1)
             {
-                Match match = (Match)_lvMatches.SelectedItems[0].Tag;
+                Match match = (Match) _lvMatches.SelectedItems[0].Tag;
                 if (new MatchOptions(match).ShowDialog() == DialogResult.OK)
                 {
                     _lvMatches.SelectedItems[0].Text = match.ToString();
@@ -54,11 +54,11 @@ namespace AgentSmith.Options
         private void btnAdd_Click(object sender, EventArgs e)
         {
             Match newMatch = new Match();
-           
+
             if (new MatchOptions(newMatch).ShowDialog() == DialogResult.OK)
             {
                 _matches.Add(newMatch);
-                
+
                 ListViewItem item = new ListViewItem(newMatch.ToString());
                 item.ToolTipText = newMatch.ToString();
                 _lvMatches.SelectedItems.Clear();

@@ -128,7 +128,8 @@ namespace AgentSmith.MemberMatch
 
         public void Prepare(ISolution solution, PsiManager manager)
         {
-            Release();
+            _markedWithAttributeType = null;
+            _inheritedFromType = null;
             DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
             IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
             if (!string.IsNullOrEmpty(_markedWithAttribute))
@@ -142,15 +143,9 @@ namespace AgentSmith.MemberMatch
             }
         }
 
-        public void Release()
-        {
-            _markedWithAttributeType = null;
-            _inheritedFromType = null;
-        }
-
         public bool IsMatch(IDeclaration declaration, bool useEffectiveRights)
         {
-            if (declaration == null /*|| declaration is IIndexerDeclaration*/)
+            if (declaration == null)
             {
                 return false;
             }
@@ -271,8 +266,7 @@ namespace AgentSmith.MemberMatch
 
         private bool isDeclMatch(IDeclaration declaration)
         {
-            if (/*declaration.DeclaredName.Contains(".") ||*/
-                declaration is IAccessorDeclaration)
+            if (declaration is IAccessorDeclaration)
             {
                 return false;
             }

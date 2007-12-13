@@ -36,6 +36,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using AgentSmith.Comments.NetSpell;
+using AgentSmith.Options;
+using JetBrains.ProjectModel;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments.NetSpell
@@ -44,7 +46,7 @@ namespace AgentSmith.Comments.NetSpell
     /// The <see cref="SpellChecker"/> class encapsulates the functions necessary to check
     ///	the spelling of inputted text.
     /// </summary>	
-    public class SpellChecker
+    public class SpellChecker : ISpellChecker
     {
         private readonly WordDictionary _dictionary;
 
@@ -56,14 +58,18 @@ namespace AgentSmith.Comments.NetSpell
         private static string _dictionaryName;
         private static SpellChecker _spellChecker;
 
-        public void SetUserWords(string[] words)
+        public static ISpellChecker GetInstance(ISolution solution)
         {
-            _dictionary.UserWords.Clear();
-            _dictionary.UserWords.AddAll(words);
+            CodeStyleSettings settings = CodeStyleSettings.GetInstance(solution);
+            if (settings == null)
+            {
+                return null;
+            }
+            return GetInstance(solution, settings.CommentsSettings.DictionaryName);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static SpellChecker GetInstance(string dictionaryName)
+        public static ISpellChecker GetInstance(ISolution solution, string dictionaryName)
         {
             if (dictionaryName == null)
             {
@@ -71,7 +77,9 @@ namespace AgentSmith.Comments.NetSpell
             }
             if (_dictionaryName != dictionaryName)
             {
-                string path = Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath), String.Format("dic\\{0}.dic", dictionaryName));
+                string path =
+                    Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                                 String.Format("dic\\{0}.dic", dictionaryName));
                 try
                 {
                     using (TextReader reader = File.OpenText(path))
@@ -88,7 +96,24 @@ namespace AgentSmith.Comments.NetSpell
                 }
             }
 
+            CodeStyleSettings settings = CodeStyleSettings.GetInstance(solution);
+            if (settings == null)
+            {
+                return null;
+            }
+
+            if (settings.CommentsSettings.UserWords != null)
+            {
+                _spellChecker.setUserWords(settings.CommentsSettings.UserWords.Split('\n'));
+            }
+
             return _spellChecker;
+        }
+
+        private void setUserWords(string[] words)
+        {
+            _userWords.Clear();
+            _userWords.AddAll(words);
         }
 
         #region ISpell Near Miss Suggetion methods
@@ -143,7 +168,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Try inserting a tryme character before every letter
+        /// Try inserting a tryme character before every letter.
         /// </summary>
         private void forgotChar(string word, ICollection<Word> tempSuggestion)
         {
@@ -169,8 +194,8 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     suggestions for a typical fault of spelling, that
-        ///		differs with more, than 1 letter from the right form.
+        /// Suggestions for a typical fault of spelling, that
+        /// differs with more, than 1 letter from the right form.
         /// </summary>
         private void replaceChars(string word, ICollection<Word> tempSuggestion)
         {
@@ -254,31 +279,54 @@ namespace AgentSmith.Comments.NetSpell
         #region public methods
 
         /// <summary>
-        ///     Calculates the minimum number of change, inserts or deletes
-        ///     required to change source into target.
+        /// Checks if the word is in the dictionary.
         /// </summary>
-        /// <param name="source" type="string">
-        ///     <para>
-        ///         The first word to calculate
-        ///     </para>
-        /// </param>
-        /// <param name="target" type="string">
-        ///     <para>
-        ///         The second word to calculate.
-        ///     </para>
-        /// </param>
-        /// <param name="positionPriority" type="bool">
-        ///     <para>
-        ///         Set to true if the first and last char should have priority.
-        ///     </para>
+        /// <param name="word" type="string">        
+        /// The word to check.        
         /// </param>
         /// <returns>
-        ///     The number of edits to make source equal target.
+        /// Returns true if word is found in dictionary.
+        /// </returns>
+        public bool TestWord(string word)
+        {
+            return testWord(word).Contains;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="word" type="string">
+        /// The word to generate suggestions for.        
+        /// </param>        
+        public IList<string> Suggest(string word, uint maxSuggestions)
+        {
+            ContainsResult result = testWord(word);
+            if (!result.Contains)
+            {
+                return suggest(word, result.PossibleBaseWords, maxSuggestions);
+            }
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Calculates the minimum number of change, inserts or deletes
+        /// required to change source into target.
+        /// </summary>
+        /// <param name="source" type="string">
+        /// The first word to calculate.        
+        /// </param>
+        /// <param name="target" type="string">        
+        /// The second word to calculate.        
+        /// </param>
+        /// <param name="positionPriority" type="bool">        
+        ///  Set to true if the first and last char should have priority.        
+        /// </param>
+        /// <returns>
+        ///  The number of edits to make source equal target.
         /// </returns>
         private int editDistance(string source, string target, bool positionPriority)
         {
             // i.e. 2-D array
-            Array matrix = Array.CreateInstance(typeof(int), source.Length + 1, target.Length + 1);
+            Array matrix = Array.CreateInstance(typeof (int), source.Length + 1, target.Length + 1);
 
             // boundary conditions
             matrix.SetValue(0, 0, 0);
@@ -286,7 +334,7 @@ namespace AgentSmith.Comments.NetSpell
             for (int j = 1; j <= target.Length; j++)
             {
                 // boundary conditions
-                int val = (int)matrix.GetValue(0, j - 1);
+                int val = (int) matrix.GetValue(0, j - 1);
                 matrix.SetValue(val + 1, 0, j);
             }
 
@@ -294,27 +342,27 @@ namespace AgentSmith.Comments.NetSpell
             for (int i = 1; i <= source.Length; i++)
             {
                 // boundary conditions
-                int val = (int)matrix.GetValue(i - 1, 0);
+                int val = (int) matrix.GetValue(i - 1, 0);
                 matrix.SetValue(val + 1, i, 0);
 
                 // inner loop
                 for (int j = 1; j <= target.Length; j++)
                 {
-                    int diag = (int)matrix.GetValue(i - 1, j - 1);
+                    int diag = (int) matrix.GetValue(i - 1, j - 1);
 
                     if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
                     {
                         diag++;
                     }
 
-                    int deletion = (int)matrix.GetValue(i - 1, j);
-                    int insertion = (int)matrix.GetValue(i, j - 1);
+                    int deletion = (int) matrix.GetValue(i - 1, j);
+                    int insertion = (int) matrix.GetValue(i, j - 1);
                     int match = Math.Min(deletion + 1, insertion + 1);
                     matrix.SetValue(Math.Min(diag, match), i, j);
                 } //for j
             } //for i
 
-            int dist = (int)matrix.GetValue(source.Length, target.Length);
+            int dist = (int) matrix.GetValue(source.Length, target.Length);
 
             // extra edit on first and last chars
             if (positionPriority)
@@ -332,59 +380,27 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Calculates the minimum number of change, inserts or deletes
-        ///     required to change source into target
+        /// Calculates the minimum number of change, inserts or deletes
+        /// required to change source into target.
         /// </summary>
         /// <param name="source" type="string">
-        ///     <para>
-        ///         The first word to calculate.
-        ///     </para>
+        /// The first word to calculate.        
         /// </param>
-        /// <param name="target" type="string">
-        ///     <para>
-        ///         The second word to calculate.
-        ///     </para>
+        /// <param name="target" type="string">        
+        /// The second word to calculate.        
         /// </param>
         /// <returns>
-        ///     The number of edits to make source equal target.
+        /// The number of edits to make source equal target.
         /// </returns>
         /// <remarks>
-        ///		This method automatically gives priority to matching the first and last char
+        ///	This method automatically gives priority to matching the first and last char.
         /// </remarks>
         private int editDistance(string source, string target)
         {
             return editDistance(source, target, true);
         }
 
-        /// <summary>
-        ///    
-        /// </summary>
-        /// <param name="word" type="string">
-        ///     <para>
-        ///         The word to generate suggestions on
-        ///     </para>
-        /// </param>
-        /// <remarks>
-        ///		
-        /// </remarks>       
-        /// <seealso cref="TestWord"/>
-        public IList<string> Suggest(string word)
-        {
-            ContainsResult result = _dictionary.Contains(word.ToLower());
-            if (!result.Contains)
-            {
-                return Suggest(word, result.PossibleBaseWords);
-            }
-            return new List<string>();
-        }
-
-        /// <summary>
-        ///   
-        /// </summary>
-        /// <remarks>
-        ///		<see cref="TestWord"/> must have been called before calling this method
-        /// </remarks>                
-        public IList<string> Suggest(string incorrectWord, IList<string> possibleBaseWords)
+        private IList<string> suggest(string incorrectWord, IList<string> possibleBaseWords, uint maxSuggestions)
         {
             if (incorrectWord.Length == 0)
             {
@@ -466,7 +482,7 @@ namespace AgentSmith.Comments.NetSpell
                     suggestions.Add(word);
                 }
 
-                if (suggestions.Count >= _maxSuggestions && _maxSuggestions > 0)
+                if (suggestions.Count >= maxSuggestions)
                 {
                     break;
                 }
@@ -475,33 +491,26 @@ namespace AgentSmith.Comments.NetSpell
             return suggestions;
         }
 
-        /// <summary>
-        ///     Checks to see if the word is in the dictionary
-        /// </summary>
-        /// <param name="word" type="string">
-        ///     <para>
-        ///         The word to check
-        ///     </para>
-        /// </param>
-        /// <returns>
-        ///     Returns true if word is found in dictionary
-        /// </returns>
-        public bool TestWord(string word)
+        private ContainsResult testWord(string word)
         {
-            if (_dictionary.Contains(word).Contains)
+            if (_userWords.Contains(word))
             {
-                return true;
+                return new ContainsResult(true, null);
             }
-            else if (_dictionary.Contains(word.ToLower()).Contains)
+
+            ContainsResult result = _dictionary.Contains(word);
+            if (result.Contains)
             {
-                return true;
+                return result;
             }
-            return false;
+
+            return _dictionary.Contains(word.ToLower());
         }
 
         #endregion
 
-        private readonly int _maxSuggestions = 5;
+        //private readonly int _maxSuggestions = 5;
         private readonly Suggestion _suggestionMode = Suggestion.PhoneticNearMiss;
+        private readonly HashSet<string> _userWords = new HashSet<string>();
     }
 }

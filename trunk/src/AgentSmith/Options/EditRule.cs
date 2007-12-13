@@ -51,20 +51,7 @@ namespace AgentSmith.Options
             _rule.Regex = ((RuleKindDescription) _cbStyle.SelectedItem).HasRegex ? _tbRegex.Text : null;
             _rule.IsDisabled = _cbDisabled.Checked;
         }
-
-        /*private void bindMatches(ListView view, Match[] matches)
-        {
-            if (matches == null) return;
-
-            foreach (Match match in matches)
-            {
-                ListViewItem lvi = new ListViewItem(match.ToString());
-                lvi.ToolTipText = match.ToString();
-                lvi.Tag = match;
-                view.Items.Add(lvi);
-            }
-        }*/
-
+      
         private void cbStyle_SelectedValueChanged(object sender, EventArgs e)
         {
             _tbRegex.Enabled = ((RuleKindDescription) _cbStyle.SelectedItem).HasRegex;
@@ -83,16 +70,6 @@ namespace AgentSmith.Options
                     e.Cancel = true;
                 }
             }
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }        
+        }                
     }
 }

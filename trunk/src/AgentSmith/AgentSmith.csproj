@@ -137,6 +137,7 @@
     <Reference Include="System">
       <Name>System</Name>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing">
       <Name>system.drawing</Name>
     </Reference>
@@ -155,6 +156,7 @@
     <Compile Include="Comments\CommentAnalyzer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Comments\NetSpell\ISpellChecker.cs" />
     <Compile Include="Comments\NetSpell\SpellChecker.cs">
     </Compile>
     <Compile Include="Comments\NetSpell\SuggestionEnum.cs" />

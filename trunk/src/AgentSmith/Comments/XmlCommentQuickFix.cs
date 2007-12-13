@@ -75,7 +75,7 @@ namespace AgentSmith.Comments
             {
                 int myCursorOffset;
                 string text = XmlDocTemplateUtil.GetDocTemplate(docCommentBlockOwnerNode, out myCursorOffset).Trim();
-                text = "///" + text.Replace("\n", "\n///") + "\r\nclass Tmp {}";
+                text = String.Format("///{0}\r\nclass Tmp {{}}", text.Replace("\n", "\n///"));
 
                 Logger.LogMessage(text);
                 Logger.LogMessage("Set comment.");
