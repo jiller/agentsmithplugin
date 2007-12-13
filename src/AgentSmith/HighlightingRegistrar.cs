@@ -7,6 +7,9 @@ using JetBrains.Shell;
 
 namespace AgentSmith
 {
+    /// <summary>
+    /// Registers Agent Smith highlighters.
+    /// </summary>
     [ShellComponentImplementation(ProgramConfigurations.ALL)]
     public class HighlightingRegistrar : IShellComponent
     {

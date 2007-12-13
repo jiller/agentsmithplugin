@@ -17,6 +17,6 @@ namespace AgentSmith.Comments
         public override Severity Severity
         {
             get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-        }       
+        }
     }
 }

@@ -37,7 +37,7 @@ namespace AgentSmith.Options
         public string[] Exclusions
         {
             get { return _exclusions; }
-            set { _exclusions = value == null ? new string[0] : value; }
+            set { _exclusions = value ?? new string[0]; }
         }
     }
 }

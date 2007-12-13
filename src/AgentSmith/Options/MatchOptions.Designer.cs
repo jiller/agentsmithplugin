@@ -91,7 +91,7 @@ namespace AgentSmith.Options
             this._lbMember.Name = "_lbMember";
             this._lbMember.Size = new System.Drawing.Size(217, 21);
             this._lbMember.TabIndex = 17;
-            this._lbMember.SelectedIndexChanged += new System.EventHandler(this.lbMemberSelectedIndexChanged);
+            this._lbMember.SelectedIndexChanged += new System.EventHandler(this.lbMember_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -111,7 +111,7 @@ namespace AgentSmith.Options
             this._btnOK.TabIndex = 23;
             this._btnOK.Text = "OK";
             this._btnOK.UseVisualStyleBackColor = true;
-            this._btnOK.Click += new System.EventHandler(this.btnOKClick);
+            this._btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // _btnCancel
             // 

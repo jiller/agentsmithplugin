@@ -43,27 +43,22 @@ namespace AgentSmith.Comments.NetSpell
         private string _phoneticCode = "";
         private string _text = "";
 
+
         public Word()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the class
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="text" type="string">
-        ///     <para>
-        ///         The string for the base word
-        ///     </para>
+        /// <param name="text" type="string">        
+        /// The string for the base word.        
         /// </param>
-        /// <param name="affixKeys" type="string">
-        ///     <para>
-        ///         The affix keys that can be applied to this base word
-        ///     </para>
+        /// <param name="affixKeys" type="string">        
+        /// The affix keys that can be applied to this base word.        
         /// </param>
-        /// <param name="phoneticCode" type="string">
-        ///     <para>
-        ///         The phonetic code for this word
-        ///     </para>
+        /// <param name="phoneticCode" type="string">        
+        /// The phonetic code for this word.        
         /// </param>
         public Word(string text, string affixKeys, string phoneticCode)
         {
@@ -73,17 +68,13 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Initializes a new instance of the class
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="text" type="string">
-        ///     <para>
-        ///         The string for the base word
-        ///     </para>
+        /// <param name="text" type="string">        
+        /// The string for the base word.        
         /// </param>
-        /// <param name="affixKeys" type="string">
-        ///     <para>
-        ///         The affix keys that can be applied to this base word
-        ///     </para>
+        /// <param name="affixKeys" type="string">        
+        ///  The affix keys that can be applied to this base word.        
         /// </param>
         public Word(string text, string affixKeys)
         {
@@ -92,12 +83,10 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Initializes a new instance of the class
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="text" type="string">
-        ///     <para>
-        ///         The string for the base word
-        ///     </para>
+        /// <param name="text" type="string">        
+        /// The string for the base word.        
         /// </param>
         public Word(string text)
         {
@@ -105,25 +94,19 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Initializes a new instance of the class
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="text" type="string">
-        ///     <para>
-        ///         The string for the word
-        ///     </para>
+        /// <param name="text" type="string">        
+        /// The string for the word.        
         /// </param>
-        /// <param name="index" type="int">
-        ///     <para>
-        ///         The position index of this word
-        ///     </para>
+        /// <param name="index" type="int">        
+        /// The position index of this word.        
         /// </param>
-        /// <param name="height" type="int">
-        ///     <para>
-        ///         The line height of this word
-        ///     </para>
+        /// <param name="height" type="int">        
+        ///  The line height of this word.        
         /// </param>
         /// <returns>
-        ///     A void value...
+        ///  A void value...
         /// </returns>
         internal Word(string text, int index, int height)
         {
@@ -133,17 +116,13 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Initializes a new instance of the class
+        /// Initializes a new instance of the class.
         /// </summary>
-        /// <param name="text" type="string">
-        ///     <para>
-        ///         The string for the base word
-        ///     </para>
+        /// <param name="text" type="string">        
+        ///  The string for the base word.        
         /// </param>
-        /// <param name="editDistance" type="int">
-        ///     <para>
-        ///         The edit distance from the misspelled word
-        ///     </para>
+        /// <param name="editDistance" type="int">        
+        ///  The edit distance from the misspelled word        
         /// </param>
         internal Word(string text, int editDistance)
         {
@@ -152,7 +131,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     The affix keys that can be applied to this base word
+        /// The affix keys that can be applied to this base word.
         /// </summary>
         public string AffixKeys
         {
@@ -161,7 +140,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     The index position of where this word appears
+        /// The index position of where this word appears.
         /// </summary>
         public int Index
         {
@@ -170,7 +149,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     The phonetic code for this word
+        /// The phonetic code for this word.
         /// </summary>
         public string PhoneticCode
         {
@@ -179,7 +158,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     The string for the base word
+        /// The string for the base word.
         /// </summary>
         public string Text
         {
@@ -188,8 +167,8 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     Used for sorting suggestions by its edit distance for 
-        ///     the misspelled word
+        /// Used for sorting suggestions by its edit distance for 
+        /// the misspelled word.
         /// </summary>
         internal int EditDistance
         {
@@ -198,7 +177,7 @@ namespace AgentSmith.Comments.NetSpell
         }
 
         /// <summary>
-        ///     The line height of this word
+        /// The line height of this word.
         /// </summary>
         internal int Height
         {
@@ -216,17 +195,17 @@ namespace AgentSmith.Comments.NetSpell
         /// </remarks>
         public int CompareTo(object obj)
         {
-            int result = EditDistance.CompareTo(((Word)obj).EditDistance);
+            int result = EditDistance.CompareTo(((Word) obj).EditDistance);
             return result; // * -1; // sorts desc order
         }
 
         #endregion
 
         /// <summary>
-        ///     Converts the word object to a string
+        /// Converts the word object to a string.
         /// </summary>
         /// <returns>
-        ///		Returns the Text Property contents
+        /// Returns the Text Property contents.
         /// </returns>
         public override string ToString()
         {

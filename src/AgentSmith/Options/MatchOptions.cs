@@ -73,7 +73,7 @@ namespace AgentSmith.Options
             }
         }
 
-        private void btnOKClick(object sender, EventArgs e)
+        private void btnOK_Click(object sender, EventArgs e)
         {
             DeclarationDescription decl = (DeclarationDescription) _lbMember.SelectedItem;
             _match.Declaration = decl.Declaration;
@@ -108,7 +108,7 @@ namespace AgentSmith.Options
             }
         }
 
-        private void lbMemberSelectedIndexChanged(object sender, EventArgs e)
+        private void lbMember_SelectedIndexChanged(object sender, EventArgs e)
         {
             DeclarationDescription description = (DeclarationDescription) _lbMember.SelectedItem;
             _cbVisibility.Enabled = description.HasAccessLevel;

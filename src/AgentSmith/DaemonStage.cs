@@ -5,6 +5,9 @@ using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace AgentSmith
 {
+    /// <summary>
+    /// Agent Smith stage.
+    /// </summary>
     [DaemonStage(StagesBefore = new Type[] {typeof (GlobalErrorStage)},
         StagesAfter = new Type[] {typeof (LanguageSpecificDaemonStage)}, RunForInvisibleDocument = true)]
     public class DaemonStage : CSharpDaemonStageBase

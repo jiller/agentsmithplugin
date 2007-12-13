@@ -12,6 +12,8 @@ namespace AgentSmith.Comments
     [QuickFix]
     public class XmlCommentSyntaxQuickFix : IQuickFix
     {
+        private const uint MAX_SUGGESTION_COUNT = 5;
+
         private readonly WordIsNotInDictionarySuggestion _suggestion;
 
         public XmlCommentSyntaxQuickFix(WordIsNotInDictionarySuggestion suggestion)
@@ -94,16 +96,16 @@ namespace AgentSmith.Comments
                                                     String.Format("<see cref=\"{0}\"/>", _suggestion.Word)));
                 }
 
-                SpellChecker spellChecker = SpellChecker.GetInstance(_suggestion.Settings.DictionaryName);
+                ISpellChecker spellChecker = SpellChecker.GetInstance(_suggestion.Solution);
 
                 if (spellChecker != null)
                 {
-                    foreach (string newWord in spellChecker.Suggest(_suggestion.Word))
+                    foreach (string newWord in spellChecker.Suggest(_suggestion.Word, MAX_SUGGESTION_COUNT))
                     {
                         items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newWord));
                     }
                 }
-                
+
                 items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
                 items.Add(new AddToDictionaryBulbItem(_suggestion.Word, _suggestion.Settings, _suggestion.Range));
                 return items.ToArray();

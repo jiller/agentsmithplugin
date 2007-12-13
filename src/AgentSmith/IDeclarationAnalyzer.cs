@@ -4,7 +4,10 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith
 {
-    public interface IDeclarationAnalyzer: IDisposable
+    /// <summary>
+    /// Declaration analyzers should implement this.
+    /// </summary>
+    public interface IDeclarationAnalyzer
     {        
         CSharpHighlightingBase[] Analyze(IDeclaration declaration);
     }

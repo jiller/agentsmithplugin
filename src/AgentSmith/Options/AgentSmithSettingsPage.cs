@@ -18,13 +18,13 @@ namespace AgentSmith.Options
         )]
     public partial class AgentSmithSettingsPage : UserControl, IOptionsPage
     {
-        private readonly IOptionsDialog _ui;
+        private readonly IOptionsDialog _optionsDialog;
 
-        public AgentSmithSettingsPage(IOptionsDialog ui)
+        public AgentSmithSettingsPage(IOptionsDialog optionsDialog)
         {
             InitializeComponent();
-            _ui = ui;
-            InitializeUI();
+            _optionsDialog = optionsDialog;
+            initializeUI();
         }
 
         public CodeStyleSettings Settings
@@ -32,7 +32,7 @@ namespace AgentSmith.Options
             get
             {
                 return
-                    ((CodeStyleSharingPage) _ui.GetPage(Constants.CODE_STYLE_PAGE_ID)).CodeStyleSettings.Get
+                    ((CodeStyleSharingPage) _optionsDialog.GetPage(Constants.CODE_STYLE_PAGE_ID)).CodeStyleSettings.Get
                         <CodeStyleSettings>();
             }
         }
@@ -54,11 +54,7 @@ namespace AgentSmith.Options
         }
 
         public bool OnOk()
-        {
-            //Settings.CatchOrSpecifySettings.CatchOrSpecifyEnabled = _cbCatchOrDocument.Checked;
-            //Settings.CatchOrSpecifySettings.Exclusions = _sceExceptionExclusions.Strings;
-            //Settings.CommentsSettings.PublicMembersMustHaveComments = _cbPublicMembers.Checked;
-           // Settings.CommentsSettings.Color = _commentColor.Color;
+        {            
             StringBuilder sb = new StringBuilder();
             foreach (string word in _tbUserDictionary.Lines)
             {
@@ -83,12 +79,8 @@ namespace AgentSmith.Options
 
         #endregion
 
-        public void InitializeUI()
-        {
-            //_cbCatchOrDocument.Checked = Settings.CatchOrSpecifySettings.CatchOrSpecifyEnabled;
-            //_cbPublicMembers.Checked = Settings.CommentsSettings.PublicMembersMustHaveComments;
-            //_sceExceptionExclusions.Strings = Settings.CatchOrSpecifySettings.Exclusions;
-            //_commentColor.Color = Settings.CommentsSettings.Color;
+        private void initializeUI()
+        {            
             _tbUserDictionary.Lines = Settings.CommentsSettings.UserWords.Split('\n');
             IList<string> dictionaries = loadDictionaries();
             _cbDictionary.DataSource = dictionaries;            
@@ -107,11 +99,6 @@ namespace AgentSmith.Options
                 list.Add(Path.GetFileNameWithoutExtension(file));
             }
             return list;
-        }
-
-        private void AgentSmithSettingsPage_Load(object sender, EventArgs e)
-        {
-
-        }
+        } 
     }
 }

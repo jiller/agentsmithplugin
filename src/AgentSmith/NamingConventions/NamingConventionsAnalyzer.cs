@@ -58,17 +58,6 @@ namespace AgentSmith.NamingConventions
             return highlightings.ToArray();
         }
 
-        public void Dispose()
-        {
-            foreach (NamingConventionRule rule in _rules)
-            {
-                if (!rule.IsDisabled)
-                {
-                    rule.Release();
-                }
-            }
-        }
-
         #endregion
     }
 }

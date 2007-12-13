@@ -104,24 +104,6 @@ namespace AgentSmith.NamingConventions
             }
         }
 
-        public void Release()
-        {
-            if (Matches != null)
-            {
-                foreach (Match match in Matches)
-                {
-                    match.Release();
-                }
-            }
-            if (NotMatches != null)
-            {
-                foreach (Match match in NotMatches)
-                {
-                    match.Release();
-                }
-            }
-        }
-
         public bool IsMatch(IDeclaration declaration)
         {
             if (declaration is IIndexerDeclaration ||

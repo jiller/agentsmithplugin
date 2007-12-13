@@ -23,13 +23,13 @@ namespace AgentSmith.Comments
         public void Execute(ISolution solution, ITextControl textControl)
         {
             string words = _settings.UserWords.Trim();
-            if (words.Length >0)
+            if (words.Length > 0)
             {
                 _settings.UserWords = words + "\n";
             }
             _settings.UserWords += _word;
 
-            Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);            
+            Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);
         }
 
         public string Text

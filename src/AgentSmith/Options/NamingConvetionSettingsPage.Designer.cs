@@ -30,11 +30,10 @@ namespace AgentSmith.Options
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this._sceExclusions = new JetBrains.CommonControls.StringCollectionEdit();
-            this.label1 = new System.Windows.Forms.Label();
+            this._lbExclusions = new System.Windows.Forms.Label();
             this._lvRules = new System.Windows.Forms.ListView();
-            this.Description = new System.Windows.Forms.ColumnHeader();
+            this._chDescription = new System.Windows.Forms.ColumnHeader();
             this._btnAdd = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this._btnUp = new System.Windows.Forms.Button();
@@ -45,16 +44,6 @@ namespace AgentSmith.Options
             this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(0, 0);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(104, 24);
-            this.checkBox1.TabIndex = 0;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // _sceExclusions
             // 
             this._sceExclusions.Location = new System.Drawing.Point(13, 343);
@@ -63,20 +52,20 @@ namespace AgentSmith.Options
             this._sceExclusions.Strings = new string[0];
             this._sceExclusions.TabIndex = 30;
             // 
-            // label1
+            // _lbExclusions
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 327);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(217, 13);
-            this.label1.TabIndex = 31;
-            this.label1.Text = "Exclusions (these name will not be validated)";
+            this._lbExclusions.AutoSize = true;
+            this._lbExclusions.Location = new System.Drawing.Point(10, 327);
+            this._lbExclusions.Name = "_lbExclusions";
+            this._lbExclusions.Size = new System.Drawing.Size(217, 13);
+            this._lbExclusions.TabIndex = 31;
+            this._lbExclusions.Text = "Exclusions (these name will not be validated)";
             // 
             // _lvRules
             // 
             this._lvRules.CheckBoxes = true;
             this._lvRules.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Description});
+            this._chDescription});
             this._lvRules.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this._lvRules.HideSelection = false;
             this._lvRules.Location = new System.Drawing.Point(13, 19);
@@ -90,8 +79,8 @@ namespace AgentSmith.Options
             // 
             // Description
             // 
-            this.Description.Text = "Description";
-            this.Description.Width = 370;
+            this._chDescription.Text = "Description";
+            this._chDescription.Width = 370;
             // 
             // _btnAdd
             // 
@@ -182,7 +171,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this.label2);
             this.Controls.Add(this._btnAdd);
             this.Controls.Add(this._lvRules);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this._lbExclusions);
             this.Controls.Add(this._sceExclusions);
             this.Name = "NamingConventionsSettingsPage";
             this.Size = new System.Drawing.Size(586, 583);
@@ -193,11 +182,10 @@ namespace AgentSmith.Options
 
         #endregion
 
-        private System.Windows.Forms.CheckBox checkBox1;
         private StringCollectionEdit _sceExclusions;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label _lbExclusions;
         private System.Windows.Forms.ListView _lvRules;
-        private System.Windows.Forms.ColumnHeader Description;
+        private System.Windows.Forms.ColumnHeader _chDescription;
         private System.Windows.Forms.Button _btnAdd;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button _btnUp;
