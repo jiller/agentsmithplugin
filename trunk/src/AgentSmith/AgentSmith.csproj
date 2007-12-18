@@ -118,6 +118,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.Psi.CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.ReSharper.Psi.Xml, Version=3.0.517.8, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.Psi.Xml.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.ReSharper.TextControl, Version=3.0.565.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.TextControl.dll</HintPath>
@@ -180,6 +184,7 @@
     </Compile>
     <Compile Include="MemberMatch\ComplexMatchEvaluator.cs" />
     <Compile Include="MemberMatch\FuzzyBool.cs" />
+    <Compile Include="ResXDaemonStage.cs" />
     <Compile Include="SuggestionBase.cs">
       <SubType>Code</SubType>
     </Compile>

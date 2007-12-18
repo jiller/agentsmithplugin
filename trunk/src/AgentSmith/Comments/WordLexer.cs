@@ -103,12 +103,12 @@ namespace AgentSmith.Comments
 
         public int TokenEnd
         {
-            get { return _tokenEnd - 1; }
+            get { return _tokenEnd; }
         }
 
         public string TokenText
         {
-            get { return _data.Substring(_tokenStart, TokenEnd - TokenStart + 1); }
+            get { return _data.Substring(_tokenStart, TokenEnd - TokenStart); }
         }
 
         public IBuffer Buffer
