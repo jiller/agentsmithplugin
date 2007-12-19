@@ -6,45 +6,61 @@ using System.Text;
 namespace AgentSmith.SpellCheck.NetSpell
 {
     /// <summary>
-    /// Summary description for <see cref="OODictionaryImporter"/>.
+    /// Summary description for <see cref="OpenOfficeDictionaryImporter"/>.
     /// </summary>
-    public class OODictionaryImporter
+    public class OpenOfficeDictionaryImporter
     {
-        private string tryChars = "";
-        private string prefix = "";
-        private string suffix = "";
-        private string replace = "";
-        Encoding encoding = Encoding.UTF7;
+        private string _tryChars = "";
+        private string _prefix = "";
+        private string _suffix = "";
+        private string _replace = "";
+        private Encoding encoding = Encoding.UTF7;
+        private readonly IDictionary<string, string> _words = new Dictionary<string, string>();
 
-        public void LoadAffix(string fileName)
+        public static void Import(string affixFile, string wordFile, string outFile)
         {
-            Encoding encoding = Encoding.UTF7;
-            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), Encoding.UTF7))
+            OpenOfficeDictionaryImporter importer = new OpenOfficeDictionaryImporter();
+            importer.loadAffix(affixFile);
+            importer.loadWords(wordFile);
+            importer.saveDictionary(outFile);
+        }
+
+        private void loadAffix(string fileName)
+        {
+            encoding = Encoding.UTF7;
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open)))
             {
-                // read line by line
+                string tempLine = sr.ReadLine();
+                if (tempLine != null && tempLine.Length > 4)
+                {
+                    encoding = Encoding.GetEncoding(tempLine.Substring(4));
+                }
+            }
+            
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), encoding))
+            {
+                sr.ReadLine();
+                
                 while (sr.Peek() >= 0)
                 {
                     string tempLine = sr.ReadLine().Trim();
                     if (tempLine.Length > 3)
                     {
                         switch (tempLine.Substring(0, 3))
-                        {
-                            case "SET":
-                                encoding = Encoding.GetEncoding(tempLine.Substring(4));
-                                break;
+                        {            
                             case "TRY":
-                                tryChars = new string(encoding.GetChars(Encoding.UTF7.GetBytes(tempLine.Substring(4))));
+                                _tryChars = tempLine.Substring(4);
                                 break;
                             case "PFX":
-                                prefix += new string(encoding.GetChars(Encoding.UTF7.GetBytes(tempLine.Substring(4)))) + "\n";
+                                _prefix += tempLine.Substring(4) + "\n";
                                 break;
                             case "SFX":
-                                suffix += new string(encoding.GetChars(Encoding.UTF7.GetBytes(tempLine.Substring(4)))) + "\n";
+                                _suffix += tempLine.Substring(4) + "\n";
                                 break;
                             case "REP":
                                 if (!char.IsNumber(tempLine.Substring(4)[0]))
                                 {
-                                    replace += new string(encoding.GetChars(Encoding.UTF7.GetBytes(tempLine.Substring(4)))) + "\n";
+                                    _replace += tempLine.Substring(4) + "\n";
                                 }
                                 break;
                         }
@@ -53,26 +69,16 @@ namespace AgentSmith.SpellCheck.NetSpell
             }
         }
 
-        private IDictionary<string, string> words = new Dictionary<string, string>();
-
-        public void LoadWords(string fileName)
-        {            
-            bool first = true;
+        private void loadWords(string fileName)
+        {                        
             using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), encoding))
             {
+                sr.ReadLine();
                 // read line by line
                 while (sr.Peek() >= 0)
                 {
                     string tempLine = sr.ReadLine().Trim();
-                    if (first)
-                    {
-                        //encoding = Encoding.GetEncoding(int.Parse(tempLine));
-                    }
-                    else
-                    {
-                        //tempLine = new string(encoding.GetChars(Encoding.UTF7.GetBytes(tempLine)));
-                    }
-                    first = false;
+                    
                     if (!char.IsNumber(tempLine[0]))
                     {
                         string[] parts = tempLine.Split('/');
@@ -84,10 +90,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                         }
 
                         // look for duplicate words
-                        if (words.ContainsKey(word))
+                        if (_words.ContainsKey(word))
                         {
                             // merge affix keys on duplicate words
-                            string[] tempParts = words[word].Split('/');
+                            string[] tempParts = _words[word].Split('/');
                             string oldKeys = "";
                             if (tempParts.Length > 1)
                             {
@@ -105,45 +111,39 @@ namespace AgentSmith.SpellCheck.NetSpell
                             // only update if have keys
                             if (affixKeys.Length > 0)
                             {
-                                words[word] = string.Format("{0}/{1}", word, affixKeys);
+                                _words[word] = string.Format("{0}/{1}", word, affixKeys);
                             }
                         }
                         else
                         {
-                            words.Add(word, tempLine);
+                            _words.Add(word, tempLine);
                         }
                     }
                 }
             }
         }
 
-        public void SaveDictionary(string fileName)
-        {            
-            // save dictionary file
-            using (StreamWriter sw = File.CreateText(fileName))
+        private void saveDictionary(string fileName)
+        {                        
+            using (StreamWriter sw = new StreamWriter(File.Create(fileName), Encoding.UTF8))
             {
-                sw.NewLine = "\n"; // unix line ends
-
-                // copyright
-                //sw.WriteLine("[Copyright]");
-                //sw.WriteLine(this.txtCopyright.Text.Replace("\r\n", "\n")); // unix line ends
-                // try
+                sw.NewLine = "\n";
+               
                 sw.WriteLine("[Try]");
-                sw.WriteLine(tryChars);
+                sw.WriteLine(_tryChars);
                 sw.WriteLine();
-                // replace
+                
                 sw.WriteLine("[Replace]");
-                sw.WriteLine(replace); // unix line ends
-                // prefix
+                sw.WriteLine(_replace);
+                
                 sw.WriteLine("[Prefix]");
-                sw.WriteLine(prefix); // unix line ends
-                // suffix
+                sw.WriteLine(_prefix);
+                
                 sw.WriteLine("[Suffix]");
-                sw.WriteLine(suffix); // unix line ends
-
-                // words
+                sw.WriteLine(_suffix);
+                
                 sw.WriteLine("[Words]");
-                foreach (string tempWord in words.Keys)
+                foreach (string tempWord in _words.Keys)
                 {
                     sw.WriteLine(tempWord);
                 }
