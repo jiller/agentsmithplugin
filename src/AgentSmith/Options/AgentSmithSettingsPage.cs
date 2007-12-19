@@ -82,8 +82,7 @@ namespace AgentSmith.Options
         private void initializeUI()
         {            
             _tbUserDictionary.Lines = Settings.CommentsSettings.UserWords.Split('\n');
-            IList<string> dictionaries = loadDictionaries();
-            _cbDictionary.DataSource = dictionaries;            
+            _cbDictionary.DataSource = loadDictionaries();            
             _cbDictionary.SelectedItem = Settings.CommentsSettings.DictionaryName;
             _mceMatches.Matches = Settings.CommentsSettings.CommentMatch;
             _mceNotMatches.Matches = Settings.CommentsSettings.CommentNotMatch;
@@ -93,12 +92,27 @@ namespace AgentSmith.Options
         private IList<string> loadDictionaries()
         {
             List<string> list = new List<string>();
-            string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
-            foreach (string file in Directory.GetFiles(Path.Combine(assemblyDir, "dic")))
+            string dicDirectory = getDicDirectory();
+            foreach (string file in Directory.GetFiles(dicDirectory))
             {
                 list.Add(Path.GetFileNameWithoutExtension(file));
             }
             return list;
+        }
+
+        private string getDicDirectory()
+        {
+            string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+            return Path.Combine(assemblyDir, "dic");
+        }
+
+        private void _btnImport_Click(object sender, EventArgs e)
+        {
+            ImportOpenOfficeDictionary frm = new ImportOpenOfficeDictionary(getDicDirectory());
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                _cbDictionary.DataSource = loadDictionaries();
+            }
         } 
     }
 }

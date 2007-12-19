@@ -44,6 +44,7 @@ namespace AgentSmith.Options
             this._lbPPS = new System.Windows.Forms.Label();
             this._lbPS = new System.Windows.Forms.Label();
             this._cbLookAtBase = new System.Windows.Forms.CheckBox();
+            this._btnImport = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // _tbUserDictionary
@@ -105,7 +106,7 @@ namespace AgentSmith.Options
             // _mceNotMatches
             // 
             this._mceNotMatches.Location = new System.Drawing.Point(289, 41);
-            this._mceNotMatches.Matches = new Match[0];
+            this._mceNotMatches.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceNotMatches.Name = "_mceNotMatches";
             this._mceNotMatches.Size = new System.Drawing.Size(251, 83);
             this._mceNotMatches.TabIndex = 60;
@@ -113,7 +114,7 @@ namespace AgentSmith.Options
             // _mceMatches
             // 
             this._mceMatches.Location = new System.Drawing.Point(15, 41);
-            this._mceMatches.Matches = new Match[0];
+            this._mceMatches.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceMatches.Name = "_mceMatches";
             this._mceMatches.Size = new System.Drawing.Size(251, 83);
             this._mceMatches.TabIndex = 59;
@@ -175,8 +176,19 @@ namespace AgentSmith.Options
             this._cbLookAtBase.Text = "Do not show warning if base member has comment.";
             this._cbLookAtBase.UseVisualStyleBackColor = true;
             // 
+            // _btnImport
+            // 
+            this._btnImport.Location = new System.Drawing.Point(219, 207);
+            this._btnImport.Name = "_btnImport";
+            this._btnImport.Size = new System.Drawing.Size(75, 23);
+            this._btnImport.TabIndex = 67;
+            this._btnImport.Text = "Import...";
+            this._btnImport.UseVisualStyleBackColor = true;
+            this._btnImport.Click += new System.EventHandler(this._btnImport_Click);
+            // 
             // AgentSmithSettingsPage
             // 
+            this.Controls.Add(this._btnImport);
             this.Controls.Add(this._cbLookAtBase);
             this.Controls.Add(this._lbPS);
             this.Controls.Add(this._lbPPS);
@@ -192,7 +204,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._userWords);
             this.Controls.Add(this._tbUserDictionary);
             this.Name = "AgentSmithSettingsPage";
-            this.Size = new System.Drawing.Size(552, 498);            
+            this.Size = new System.Drawing.Size(552, 498);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -214,5 +226,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label _lbPPS;
         private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.CheckBox _cbLookAtBase;
+        private System.Windows.Forms.Button _btnImport;
     }
 }

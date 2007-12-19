@@ -156,6 +156,12 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Options\ImportOpenOfficeDictionary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options\ImportOpenOfficeDictionary.Designer.cs">
+      <DependentUpon>ImportOpenOfficeDictionary.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpellCheck\AddToDictionaryBulbItem.cs" />
     <Compile Include="Comments\CommentAnalyzer.cs">
       <SubType>Code</SubType>
@@ -164,7 +170,7 @@
     <Compile Include="ResX\ResXQuickFix.cs" />
     <Compile Include="ResX\ResXSpellHighlighting.cs" />
     <Compile Include="SpellCheck\NetSpell\ISpellChecker.cs" />
-    <Compile Include="SpellCheck\NetSpell\OODictionaryImporter.cs">
+    <Compile Include="SpellCheck\NetSpell\OpenOfficeDictionaryImporter.cs">
     </Compile>
     <Compile Include="SpellCheck\NetSpell\SpellChecker.cs">
     </Compile>
@@ -290,6 +296,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Options\DefaultNamingConventionSettings.xml" />
+    <EmbeddedResource Include="Options\ImportOpenOfficeDictionary.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ImportOpenOfficeDictionary.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
