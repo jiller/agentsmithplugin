@@ -13,7 +13,7 @@ namespace AgentSmith
     public class DaemonStage : CSharpDaemonStageBase
     {
         public override IDaemonStageProcess CreateProcess(IDaemonProcess process)
-        {
+        {            
             if (!IsSupported(process.ProjectFile))
             {
                 return null;

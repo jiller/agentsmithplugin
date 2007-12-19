@@ -1,6 +1,7 @@
 using System;
 using AgentSmith.Comments;
 using AgentSmith.NamingConventions;
+using AgentSmith.Resx;
 using JetBrains.ComponentModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.Shell;
@@ -26,7 +27,7 @@ namespace AgentSmith
             manager.RegisterConfigurableSeverity(WordIsNotInDictionarySuggestion.NAME, group, "Word doesn't exist in dictionary.", "Word doesn't exist in default or user dictionary.", Severity.SUGGESTION);
             manager.RegisterConfigurableSeverity(FixCommentSuggestion.NAME, group, "Public members must have XML comment.", "Public members must have XML comments.", Severity.SUGGESTION);
             manager.RegisterConfigurableSeverity(NamingConventionsSuggestion.NAME, group, "Declarations must conform to naming conventions.", "Declarations must conform to naming conventions", Severity.WARNING);
-            manager.RegisterConfigurableSeverity(ResXProcess.ResxSpellHighlighting.NAME, group, "Declarations must conform to naming conventions.", "Declarations must conform to naming conventions", Severity.WARNING);
+            manager.RegisterConfigurableSeverity(ResXSpellHighlighting.NAME, group, "Declarations must conform to naming conventions.", "Declarations must conform to naming conventions", Severity.WARNING);
         }
 
         #endregion

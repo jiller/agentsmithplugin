@@ -29,7 +29,7 @@
 
 using System;
 
-namespace AgentSmith.Comments.NetSpell.Phonetic
+namespace AgentSmith.SpellCheck.NetSpell.Phonetic
 {
     /// <summary>
     ///		This class hold the settings for a phonetic rule

@@ -29,7 +29,7 @@
 
 using System;
 
-namespace AgentSmith.Comments.NetSpell
+namespace AgentSmith.SpellCheck.NetSpell
 {
     /// <summary>
     /// The Word class represents a base word in the dictionary.

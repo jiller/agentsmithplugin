@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.Comments.NetSpell;
+using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;

@@ -29,27 +29,23 @@
 
 using System;
 using System.Globalization;
-using AgentSmith.Comments.NetSpell.Phonetic;
+using AgentSmith.SpellCheck.NetSpell.Phonetic;
 
-namespace AgentSmith.Comments.NetSpell.Phonetic
+namespace AgentSmith.SpellCheck.NetSpell.Phonetic
 {
     /// <summary>
-    ///		This class holds helper methods for phonetic encoding
+    ///	This class holds helper methods for phonetic encoding.
     /// </summary>
     public sealed class PhoneticUtility
     {
         /// <summary>
-        ///     Converts the rule text in to a <see cref="PhoneticRule"/> class.
+        /// Converts the rule text in to a <see cref="PhoneticRule"/> class.
         /// </summary>
         /// <param name="ruleText" type="string">
-        ///     <para>
-        ///         The text to convert.
-        ///     </para>
+        /// The text to convert.
         /// </param>
         /// <param name="rule" type="ref NetSpell.SpellChecker.Dictionary.Phonetic.PhoneticRule">
-        ///     <para>
-        ///         The object that will hold the conversion data.
-        ///     </para>
+        /// The object that will hold the conversion data.        
         /// </param>
         public static void EncodeRule(string ruleText, ref PhoneticRule rule)
         {

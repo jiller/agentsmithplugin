@@ -6,7 +6,7 @@ using JetBrains.ReSharper.TextControl;
 using JetBrains.Shell;
 using JetBrains.Util;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.SpellCheck
 {
     public class ReplaceWordWithBulbItem : IBulbItem
     {

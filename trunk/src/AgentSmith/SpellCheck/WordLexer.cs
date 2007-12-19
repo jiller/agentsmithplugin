@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Util;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.SpellCheck
 {
     public class WordLexer : ILexer
     {

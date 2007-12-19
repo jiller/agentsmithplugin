@@ -156,26 +156,31 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Comments\AddToDictionaryBulbItem.cs" />
+    <Compile Include="SpellCheck\AddToDictionaryBulbItem.cs" />
     <Compile Include="Comments\CommentAnalyzer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Comments\NetSpell\ISpellChecker.cs" />
-    <Compile Include="Comments\NetSpell\SpellChecker.cs">
+    <Compile Include="ResX\ResXProcess.cs" />
+    <Compile Include="ResX\ResXQuickFix.cs" />
+    <Compile Include="ResX\ResXSpellHighlighting.cs" />
+    <Compile Include="SpellCheck\NetSpell\ISpellChecker.cs" />
+    <Compile Include="SpellCheck\NetSpell\OODictionaryImporter.cs">
     </Compile>
-    <Compile Include="Comments\NetSpell\SuggestionEnum.cs" />
-    <Compile Include="Comments\ReplaceWordWithBulbItem.cs" />
-    <Compile Include="Comments\NetSpell\Affix\AffixEntry.cs" />
-    <Compile Include="Comments\NetSpell\Affix\AffixRule.cs" />
-    <Compile Include="Comments\NetSpell\Affix\AffixUtility.cs" />
-    <Compile Include="Comments\NetSpell\ContainsResult.cs" />
-    <Compile Include="Comments\NetSpell\Phonetic\PhoneticRule.cs" />
-    <Compile Include="Comments\NetSpell\Phonetic\PhoneticUtility.cs" />
-    <Compile Include="Comments\NetSpell\Word.cs" />
-    <Compile Include="Comments\NetSpell\WordDictionary.cs">
+    <Compile Include="SpellCheck\NetSpell\SpellChecker.cs">
+    </Compile>
+    <Compile Include="SpellCheck\NetSpell\SuggestionEnum.cs" />
+    <Compile Include="SpellCheck\ReplaceWordWithBulbItem.cs" />
+    <Compile Include="SpellCheck\NetSpell\Affix\AffixEntry.cs" />
+    <Compile Include="SpellCheck\NetSpell\Affix\AffixRule.cs" />
+    <Compile Include="SpellCheck\NetSpell\Affix\AffixUtility.cs" />
+    <Compile Include="SpellCheck\NetSpell\ContainsResult.cs" />
+    <Compile Include="SpellCheck\NetSpell\Phonetic\PhoneticRule.cs" />
+    <Compile Include="SpellCheck\NetSpell\Phonetic\PhoneticUtility.cs" />
+    <Compile Include="SpellCheck\NetSpell\Word.cs" />
+    <Compile Include="SpellCheck\NetSpell\WordDictionary.cs">
     </Compile>
     <Compile Include="Comments\WordIsNotInDictionarySuggestion.cs" />
-    <Compile Include="Comments\WordLexer.cs" />
+    <Compile Include="SpellCheck\WordLexer.cs" />
     <Compile Include="Comments\XmlCommentQuickFix.cs" />
     <Compile Include="Comments\XmlCommentSyntaxQuickFix.cs" />
     <Compile Include="Comments\XmlDocLexer.cs" />
@@ -184,7 +189,7 @@
     </Compile>
     <Compile Include="MemberMatch\ComplexMatchEvaluator.cs" />
     <Compile Include="MemberMatch\FuzzyBool.cs" />
-    <Compile Include="ResXDaemonStage.cs" />
+    <Compile Include="ResX\ResXDaemonStage.cs" />
     <Compile Include="SuggestionBase.cs">
       <SubType>Code</SubType>
     </Compile>

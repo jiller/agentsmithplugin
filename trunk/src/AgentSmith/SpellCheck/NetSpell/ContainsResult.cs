@@ -1,6 +1,6 @@
 using System;
 
-namespace AgentSmith.Comments.NetSpell
+namespace AgentSmith.SpellCheck.NetSpell
 {
     public struct ContainsResult
     {

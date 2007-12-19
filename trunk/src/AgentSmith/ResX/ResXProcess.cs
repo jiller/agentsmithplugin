@@ -1,71 +1,30 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.Comments;
-using AgentSmith.Comments.NetSpell;
+using AgentSmith.Options;
+using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
-using JetBrains.ReSharper.Daemon.Impl;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.Util;
 
-namespace AgentSmith
+namespace AgentSmith.Resx
 {
-    [DaemonStage(StagesBefore = new Type[] {typeof (GlobalErrorStage)},
-        StagesAfter = new Type[] {typeof (LanguageSpecificDaemonStage)}, RunForInvisibleDocument = true)]
-    public class ResXDaemonStage : IDaemonStage
-    {
-        public IDaemonStageProcess CreateProcess(IDaemonProcess process)
-        {
-            if (process.ProjectFile.Name.EndsWith(".resx"))
-            {
-                return new ResXProcess(process.ProjectFile, this);
-            }
-
-            return null;
-        }
-
-        public ErrorStripeRequest NeedsErrorStripe(IProjectFile projectFile)
-        {
-            return ErrorStripeRequest.STRIPE_AND_ERRORS;
-        }
-    }
-
-    internal class ResXProcess : DaemonProcessBase, IDaemonStageProcess
+    internal class ResXProcess : IDaemonStageProcess
     {
         private readonly IProjectFile _file;
 
-        public ResXProcess(IProjectFile file, ResXDaemonStage stage)
-            : base(file, new IDaemonStage[] {stage})
+        public ResXProcess(IProjectFile file)            
         {
             _file = file;
         }
-
-        public override bool IsRangeInvalidated(TextRange range)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool HasInvalidatedRangeOutside(ICollection<TextRange> ranges)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void CommitHighlighters(CommitContext context)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool FullRehighlightingRequired
-        {
-            get { throw new NotImplementedException(); }
-        }
-
+      
         public DaemonStageProcessResult Execute()
         {
+            CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_file.GetSolution());
+
             DaemonStageProcessResult result = new DaemonStageProcessResult();
             List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
             ISpellChecker checker = SpellChecker.GetInstance(_file.GetSolution());
@@ -82,7 +41,7 @@ namespace AgentSmith
                         DocumentRange docRange = token.GetDocumentRange();
                         DocumentRange range = new DocumentRange(docRange.Document, new TextRange(docRange.TextRange.StartOffset + lexer.TokenStart, docRange.TextRange.StartOffset + lexer.TokenEnd));                        
                         highlightings.Add(new HighlightingInfo(range,
-                                                               new ResxSpellHighlighting(token.GetDocumentRange(), token, text)));
+                            new ResXSpellHighlighting(lexer.TokenText, _file.GetSolution(), styleSettings.CommentsSettings, token.GetDocumentRange(), token, text)));
                     }
                     lexer.Advance();
                 }                
@@ -125,29 +84,6 @@ namespace AgentSmith
                 }
             }
             return tokens;
-        }
-
-        [ConfigurableSeverityHighlighting(ResxSpellHighlighting.NAME)]
-        internal class ResxSpellHighlighting : SuggestionBase
-        {
-            public const string NAME = "ResxSpellCheckSuggestion";
-            private readonly DocumentRange _range;
-
-            public ResxSpellHighlighting(DocumentRange range, IElement element, string toolTip)
-                : base(element, toolTip)
-            {
-                _range = range;
-            }
-
-            public override Severity Severity
-            {
-                get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-            }
-
-            public override DocumentRange Range
-            {
-                get { return _range; }
-            }
         }
     }
 }

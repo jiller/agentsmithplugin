@@ -35,12 +35,12 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
-using AgentSmith.Comments.NetSpell;
 using AgentSmith.Options;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.Util;
 
-namespace AgentSmith.Comments.NetSpell
+namespace AgentSmith.SpellCheck.NetSpell
 {
     /// <summary>
     /// The <see cref="SpellChecker"/> class encapsulates the functions necessary to check
@@ -79,7 +79,7 @@ namespace AgentSmith.Comments.NetSpell
             {
                 string path =
                     Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
-                                 String.Format("dic\\{0}.dic", dictionaryName));
+                        String.Format("dic\\{0}.dic", dictionaryName));
                 try
                 {
                     using (TextReader reader = File.OpenText(path))

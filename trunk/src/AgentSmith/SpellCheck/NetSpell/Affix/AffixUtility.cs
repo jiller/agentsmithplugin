@@ -28,8 +28,9 @@
 #endregion Copyright
 
 using System;
+using AgentSmith.SpellCheck.NetSpell.Affix;
 
-namespace AgentSmith.Comments.NetSpell.Affix
+namespace AgentSmith.SpellCheck.NetSpell.Affix
 {
     /// <summary>
     /// Summary description for <see cref="AffixUtility"/>.
