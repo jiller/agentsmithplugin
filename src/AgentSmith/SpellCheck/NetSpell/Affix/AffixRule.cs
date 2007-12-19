@@ -29,8 +29,9 @@
 
 using System;
 using System.Collections.Generic;
+using AgentSmith.SpellCheck.NetSpell.Affix;
 
-namespace AgentSmith.Comments.NetSpell.Affix
+namespace AgentSmith.SpellCheck.NetSpell.Affix
 {
     /// <summary>
     /// Rule for expanding base words.

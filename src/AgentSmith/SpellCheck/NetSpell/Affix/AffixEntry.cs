@@ -29,7 +29,7 @@
 
 using System;
 
-namespace AgentSmith.Comments.NetSpell.Affix
+namespace AgentSmith.SpellCheck.NetSpell.Affix
 {
     /// <summary>
     /// Rule Entry for expanding base words.

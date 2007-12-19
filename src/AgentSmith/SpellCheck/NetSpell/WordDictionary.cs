@@ -33,12 +33,10 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using AgentSmith.Comments.NetSpell;
-using AgentSmith.Comments.NetSpell.Affix;
-using AgentSmith.Comments.NetSpell.Phonetic;
-using JetBrains.Util;
+using AgentSmith.SpellCheck.NetSpell.Affix;
+using AgentSmith.SpellCheck.NetSpell.Phonetic;
 
-namespace AgentSmith.Comments.NetSpell
+namespace AgentSmith.SpellCheck.NetSpell
 {
     /// <summary>
     /// The <see cref="WordDictionary"/> class contains all the logic for managing the word list.

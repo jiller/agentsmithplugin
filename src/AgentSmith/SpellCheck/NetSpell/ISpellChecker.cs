@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AgentSmith.Comments.NetSpell
+namespace AgentSmith.SpellCheck.NetSpell
 {
     /// <summary>
     /// Spell checker.

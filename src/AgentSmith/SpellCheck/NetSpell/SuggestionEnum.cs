@@ -27,7 +27,7 @@
 
 using System;
 
-namespace AgentSmith.Comments.NetSpell
+namespace AgentSmith.SpellCheck.NetSpell
 {
     /// <summary>
     /// The suggestion strategy to use when generating suggestions.

@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.TextControl;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.SpellCheck
 {
     public class AddToDictionaryBulbItem : IBulbItem
     {

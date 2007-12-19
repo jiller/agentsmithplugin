@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.Comments.NetSpell;
 using AgentSmith.MemberMatch;
 using AgentSmith.Options;
+using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Editor;
