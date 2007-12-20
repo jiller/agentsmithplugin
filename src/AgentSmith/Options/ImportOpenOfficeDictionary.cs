@@ -54,7 +54,7 @@ namespace AgentSmith.Options
         }
 
         /// <summary>
-        /// Проверка русcкой орфографии
+        /// Проверка русской орфографии
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

@@ -48,8 +48,56 @@ namespace AgentSmith.SpellCheck.NetSpell
         private readonly Dictionary<string, AffixRule> _prefixRules = new Dictionary<string, AffixRule>();
         private readonly List<string> _replaceCharacters = new List<string>();
         private readonly Dictionary<string, AffixRule> _suffixRules = new Dictionary<string, AffixRule>();
-        //private readonly HashSet<string> _userWords = new HashSet<string>();
         private string _tryCharacters = "";
+        
+        private readonly byte[]  _encodeTable = new byte[65536];
+        private readonly char[] _decodeTable = new char[256];
+        private byte _currentChar = 128;
+
+        private string decode(string s)
+        {
+            if (_currentChar == 128)
+            {
+                return s;
+            }
+            char[] chars = new char[s.Length];
+            for (int i = 0; i < s.Length; i++)
+            {
+                chars[i] = _decodeTable[s[i]];
+            }
+            return new string(chars);
+        }
+
+        private IList<string> decode(IList<string> list)
+        {
+            List<string> newList = new List<string>();
+            foreach (string s in list)
+            {
+                newList.Add(decode(s));
+            }
+            return newList;
+        }
+
+        private string encode(string s)
+        {
+            char[] chars = new char[s.Length];
+            for (int i = 0; i < s.Length; i++)
+            {
+                char originalChar = s[i];
+
+                byte c1 = _encodeTable[originalChar];
+                if (c1 == 0 && _currentChar < 255)
+                {
+                    _encodeTable[originalChar] = _currentChar;
+                    _decodeTable[_currentChar] = originalChar;
+                    c1 = _currentChar;
+                    _currentChar++;
+                }
+                chars[i] = (char) c1;
+            }
+
+            return new string(chars);
+        }
 
         /// <summary>
         /// Initializes the dictionary by loading and parsing the
@@ -57,7 +105,12 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </summary>
         public WordDictionary(TextReader inputDictionary)
         {
-            Regex spaceRegx = new Regex(@"[^\s]+", RegexOptions.Compiled);
+            for (byte i=0; i<128; i++)
+            {
+                _encodeTable[i] = i;
+                _decodeTable[i] = (char)i;
+            }
+            Regex spaceRegx = new Regex(@"[^ ]+", RegexOptions.Compiled);
             MatchCollection partMatches;
 
             string currentSection = "";
@@ -65,7 +118,7 @@ namespace AgentSmith.SpellCheck.NetSpell
 
             while (inputDictionary.Peek() >= 0)
             {
-                string tempLine = inputDictionary.ReadLine().Trim();
+                string tempLine = encode(inputDictionary.ReadLine().Trim());
                 if (tempLine.Length > 0)
                 {
                     // check for section flag
@@ -88,11 +141,11 @@ namespace AgentSmith.SpellCheck.NetSpell
                                 case "[Copyright]":
                                     //this.Copyright += tempLine + "\r\n";
                                     break;
-                                case "[Try]": // ISpell try chars
-                                    TryCharacters += tempLine;
+                                case "[Try]": // ISpell try chars                                    
+                                    _tryCharacters += tempLine;
                                     break;
                                 case "[Replace]": // ISpell replace chars
-                                    ReplaceCharacters.Add(tempLine);
+                                    _replaceCharacters.Add(tempLine);
                                     break;
                                 case "[Prefix]": // MySpell prefix rules
                                 case "[Suffix]": // MySpell suffix rules
@@ -117,12 +170,12 @@ namespace AgentSmith.SpellCheck.NetSpell
                                         if (currentSection == "[Prefix]")
                                         {
                                             // add to prefix collection
-                                            PrefixRules.Add(currentRule.Name, currentRule);
+                                            _prefixRules.Add(currentRule.Name, currentRule);
                                         }
                                         else
                                         {
                                             // add to suffix collection
-                                            SuffixRules.Add(currentRule.Name, currentRule);
+                                            _suffixRules.Add(currentRule.Name, currentRule);
                                         }
                                     }
                                         //if 4 parts, then entry for current rule
@@ -175,7 +228,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                                         tempWord.PhoneticCode = parts[2];
                                     }
 
-                                    BaseWords.Add(tempWord.Text, tempWord);
+                                    _baseWords.Add(tempWord.Text, tempWord);
                                     break;
                             }
                             break;
@@ -187,41 +240,22 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// <summary>
         /// The collection of base words for the dictionary.
         /// </summary>		
-        public Dictionary<string, Word> BaseWords
+        public ICollection<Word> BaseWords
         {
-            get { return _baseWords; }
+            get { return _baseWords.Values; }
         }
 
-        /// <summary>
-        /// Collection of phonetic rules for this dictionary.
-        /// </summary>		
-        public List<PhoneticRule> PhoneticRules
+        public bool HasPhoneticRules
         {
-            get { return _phoneticRules; }
-        }
-
-        /// <summary>
-        /// Collection of affix prefixes for the base words in this dictionary.
-        /// </summary>		
-        public Dictionary<string, AffixRule> PrefixRules
-        {
-            get { return _prefixRules; }
+            get { return _phoneticRules.Count > 0; }
         }
 
         /// <summary>
         /// List of characters to use when generating suggestions using the near miss strategy.
         /// </summary>		
-        public List<string> ReplaceCharacters
+        public IList<string> ReplaceCharacters
         {
-            get { return _replaceCharacters; }
-        }
-
-        /// <summary>
-        /// Collection of affix suffixes for the base words in this dictionary.
-        /// </summary>		
-        public Dictionary<string, AffixRule> SuffixRules
-        {
-            get { return _suffixRules; }
+            get { return decode(_replaceCharacters); }
         }
 
         /// <summary>
@@ -229,8 +263,8 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </summary>		
         public string TryCharacters
         {
-            get { return _tryCharacters; }
-            set { _tryCharacters = value; }
+            get { return decode(_tryCharacters); }
+            set { _tryCharacters = encode(value); }
         }
 
         /// <summary>
@@ -244,6 +278,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </returns>
         public ContainsResult Contains(string word)
         {
+            word = encode(word);
             // clean up possible base word list
             List<string> possibleBaseWords = new List<string>();
 
@@ -260,7 +295,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             // Add word to suffix word list
             suffixWords.Add(word);
 
-            foreach (AffixRule rule in SuffixRules.Values)
+            foreach (AffixRule rule in _suffixRules.Values)
             {
                 foreach (AffixEntry entry in rule.AffixEntries)
                 {
@@ -292,7 +327,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             possibleBaseWords.AddRange(suffixWords);
 
             // Step 4 Remove Prefix, Search BaseWords
-            foreach (AffixRule rule in PrefixRules.Values)
+            foreach (AffixRule rule in _prefixRules.Values)
             {
                 foreach (AffixEntry entry in rule.AffixEntries)
                 {
@@ -327,8 +362,8 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// <returns>
         /// A <see cref="List<string>"/> of words expanded from base word.
         /// </returns>
-        public List<string> ExpandWord(Word word)
-        {
+        public IList<string> ExpandWord(Word word)
+        {            
             List<string> suffixWords = new List<string>();
             List<string> words = new List<string>();
 
@@ -378,7 +413,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             words.AddRange(suffixWords);
 
             //TraceWriter.TraceVerbose("Word Expanded: {0}; Child Words: {1}", word.Text, words.Count);
-            return words;
+            return decode(words);
         }
 
         /// <summary>
@@ -392,7 +427,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </returns>
         public string PhoneticCode(string word)
         {
-            string tempWord = word.ToUpper();
+            string tempWord = encode(word.ToUpper());
             string prevWord;
             StringBuilder code = new StringBuilder();
 
@@ -468,9 +503,9 @@ namespace AgentSmith.SpellCheck.NetSpell
         private bool verifyAffixKey(string word, char affixKey)
         {
             // make sure base word has this affix key
-            Word baseWord = BaseWords[word];
+            Word baseWord = _baseWords[word];
             List<char> keys = new List<char>(baseWord.AffixKeys.ToCharArray());
             return keys.Contains(affixKey);
-        }
+        }        
     }
 }

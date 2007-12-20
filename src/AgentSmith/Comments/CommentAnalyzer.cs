@@ -80,7 +80,7 @@ namespace AgentSmith.Comments
             {
                 if (wordRange.Word != wordRange.Word.ToUpper() && !containsDigit(wordRange.Word))
                 {
-                    if (_spellChecker != null && !_spellChecker.TestWord(wordRange.Word))
+                    if (_spellChecker != null && !_spellChecker.TestWord(wordRange.Word, false))
                     {
                         DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
                         WordIsNotInDictionarySuggestion highlighting =

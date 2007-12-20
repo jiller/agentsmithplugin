@@ -36,7 +36,7 @@ namespace AgentSmith.Resx
                     lexer.Start();
                     while (lexer.TokenType != null)
                     {
-                        if (!checker.TestWord(lexer.TokenText))
+                        if (!checker.TestWord(lexer.TokenText, false))
                         {
                             string text = String.Format("Word {0} is not in dictionary.", lexer.TokenText);
 
