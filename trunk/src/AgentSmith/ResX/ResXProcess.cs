@@ -28,30 +28,33 @@ namespace AgentSmith.Resx
             DaemonStageProcessResult result = new DaemonStageProcessResult();
             List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
             ISpellChecker checker = SpellChecker.GetInstance(_file.GetSolution());
-            foreach (IXmlTokenNode token in GetStringsToCheck())
+            if (checker != null)
             {
-                WordLexer lexer = new WordLexer(token.GetText());
-                lexer.Start();
-                while (lexer.TokenType != null)
+                foreach (IXmlTokenNode token in getStringsToCheck())
                 {
-                    if (!checker.TestWord(lexer.TokenText))
+                    WordLexer lexer = new WordLexer(token.GetText());
+                    lexer.Start();
+                    while (lexer.TokenType != null)
                     {
-                        string text = String.Format("Word {0} is not in dictionary.", lexer.TokenText);
-                        
-                        DocumentRange docRange = token.GetDocumentRange();
-                        DocumentRange range = new DocumentRange(docRange.Document, new TextRange(docRange.TextRange.StartOffset + lexer.TokenStart, docRange.TextRange.StartOffset + lexer.TokenEnd));                        
-                        highlightings.Add(new HighlightingInfo(range,
-                            new ResXSpellHighlighting(lexer.TokenText, _file.GetSolution(), styleSettings.CommentsSettings, token.GetDocumentRange(), token, text)));
+                        if (!checker.TestWord(lexer.TokenText))
+                        {
+                            string text = String.Format("Word {0} is not in dictionary.", lexer.TokenText);
+
+                            DocumentRange docRange = token.GetDocumentRange();
+                            DocumentRange range = new DocumentRange(docRange.Document, new TextRange(docRange.TextRange.StartOffset + lexer.TokenStart, docRange.TextRange.StartOffset + lexer.TokenEnd));
+                            highlightings.Add(new HighlightingInfo(range,
+                                new ResXSpellHighlighting(lexer.TokenText, _file.GetSolution(), styleSettings.CommentsSettings, token.GetDocumentRange(), token, text)));
+                        }
+                        lexer.Advance();
                     }
-                    lexer.Advance();
-                }                
+                }
             }
             result.Highlightings = highlightings.ToArray();
             result.FullyRehighlighted = result.Highlightings.Length > 0;
             return result;
         }
 
-        private IList<IXmlTokenNode> GetStringsToCheck()
+        private IList<IXmlTokenNode> getStringsToCheck()
         {
             IList<IXmlTokenNode> tokens = new List<IXmlTokenNode>();
             IXmlFile xmlFile = PsiManager.GetInstance(_file.GetSolution()).GetPsiFile(_file) as IXmlFile;
