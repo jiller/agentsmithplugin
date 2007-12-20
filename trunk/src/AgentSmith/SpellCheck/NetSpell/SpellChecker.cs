@@ -50,7 +50,7 @@ namespace AgentSmith.SpellCheck.NetSpell
     {
         private readonly WordDictionary _dictionary;
 
-        private SpellChecker(WordDictionary dictionary)
+        public SpellChecker(WordDictionary dictionary)
         {
             _dictionary = dictionary;
         }
@@ -119,8 +119,8 @@ namespace AgentSmith.SpellCheck.NetSpell
         #region ISpell Near Miss Suggetion methods
 
         /// <summary>
-        ///		swap out each char one by one and try all the tryme
-        ///		chars in its place to see if that makes a good word
+        ///	Swap out each char one by one and try all the tryme
+        ///	chars in its place to see if that makes a good word.
         /// </summary>
         private void badChar(string word, ICollection<Word> tempSuggestion)
         {
@@ -131,10 +131,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                 for (int x = 0; x < tryme.Length; x++)
                 {
                     tempWord[i] = tryme[x];
-                    if (TestWord(tempWord.ToString()))
+                    if (TestWord(tempWord.ToString(), true))
                     {
                         Word ws = new Word();
-                        ws.Text = tempWord.ToString().ToLower();
+                        ws.Text = tempWord.ToString();
                         ws.EditDistance = editDistance(word, tempWord.ToString());
 
                         tempSuggestion.Add(ws);
@@ -144,7 +144,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         }
 
         /// <summary>
-        ///     try omitting one char of word at a time
+        /// Try omitting one char of word at a time.
         /// </summary>
         private void extraChar(string word, ICollection<Word> tempSuggestion)
         {
@@ -155,10 +155,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                     StringBuilder tempWord = new StringBuilder(word);
                     tempWord.Remove(i, 1);
 
-                    if (TestWord(tempWord.ToString()))
+                    if (TestWord(tempWord.ToString(), true))
                     {
                         Word ws = new Word();
-                        ws.Text = tempWord.ToString().ToLower(CultureInfo.CurrentUICulture);
+                        ws.Text = tempWord.ToString();
                         ws.EditDistance = editDistance(word, tempWord.ToString());
 
                         tempSuggestion.Add(ws);
@@ -181,10 +181,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                     StringBuilder tempWord = new StringBuilder(word);
 
                     tempWord.Insert(i, tryme[x]);
-                    if (TestWord(tempWord.ToString()))
+                    if (TestWord(tempWord.ToString(), true))
                     {
                         Word ws = new Word();
-                        ws.Text = tempWord.ToString().ToLower();
+                        ws.Text = tempWord.ToString();
                         ws.EditDistance = editDistance(word, tempWord.ToString());
 
                         tempSuggestion.Add(ws);
@@ -199,7 +199,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </summary>
         private void replaceChars(string word, ICollection<Word> tempSuggestion)
         {
-            List<string> replacementChars = _dictionary.ReplaceCharacters;
+            IList<string> replacementChars = _dictionary.ReplaceCharacters;
             for (int i = 0; i < replacementChars.Count; i++)
             {
                 int split = replacementChars[i].IndexOf(' ');
@@ -213,10 +213,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                     tempWord += replacement;
                     tempWord += word.Substring(pos + key.Length);
 
-                    if (TestWord(tempWord))
+                    if (TestWord(tempWord, true))
                     {
                         Word ws = new Word();
-                        ws.Text = tempWord.ToLower();
+                        ws.Text = tempWord;
                         ws.EditDistance = editDistance(word, tempWord);
 
                         tempSuggestion.Add(ws);
@@ -227,7 +227,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         }
 
         /// <summary>
-        ///     try swapping adjacent chars one by one
+        /// Try swapping adjacent chars one by one.
         /// </summary>
         private void swapChar(string word, ICollection<Word> tempSuggestion)
         {
@@ -239,10 +239,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                 tempWord[i] = tempWord[i + 1];
                 tempWord[i + 1] = swap;
 
-                if (TestWord(tempWord.ToString()))
+                if (TestWord(tempWord.ToString(), true))
                 {
                     Word ws = new Word();
-                    ws.Text = tempWord.ToString().ToLower();
+                    ws.Text = tempWord.ToString();
                     ws.EditDistance = editDistance(word, tempWord.ToString());
 
                     tempSuggestion.Add(ws);
@@ -251,8 +251,8 @@ namespace AgentSmith.SpellCheck.NetSpell
         }
 
         /// <summary>
-        ///     split the string into two pieces after every char
-        ///		if both pieces are good words make them a suggestion
+        /// Split the string into two pieces after every char
+        ///	if both pieces are good words make them a suggestion.
         /// </summary>
         private void twoWords(string word, ICollection<Word> tempSuggestion)
         {
@@ -261,12 +261,12 @@ namespace AgentSmith.SpellCheck.NetSpell
                 string firstWord = word.Substring(0, i);
                 string secondWord = word.Substring(i);
 
-                if (TestWord(firstWord) && TestWord(secondWord))
+                if (TestWord(firstWord, true) && TestWord(secondWord, true))
                 {
                     string tempWord = firstWord + " " + secondWord;
 
                     Word ws = new Word();
-                    ws.Text = tempWord.ToLower();
+                    ws.Text = tempWord;
                     ws.EditDistance = editDistance(word, tempWord);
 
                     tempSuggestion.Add(ws);
@@ -287,9 +287,9 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// <returns>
         /// Returns true if word is found in dictionary.
         /// </returns>
-        public bool TestWord(string word)
+        public bool TestWord(string word, bool matchCase)
         {
-            return testWord(word).Contains;
+            return testWord(word, matchCase).Contains;
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </param>        
         public IList<string> Suggest(string word, uint maxSuggestions)
         {
-            ContainsResult result = testWord(word);
+            ContainsResult result = testWord(word, false);
             if (!result.Contains)
             {
                 return suggest(word, result.PossibleBaseWords, maxSuggestions);
@@ -411,7 +411,7 @@ namespace AgentSmith.SpellCheck.NetSpell
 
             if ((_suggestionMode == Suggestion.PhoneticNearMiss
                  || _suggestionMode == Suggestion.Phonetic)
-                && _dictionary.PhoneticRules.Count > 0)
+                && _dictionary.HasPhoneticRules)
             {
                 // generate phonetic code for possible root word
                 Hashtable codes = new Hashtable();
@@ -427,11 +427,11 @@ namespace AgentSmith.SpellCheck.NetSpell
                 if (codes.Count > 0)
                 {
                     // search root words for phonetic codes
-                    foreach (Word word in _dictionary.BaseWords.Values)
+                    foreach (Word word in _dictionary.BaseWords)
                     {
                         if (codes.ContainsKey(word.PhoneticCode))
                         {
-                            List<string> words = _dictionary.ExpandWord(word);
+                            IList<string> words = _dictionary.ExpandWord(word);
                             // add expanded words
                             foreach (string expandedWord in words)
                             {
@@ -491,7 +491,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             return suggestions;
         }
 
-        private ContainsResult testWord(string word)
+        private ContainsResult testWord(string word, bool matchCase)
         {
             if (_userWords.Contains(word))
             {
@@ -499,12 +499,12 @@ namespace AgentSmith.SpellCheck.NetSpell
             }
 
             ContainsResult result = _dictionary.Contains(word);
-            if (result.Contains)
+            if (matchCase || result.Contains || word.Length == 0)
             {
                 return result;
             }
 
-            return _dictionary.Contains(word.ToLower());
+            return _dictionary.Contains(char.ToLower(word[0]) + word.Substring(1));
         }
 
         #endregion
