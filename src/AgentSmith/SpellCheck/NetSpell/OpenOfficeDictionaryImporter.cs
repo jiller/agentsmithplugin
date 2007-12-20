@@ -143,7 +143,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                 sw.WriteLine(_suffix);
                 
                 sw.WriteLine("[Words]");
-                foreach (string tempWord in _words.Keys)
+                foreach (string tempWord in _words.Values)
                 {
                     sw.WriteLine(tempWord);
                 }

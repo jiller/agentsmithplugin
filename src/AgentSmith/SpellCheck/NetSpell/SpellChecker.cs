@@ -89,9 +89,9 @@ namespace AgentSmith.SpellCheck.NetSpell
                         _dictionaryName = dictionaryName;
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
-                    Logger.LogMessage("Failed to load dictionary from path {0}", path);
+                    Logger.LogError("Failed to load dictionary from path {0},{1}", path, ex.ToString());
                     return null;
                 }
             }

@@ -29,7 +29,7 @@ namespace AgentSmith.Options
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this._dictionaryLink = new System.Windows.Forms.LinkLabel();
             this._tbDictName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this._btnImport = new System.Windows.Forms.Button();
@@ -51,32 +51,35 @@ namespace AgentSmith.Options
             this.label1.TabIndex = 0;
             this.label1.Text = "Open office dictionaries can be downloaded from ";
             // 
-            // linkLabel1
+            // _dictionaryLink
             // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Location = new System.Drawing.Point(12, 22);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(252, 13);
-            this.linkLabel1.TabIndex = 1;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "http://wiki.services.openoffice.org/wiki/Dictionaries";
+            this._dictionaryLink.AutoSize = true;
+            this._dictionaryLink.Location = new System.Drawing.Point(12, 22);
+            this._dictionaryLink.Name = "_dictionaryLink";
+            this._dictionaryLink.Size = new System.Drawing.Size(252, 13);
+            this._dictionaryLink.TabIndex = 1;
+            this._dictionaryLink.TabStop = true;
+            this._dictionaryLink.Text = "http://wiki.services.openoffice.org/wiki/Dictionaries";
+            this._dictionaryLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dictionaryLink_LinkClicked);
             // 
             // _tbDictName
             // 
-            this._tbDictName.Location = new System.Drawing.Point(169, 68);
+            this._tbDictName.Location = new System.Drawing.Point(184, 55);
             this._tbDictName.Name = "_tbDictName";
-            this._tbDictName.Size = new System.Drawing.Size(178, 20);
+            this._tbDictName.Size = new System.Drawing.Size(131, 20);
             this._tbDictName.TabIndex = 2;
-            this._tbDictName.Validating += new System.ComponentModel.CancelEventHandler(this._tbDictName_Validating);
+            this._tbDictName.Validating += new System.ComponentModel.CancelEventHandler(this.tbDictName_Validating);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 68);
+            this.label2.Location = new System.Drawing.Point(12, 55);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(151, 13);
+            this.label2.Size = new System.Drawing.Size(166, 39);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Dictionary Name (en-US, fr, ...)";
+            this.label2.Text = "Dictionary Name (en-US, fr, ...).\nThis name is used to \nfind dictionary to check " +
+                ".resx files.";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // _btnImport
             // 
@@ -87,7 +90,7 @@ namespace AgentSmith.Options
             this._btnImport.TabIndex = 4;
             this._btnImport.Text = "&Import";
             this._btnImport.UseVisualStyleBackColor = true;
-            this._btnImport.Click += new System.EventHandler(this._btnImport_Click);
+            this._btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // _btnCancel
             // 
@@ -102,7 +105,7 @@ namespace AgentSmith.Options
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 97);
+            this.label3.Location = new System.Drawing.Point(12, 104);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 13);
             this.label3.TabIndex = 6;
@@ -110,20 +113,20 @@ namespace AgentSmith.Options
             // 
             // _tbAffixFile
             // 
-            this._tbAffixFile.Location = new System.Drawing.Point(169, 97);
+            this._tbAffixFile.Location = new System.Drawing.Point(184, 104);
             this._tbAffixFile.Name = "_tbAffixFile";
-            this._tbAffixFile.Size = new System.Drawing.Size(178, 20);
+            this._tbAffixFile.Size = new System.Drawing.Size(164, 20);
             this._tbAffixFile.TabIndex = 7;
             // 
             // _btnBrowseAffix
             // 
-            this._btnBrowseAffix.Location = new System.Drawing.Point(354, 93);
+            this._btnBrowseAffix.Location = new System.Drawing.Point(354, 101);
             this._btnBrowseAffix.Name = "_btnBrowseAffix";
             this._btnBrowseAffix.Size = new System.Drawing.Size(75, 23);
             this._btnBrowseAffix.TabIndex = 8;
             this._btnBrowseAffix.Text = "Browse...";
             this._btnBrowseAffix.UseVisualStyleBackColor = true;
-            this._btnBrowseAffix.Click += new System.EventHandler(this._btnBrowseAffix_Click);
+            this._btnBrowseAffix.Click += new System.EventHandler(this.btnBrowseAffix_Click);
             // 
             // _btnBrowseDict
             // 
@@ -133,13 +136,13 @@ namespace AgentSmith.Options
             this._btnBrowseDict.TabIndex = 9;
             this._btnBrowseDict.Text = "Browse...";
             this._btnBrowseDict.UseVisualStyleBackColor = true;
-            this._btnBrowseDict.Click += new System.EventHandler(this.button2_Click);
+            this._btnBrowseDict.Click += new System.EventHandler(this.btnBrowseDict_Click);
             // 
             // _tbDicFile
             // 
-            this._tbDicFile.Location = new System.Drawing.Point(169, 125);
+            this._tbDicFile.Location = new System.Drawing.Point(184, 125);
             this._tbDicFile.Name = "_tbDicFile";
-            this._tbDicFile.Size = new System.Drawing.Size(178, 20);
+            this._tbDicFile.Size = new System.Drawing.Size(163, 20);
             this._tbDicFile.TabIndex = 10;
             // 
             // label4
@@ -155,7 +158,7 @@ namespace AgentSmith.Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 203);
+            this.ClientSize = new System.Drawing.Size(441, 198);
             this.Controls.Add(this.label4);
             this.Controls.Add(this._tbDicFile);
             this.Controls.Add(this._btnBrowseDict);
@@ -166,7 +169,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._btnImport);
             this.Controls.Add(this.label2);
             this.Controls.Add(this._tbDictName);
-            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this._dictionaryLink);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ImportOpenOfficeDictionary";
@@ -179,7 +182,7 @@ namespace AgentSmith.Options
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel _dictionaryLink;
         private System.Windows.Forms.TextBox _tbDictName;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button _btnImport;
