@@ -1,6 +1,10 @@
 #region Copyright
 
-/* Copyright (c) 2003, Paul Welter
+/*This file is modified version of Paul Welter's one and 
+* following license applies to it:
+* 
+* 
+* Copyright (c) 2003, Paul Welter
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -285,6 +289,18 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
             return word;
         }
 
+        private static bool endsWith(string s, string suffix)
+        {
+            if (s.Length < suffix.Length)
+                return false;
+            for (int i = s.Length - suffix.Length, j = 0; j < suffix.Length; j++, i++)
+            {
+                if (s[i] != suffix[j])
+                    return false;
+            }
+            return true;
+        }
+
         /// <summary>
         /// Removes the affix suffix rule entry for the word if valid.
         /// </summary>
@@ -305,28 +321,25 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
             int tempLength = word.Length - entry.AddCharacters.Length;
             if ((tempLength > 0)
                 && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
-                && (word.EndsWith(entry.AddCharacters)))
+                && (endsWith(word, entry.AddCharacters)))
             {
                 // word with out affix
                 string tempWord = word.Substring(0, tempLength);
                 // add back strip chars
                 tempWord += entry.StripCharacters;
                 // check that this is valid
-                int passCount = 0;
-                for (int i = 0; i < entry.ConditionCount; i++)
+
+                for (int i = 0, j = tempWord.Length - entry.ConditionCount; i < entry.ConditionCount; i++, j++)
                 {
-                    int charCode = tempWord[tempWord.Length - (entry.ConditionCount - i)];
-                    if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
+                    int charCode = tempWord[j];
+                    if ((entry.Condition[charCode] & (1 << i)) != 0)
                     {
-                        passCount++;
+                        return null;
                     }
                 }
-                if (passCount == entry.ConditionCount)
-                {
-                    return tempWord;
-                }
+                return tempWord;                
             }
-            return word;
+            return null;
         }
     }
 }

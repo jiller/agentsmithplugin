@@ -1,6 +1,10 @@
 #region Copyright
 
-/* Copyright (c) 2003, Paul Welter
+/*This file is modified version of Paul Welter's one and 
+* following license applies to it:
+* 
+* 
+* Copyright (c) 2003, Paul Welter
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -300,7 +304,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                 foreach (AffixEntry entry in rule.AffixEntries)
                 {
                     string tempWord = AffixUtility.RemoveSuffix(word, entry);
-                    if (tempWord != word)
+                    if (tempWord != null)
                     {
                         if (_baseWords.ContainsKey(tempWord))
                         {

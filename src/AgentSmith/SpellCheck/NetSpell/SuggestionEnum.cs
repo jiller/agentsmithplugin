@@ -1,5 +1,10 @@
 #region Copyright
-/* Copyright (c) 2003, Paul Welter
+
+/*This file is modified version of Paul Welter's one and 
+* following license applies to it:
+* 
+* 
+* Copyright (c) 2003, Paul Welter
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -23,6 +28,7 @@
 * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
+
 #endregion Copyright
 
 using System;

@@ -14,7 +14,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         private string _prefix = "";
         private string _suffix = "";
         private string _replace = "";
-        private Encoding encoding = Encoding.UTF7;
+        private Encoding _encoding = Encoding.UTF7;
         private readonly IDictionary<string, string> _words = new Dictionary<string, string>();
 
         public static void Import(string affixFile, string wordFile, string outFile)
@@ -22,22 +22,30 @@ namespace AgentSmith.SpellCheck.NetSpell
             OpenOfficeDictionaryImporter importer = new OpenOfficeDictionaryImporter();
             importer.loadAffix(affixFile);
             importer.loadWords(wordFile);
-            importer.saveDictionary(outFile);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                StreamWriter sw = new StreamWriter(ms);
+                importer.saveDictionary(sw);
+                importer._words.Clear();
+                ms.Seek(0, SeekOrigin.Begin);
+                new WordDictionary(new StreamReader(ms));
+                File.WriteAllText(outFile, sw.ToString());
+            }
         }
 
         private void loadAffix(string fileName)
         {
-            encoding = Encoding.UTF7;
+            _encoding = Encoding.UTF7;
             using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open)))
             {
                 string tempLine = sr.ReadLine();
                 if (tempLine != null && tempLine.Length > 4)
                 {
-                    encoding = Encoding.GetEncoding(tempLine.Substring(4));
+                    _encoding = Encoding.GetEncoding(tempLine.Substring(4));
                 }
             }
             
-            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), encoding))
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
             {
                 sr.ReadLine();
                 
@@ -71,7 +79,7 @@ namespace AgentSmith.SpellCheck.NetSpell
 
         private void loadWords(string fileName)
         {                        
-            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), encoding))
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
             {
                 sr.ReadLine();
                 // read line by line
@@ -123,30 +131,27 @@ namespace AgentSmith.SpellCheck.NetSpell
             }
         }
 
-        private void saveDictionary(string fileName)
-        {                        
-            using (StreamWriter sw = new StreamWriter(File.Create(fileName), Encoding.UTF8))
+        private void saveDictionary(StreamWriter sw)
+        {
+            sw.NewLine = "\n";
+
+            sw.WriteLine("[Try]");
+            sw.WriteLine(_tryChars);
+            sw.WriteLine();
+
+            sw.WriteLine("[Replace]");
+            sw.WriteLine(_replace);
+
+            sw.WriteLine("[Prefix]");
+            sw.WriteLine(_prefix);
+
+            sw.WriteLine("[Suffix]");
+            sw.WriteLine(_suffix);
+
+            sw.WriteLine("[Words]");
+            foreach (string tempWord in _words.Values)
             {
-                sw.NewLine = "\n";
-               
-                sw.WriteLine("[Try]");
-                sw.WriteLine(_tryChars);
-                sw.WriteLine();
-                
-                sw.WriteLine("[Replace]");
-                sw.WriteLine(_replace);
-                
-                sw.WriteLine("[Prefix]");
-                sw.WriteLine(_prefix);
-                
-                sw.WriteLine("[Suffix]");
-                sw.WriteLine(_suffix);
-                
-                sw.WriteLine("[Words]");
-                foreach (string tempWord in _words.Values)
-                {
-                    sw.WriteLine(tempWord);
-                }
+                sw.WriteLine(tempWord);
             }
         }
     }
