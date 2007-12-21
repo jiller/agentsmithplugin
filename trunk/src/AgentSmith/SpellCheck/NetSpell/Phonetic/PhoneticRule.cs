@@ -1,6 +1,10 @@
 #region Copyright
 
-/* Copyright (c) 2003, Paul Welter
+/*This file is modified version of Paul Welter's one and 
+* following license applies to it:
+* 
+* 
+* Copyright (c) 2003, Paul Welter
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -32,7 +36,7 @@ using System;
 namespace AgentSmith.SpellCheck.NetSpell.Phonetic
 {
     /// <summary>
-    ///		This class hold the settings for a phonetic rule
+    ///	This class hold the settings for a phonetic rule.
     /// </summary>
     public class PhoneticRule
     {
@@ -46,7 +50,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         private string _replaceString;
 
         /// <summary>
-        ///     True if this rule should be applied to the beginning only
+        /// True if this rule should be applied to the beginning only.
         /// </summary>
         public bool BeginningOnly
         {
@@ -55,7 +59,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     The ASCII condition array.
+        /// The ASCII condition array.
         /// </summary>
         public int[] Condition
         {
@@ -63,7 +67,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     The number of conditions
+        /// The number of conditions.
         /// </summary>
         public int ConditionCount
         {
@@ -72,7 +76,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     The number of chars to consume with this rule
+        /// The number of chars to consume with this rule.
         /// </summary>
         public int ConsumeCount
         {
@@ -81,7 +85,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     True if this rule should be applied to the end only
+        /// True if this rule should be applied to the end only.
         /// </summary>
         public bool EndOnly
         {
@@ -90,7 +94,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     The priority of this rule
+        /// The priority of this rule.
         /// </summary>
         public int Priority
         {
@@ -99,7 +103,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     True if this rule should run in replace mode
+        /// True if this rule should run in replace mode.
         /// </summary>
         public bool ReplaceMode
         {
@@ -108,7 +112,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
         }
 
         /// <summary>
-        ///     The string to use when replacing
+        /// The string to use when replacing.
         /// </summary>
         public string ReplaceString
         {

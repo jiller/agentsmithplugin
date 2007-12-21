@@ -1,6 +1,10 @@
 #region Copyright
 
-/* Copyright (c) 2003, Paul Welter
+/*This file is modified version of Paul Welter's one and 
+* following license applies to it:
+* 
+* 
+* Copyright (c) 2003, Paul Welter
 * All rights reserved.
 *
 * Redistribution and use in source and binary forms, with or without
@@ -499,7 +503,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             }
 
             ContainsResult result = _dictionary.Contains(word);
-            if (matchCase || result.Contains || word.Length == 0)
+            if (/*matchCase ||*/ result.Contains || word.Length == 0)
             {
                 return result;
             }
