@@ -332,7 +332,7 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
                 for (int i = 0, j = tempWord.Length - entry.ConditionCount; i < entry.ConditionCount; i++, j++)
                 {
                     int charCode = tempWord[j];
-                    if ((entry.Condition[charCode] & (1 << i)) != 0)
+                    if ((entry.Condition[charCode] & (1 << i)) == 0)
                     {
                         return null;
                     }
