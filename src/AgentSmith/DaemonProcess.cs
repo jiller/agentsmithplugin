@@ -1,21 +1,23 @@
 using System;
+using System.Collections.Generic;
 using AgentSmith.Comments;
 using AgentSmith.NamingConventions;
 using AgentSmith.Options;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Shell.Progress;
 
 namespace AgentSmith
 {
-    public class DaemonProcess : CSharpDaemonStageProcessBase
+    public class DaemonProcess : ElementVisitor, IDaemonStageProcess, IRecursiveElementProcessor
     {
         private readonly IDeclarationAnalyzer[] _analyzers;
         private readonly IDaemonProcess _process;
+        private readonly List<HighlightingInfo> _highlightings = new List<HighlightingInfo>();
 
-        public DaemonProcess(IDaemonProcess daemonProcess)
-            : base(daemonProcess)
+        public DaemonProcess(IDaemonProcess daemonProcess)            
         {
             _process = daemonProcess;
             CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_process.Solution);
@@ -25,16 +27,26 @@ namespace AgentSmith
                     new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),                    
                 };
         }
-        
-        public override void ProcessFile(ICSharpFile file)
+
+
+        public DaemonStageProcessResult Execute()
         {
-            file.ProcessDescendants(this);
-            FullyRehighlighted = true;
+            DaemonStageProcessResult result = new DaemonStageProcessResult();
+            ICSharpFile myFile = (ICSharpFile)PsiManager.GetInstance(_process.Solution).GetPsiFile(_process.ProjectFile);
+            ProcessFile(myFile);
+            result.FullyRehighlighted = true;
+            
+            result.Highlightings = _highlightings.ToArray();
+            return result;
         }
 
-        public override void ProcessBeforeInterior(IElement element)
+        public  void ProcessFile(ICSharpFile file)
         {
-            base.ProcessBeforeInterior(element);
+            file.ProcessDescendants(this);            
+        }
+
+        public void ProcessBeforeInterior(IElement element)
+        {
             IDeclaration declaration = element as IDeclaration;
             if (declaration == null)
             {
@@ -43,10 +55,37 @@ namespace AgentSmith
 
             foreach (IDeclarationAnalyzer analyzer in _analyzers)
             {
-                foreach (CSharpHighlightingBase highlighting in analyzer.Analyze(declaration))
+                foreach (SuggestionBase highlighting in analyzer.Analyze(declaration))
                 {
-                   AddHighlighting(highlighting);                   
+                   addHighlighting(highlighting);                   
                 }
+            }
+        }
+
+        private void addHighlighting(SuggestionBase highlighting)
+        {
+            _highlightings.Add(new HighlightingInfo(highlighting.Range, highlighting));
+        }
+
+
+        public bool InteriorShouldBeProcessed(IElement element)
+        {
+            return true;
+        }
+
+        public void ProcessAfterInterior(IElement element)
+        {            
+        }
+
+        public bool ProcessingIsFinished
+        {
+            get
+            {
+                if (_process.InterruptFlag)
+                {
+                    throw new ProcessCancelledException();
+                }
+                return false;                
             }
         }
     }

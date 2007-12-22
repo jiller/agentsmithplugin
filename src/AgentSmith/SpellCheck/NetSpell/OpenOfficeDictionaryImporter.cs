@@ -29,7 +29,8 @@ namespace AgentSmith.SpellCheck.NetSpell
                 importer._words.Clear();
                 ms.Seek(0, SeekOrigin.Begin);
                 new WordDictionary(new StreamReader(ms));
-                File.WriteAllText(outFile, sw.ToString());
+                ms.Seek(0, SeekOrigin.Begin);
+                File.WriteAllText(outFile, new StreamReader(ms).ReadToEnd());
             }
         }
 
@@ -39,9 +40,14 @@ namespace AgentSmith.SpellCheck.NetSpell
             using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open)))
             {
                 string tempLine = sr.ReadLine();
-                if (tempLine != null && tempLine.Length > 4)
+                while (tempLine != null)
                 {
-                    _encoding = Encoding.GetEncoding(tempLine.Substring(4));
+                    if (tempLine.StartsWith("SET "))
+                    {
+                        _encoding = Encoding.GetEncoding(tempLine.Substring(4));
+                        break;
+                    }
+                    tempLine = sr.ReadLine();
                 }
             }
             

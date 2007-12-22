@@ -28,6 +28,7 @@ namespace AgentSmith.Options
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this._dictionaryLink = new System.Windows.Forms.LinkLabel();
             this._tbDictName = new System.Windows.Forms.TextBox();
@@ -40,6 +41,8 @@ namespace AgentSmith.Options
             this._btnBrowseDict = new System.Windows.Forms.Button();
             this._tbDicFile = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
+            this._errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this._errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -64,16 +67,16 @@ namespace AgentSmith.Options
             // 
             // _tbDictName
             // 
-            this._tbDictName.Location = new System.Drawing.Point(184, 55);
+            this._tbDictName.Location = new System.Drawing.Point(184, 113);
             this._tbDictName.Name = "_tbDictName";
-            this._tbDictName.Size = new System.Drawing.Size(131, 20);
+            this._tbDictName.Size = new System.Drawing.Size(154, 20);
             this._tbDictName.TabIndex = 2;
             this._tbDictName.Validating += new System.ComponentModel.CancelEventHandler(this.tbDictName_Validating);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 55);
+            this.label2.Location = new System.Drawing.Point(12, 113);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(166, 39);
             this.label2.TabIndex = 3;
@@ -83,7 +86,6 @@ namespace AgentSmith.Options
             // 
             // _btnImport
             // 
-            this._btnImport.DialogResult = System.Windows.Forms.DialogResult.OK;
             this._btnImport.Location = new System.Drawing.Point(272, 168);
             this._btnImport.Name = "_btnImport";
             this._btnImport.Size = new System.Drawing.Size(75, 23);
@@ -105,7 +107,7 @@ namespace AgentSmith.Options
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 104);
+            this.label3.Location = new System.Drawing.Point(12, 52);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 13);
             this.label3.TabIndex = 6;
@@ -113,14 +115,15 @@ namespace AgentSmith.Options
             // 
             // _tbAffixFile
             // 
-            this._tbAffixFile.Location = new System.Drawing.Point(184, 104);
+            this._tbAffixFile.Location = new System.Drawing.Point(184, 52);
             this._tbAffixFile.Name = "_tbAffixFile";
-            this._tbAffixFile.Size = new System.Drawing.Size(164, 20);
+            this._tbAffixFile.Size = new System.Drawing.Size(154, 20);
             this._tbAffixFile.TabIndex = 7;
+            this._tbAffixFile.Validating += new System.ComponentModel.CancelEventHandler(this.tbAffixFile_Validating);
             // 
             // _btnBrowseAffix
             // 
-            this._btnBrowseAffix.Location = new System.Drawing.Point(354, 101);
+            this._btnBrowseAffix.Location = new System.Drawing.Point(354, 49);
             this._btnBrowseAffix.Name = "_btnBrowseAffix";
             this._btnBrowseAffix.Size = new System.Drawing.Size(75, 23);
             this._btnBrowseAffix.TabIndex = 8;
@@ -130,7 +133,7 @@ namespace AgentSmith.Options
             // 
             // _btnBrowseDict
             // 
-            this._btnBrowseDict.Location = new System.Drawing.Point(354, 123);
+            this._btnBrowseDict.Location = new System.Drawing.Point(354, 71);
             this._btnBrowseDict.Name = "_btnBrowseDict";
             this._btnBrowseDict.Size = new System.Drawing.Size(75, 23);
             this._btnBrowseDict.TabIndex = 9;
@@ -140,19 +143,24 @@ namespace AgentSmith.Options
             // 
             // _tbDicFile
             // 
-            this._tbDicFile.Location = new System.Drawing.Point(184, 125);
+            this._tbDicFile.Location = new System.Drawing.Point(184, 73);
             this._tbDicFile.Name = "_tbDicFile";
-            this._tbDicFile.Size = new System.Drawing.Size(163, 20);
+            this._tbDicFile.Size = new System.Drawing.Size(154, 20);
             this._tbDicFile.TabIndex = 10;
+            this._tbDicFile.Validating += new System.ComponentModel.CancelEventHandler(this.tbDicFile_Validating);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 128);
+            this.label4.Location = new System.Drawing.Point(12, 76);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 11;
             this.label4.Text = "Dic file path";
+            // 
+            // _errorProvider
+            // 
+            this._errorProvider.ContainerControl = this;
             // 
             // ImportOpenOfficeDictionary
             // 
@@ -173,7 +181,9 @@ namespace AgentSmith.Options
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "ImportOpenOfficeDictionary";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import Open Office Dictionary";
+            ((System.ComponentModel.ISupportInitialize)(this._errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -193,5 +203,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Button _btnBrowseDict;
         private System.Windows.Forms.TextBox _tbDicFile;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ErrorProvider _errorProvider;
     }
 }

@@ -34,7 +34,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -59,62 +58,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             _dictionary = dictionary;
         }
 
-        private static string _dictionaryName;
-        private static SpellChecker _spellChecker;
-
-        public static ISpellChecker GetInstance(ISolution solution)
-        {
-            CodeStyleSettings settings = CodeStyleSettings.GetInstance(solution);
-            if (settings == null)
-            {
-                return null;
-            }
-            return GetInstance(solution, settings.CommentsSettings.DictionaryName);
-        }
-
-        [MethodImpl(MethodImplOptions.Synchronized)]
-        public static ISpellChecker GetInstance(ISolution solution, string dictionaryName)
-        {
-            if (dictionaryName == null)
-            {
-                return null;
-            }
-            if (_dictionaryName != dictionaryName)
-            {
-                string path =
-                    Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
-                        String.Format("dic\\{0}.dic", dictionaryName));
-                try
-                {
-                    using (TextReader reader = File.OpenText(path))
-                    {
-                        WordDictionary dictionary = new WordDictionary(reader);
-                        _spellChecker = new SpellChecker(dictionary);
-                        _dictionaryName = dictionaryName;
-                    }
-                }
-                catch(Exception ex)
-                {
-                    Logger.LogError("Failed to load dictionary from path {0},{1}", path, ex.ToString());
-                    return null;
-                }
-            }
-
-            CodeStyleSettings settings = CodeStyleSettings.GetInstance(solution);
-            if (settings == null)
-            {
-                return null;
-            }
-
-            if (settings.CommentsSettings.UserWords != null)
-            {
-                _spellChecker.setUserWords(settings.CommentsSettings.UserWords.Split('\n'));
-            }
-
-            return _spellChecker;
-        }
-
-        private void setUserWords(string[] words)
+        public void SetUserWords(string[] words)
         {
             _userWords.Clear();
             _userWords.AddAll(words);

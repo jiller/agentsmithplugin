@@ -176,6 +176,7 @@ namespace AgentSmith.Options
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "MatchOptions";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Match Options";
             this.ResumeLayout(false);
             this.PerformLayout();

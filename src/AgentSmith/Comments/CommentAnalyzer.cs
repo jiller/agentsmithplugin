@@ -5,7 +5,6 @@ using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -26,7 +25,7 @@ namespace AgentSmith.Comments
         {
             _settings = settings;            
             _solution = solution;
-            _spellChecker = SpellChecker.GetInstance(solution);
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution);
             
             if (_settings.CommentMatch != null)
             {
@@ -46,13 +45,13 @@ namespace AgentSmith.Comments
 
         #region IDeclarationAnalyzer Members
 
-        public CSharpHighlightingBase[] Analyze(IDeclaration declaration)
+        public SuggestionBase[] Analyze(IDeclaration declaration)
         {
             if (!(declaration is IClassMemberDeclaration))
             {
-                return new CSharpHighlightingBase[0];
+                return new SuggestionBase[0];
             }
-            List<CSharpHighlightingBase> highlightings = new List<CSharpHighlightingBase>();
+            List<SuggestionBase> highlightings = new List<SuggestionBase>();
             checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings);
             /* if (checkCommentIsCorrect(declaration))
              {
@@ -68,7 +67,7 @@ namespace AgentSmith.Comments
         #endregion
       
         private void checkCommentSpelling(IClassMemberDeclaration decl,
-                                          ICollection<CSharpHighlightingBase> highlightings)
+                                          ICollection<SuggestionBase> highlightings)
         {
             IDocCommentBlockNode docBlock = (this is IMultipleDeclarationMemberNode)
                                                 ? SharedImplUtil.GetDocCommentBlockNode(
@@ -78,7 +77,8 @@ namespace AgentSmith.Comments
 
             foreach (Range wordRange in getWordsFromXmlComment(docBlock))
             {
-                if (wordRange.Word != wordRange.Word.ToUpper() && !containsDigit(wordRange.Word))
+                string word = wordRange.Word;
+                if (SpellCheckUtil.ShouldSpellCheck(word))
                 {
                     if (_spellChecker != null && !_spellChecker.TestWord(wordRange.Word, false))
                     {
@@ -139,18 +139,7 @@ namespace AgentSmith.Comments
             }
         }
 
-        private static bool containsDigit(string text)
-        {
-            foreach (char c in text)
-            {
-                if (char.IsDigit(c))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
+        
         /*private bool checkCommentIsCorrect(IClassMemberDeclaration decl, IList<IHighlighting> highlightings)
         {
             if (decl.GetXMLDoc(false) != null)
@@ -175,7 +164,7 @@ namespace AgentSmith.Comments
         }*/
 
         private bool checkPublicMembersHaveComments(IClassMemberDeclaration decl,
-                                                    List<CSharpHighlightingBase> highlightings)
+                                                    List<SuggestionBase> highlightings)
         {
             if (decl.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
@@ -199,7 +188,6 @@ namespace AgentSmith.Comments
         {
             public readonly TextRange TextRange;
             public readonly string Word;
-
 
             public Range(string word, TextRange range)
             {

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using AgentSmith.Options;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -35,14 +34,14 @@ namespace AgentSmith.NamingConventions
 
         #region IDeclarationAnalyzer Members
 
-        public CSharpHighlightingBase[] Analyze(IDeclaration declaration)
+        public SuggestionBase[] Analyze(IDeclaration declaration)
         {
             if (declaration == null || declaration.DeclaredName.Length == 0)
             {
-                return new CSharpHighlightingBase[0];
+                return new SuggestionBase[0];
             }
 
-            List<CSharpHighlightingBase> highlightings = new List<CSharpHighlightingBase>();
+            List<SuggestionBase> highlightings = new List<SuggestionBase>();
 
             foreach (NamingConventionRule rule in _rules)
             {

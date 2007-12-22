@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
-using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.Util;
 
@@ -27,7 +26,7 @@ namespace AgentSmith.Resx
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-                foreach (string suggestion in SpellChecker.GetInstance(_highlighting.Solution).Suggest(_highlighting.Word, 5))
+                foreach (string suggestion in SpellCheckManager.GetSpellChecker(_highlighting.File).Suggest(_highlighting.Word, 5))
                 {
                     items.Add(new ReplaceWordWithBulbItem(_highlighting.Range, suggestion));
                 }

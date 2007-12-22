@@ -1,7 +1,6 @@
 using System;
 using System.Drawing;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -10,7 +9,7 @@ namespace AgentSmith
     /// <summary>
     /// Base suggestion for Agent Smith suggestions.
     /// </summary>
-    public abstract class SuggestionBase : CSharpHighlightingBase, IHighlighting
+    public abstract class SuggestionBase : IHighlighting
     {
         private readonly IElement _element;
         private readonly DocumentRange _range;
@@ -46,7 +45,7 @@ namespace AgentSmith
             get { return 0; }
         }
 
-        public override DocumentRange Range
+        public virtual DocumentRange Range
         {
             get { return _range; }
         }
