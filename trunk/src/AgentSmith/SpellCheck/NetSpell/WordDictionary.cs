@@ -90,6 +90,10 @@ namespace AgentSmith.SpellCheck.NetSpell
                 char originalChar = s[i];
 
                 byte c1 = _encodeTable[originalChar];
+                if (_currentChar == 255)
+                {
+                    throw new ArgumentException("Quite a few letters in the language. Currently we doesn't support so many. Sorry.");
+                }
                 if (c1 == 0 && _currentChar < 255)
                 {
                     _encodeTable[originalChar] = _currentChar;

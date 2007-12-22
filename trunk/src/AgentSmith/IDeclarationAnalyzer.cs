@@ -1,5 +1,4 @@
 using System;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith
@@ -9,6 +8,6 @@ namespace AgentSmith
     /// </summary>
     public interface IDeclarationAnalyzer
     {        
-        CSharpHighlightingBase[] Analyze(IDeclaration declaration);
+        SuggestionBase[] Analyze(IDeclaration declaration);
     }
 }

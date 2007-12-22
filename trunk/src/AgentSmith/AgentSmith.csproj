@@ -156,6 +156,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SpellCheck\SpellCheckManager.cs" />
+    <Compile Include="SpellCheck\SpellCheckUtil.cs" />
     <Compile Include="Options\ImportOpenOfficeDictionary.cs">
       <SubType>Form</SubType>
     </Compile>

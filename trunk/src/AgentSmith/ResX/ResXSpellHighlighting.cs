@@ -14,20 +14,15 @@ namespace AgentSmith.Resx
         private readonly DocumentRange _range;
         private readonly CommentsSettings _settings;
         private readonly string _word;
-        private readonly ISolution _solution;
+        private readonly IProjectFile _file;
 
-        public ResXSpellHighlighting(string word, ISolution solution, CommentsSettings settings, DocumentRange range, IElement element, string toolTip)
+        public ResXSpellHighlighting(string word, IProjectFile file, CommentsSettings settings, DocumentRange range, IElement element, string toolTip)
             : base(element, toolTip)
         {
             _range = range;
             _settings = settings;
             _word = word;
-            _solution = solution;
-        }
-
-        public ISolution Solution
-        {
-            get { return _solution; }
+            _file = file;
         }
 
         public CommentsSettings Settings
@@ -48,6 +43,11 @@ namespace AgentSmith.Resx
         public override DocumentRange Range
         {
             get { return _range; }
+        }
+
+        public IProjectFile File
+        {
+            get { return _file; }
         }
     }
 }

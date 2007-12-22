@@ -9,6 +9,7 @@ namespace AgentSmith.Options
     public partial class ImportOpenOfficeDictionary : Form
     {
         private readonly string _dicDir;
+        private bool _valid = true;
 
         public ImportOpenOfficeDictionary(string dicDir)
         {
@@ -25,19 +26,35 @@ namespace AgentSmith.Options
             fileOpenDialog.FileName = _tbDicFile.Text;
             if (fileOpenDialog.ShowDialog() == DialogResult.OK)
             {
-                _tbDicFile.Text = fileOpenDialog.FileName;                
+                _tbDicFile.Text = fileOpenDialog.FileName;
             }
         }
 
         private void tbDictName_Validating(object sender, CancelEventArgs e)
         {
-           
-        }
+            if (_tbDictName.Text.Trim().Length == 0)
+            {
+                _errorProvider.SetError(_tbDictName, "Invalid dictionary name.");
+                _valid = false;
+            }
+            else
+            {
+                _errorProvider.SetError(_tbDictName, "");
+            }
+        }        
 
         private void btnImport_Click(object sender, EventArgs e)
         {
+            _valid = true;
+            ValidateChildren();
+            if (!_valid)
+            {
+                return;
+            }
             string outPath = Path.Combine(_dicDir, _tbDictName.Text.Trim() + ".dic");
-            if (!File.Exists(outPath) || MessageBox.Show("Dictionary with this name already exists. Overwrite?", "Confirm", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (!File.Exists(outPath) ||
+                MessageBox.Show("Dictionary with this name already exists. Overwrite?", "Confirm",
+                                MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
@@ -50,14 +67,9 @@ namespace AgentSmith.Options
                 }
                 DialogResult = DialogResult.OK;
                 Close();
-            }       
+            }
         }
-
-        /// <summary>
-        /// Проверка русской орфографии
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        
         private void btnBrowseAffix_Click(object sender, EventArgs e)
         {
             OpenFileDialog fileOpenDialog = new OpenFileDialog();
@@ -68,22 +80,50 @@ namespace AgentSmith.Options
             if (fileOpenDialog.ShowDialog() == DialogResult.OK)
             {
                 _tbAffixFile.Text = fileOpenDialog.FileName;
-                string dicFile = Path.Combine(Path.GetDirectoryName(fileOpenDialog.FileName), Path.GetFileNameWithoutExtension(fileOpenDialog.FileName) + ".dic");
+                string dictName = Path.GetFileNameWithoutExtension(fileOpenDialog.FileName);
+                string dicFile =
+                    Path.Combine(Path.GetDirectoryName(fileOpenDialog.FileName),
+                                 dictName + ".dic");
                 if (_tbDicFile.Text.Length == 0 && File.Exists(dicFile))
                 {
                     _tbDicFile.Text = dicFile;
                 }
+                if (_tbDictName.Text.Length == 0)
+                {
+                    _tbDictName.Text = dictName.Replace("_", "-");
+                }
             }
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void dictionaryLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(_dictionaryLink.Text);
+        }
+
+        private void tbAffixFile_Validating(object sender, CancelEventArgs e)
+        {
+            if (!File.Exists(_tbAffixFile.Text))
+            {
+                _errorProvider.SetError(_tbAffixFile, "Affix file doesn't exist.");
+                _valid = false;
+            }
+            else
+            {
+                _errorProvider.SetError(_tbAffixFile, "");
+            }
+        }
+
+        private void tbDicFile_Validating(object sender, CancelEventArgs e)
+        {
+            if (!File.Exists(_tbDicFile.Text))
+            {
+                _errorProvider.SetError(_tbDicFile, "Dictionary file doesn't exist.");
+                _valid = false;
+            }
+            else
+            {
+                _errorProvider.SetError(_tbDicFile, "");
+            }
         }
     }
 }

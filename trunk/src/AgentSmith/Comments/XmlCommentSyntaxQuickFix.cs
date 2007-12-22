@@ -97,7 +97,7 @@ namespace AgentSmith.Comments
                                                     String.Format("<see cref=\"{0}\"/>", _suggestion.Word)));
                 }
 
-                ISpellChecker spellChecker = SpellChecker.GetInstance(_suggestion.Solution);
+                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution);
 
                 if (spellChecker != null)
                 {

@@ -141,7 +141,7 @@ namespace AgentSmith.Options
             this._lbMustHavePrefix.Name = "_lbMustHavePrefix";
             this._lbMustHavePrefix.Size = new System.Drawing.Size(85, 13);
             this._lbMustHavePrefix.TabIndex = 47;
-            this._lbMustHavePrefix.Text = "Must have prefix";            
+            this._lbMustHavePrefix.Text = "Must have prefix";
             // 
             // _lbMustHaveSuffix
             // 
@@ -150,7 +150,7 @@ namespace AgentSmith.Options
             this._lbMustHaveSuffix.Name = "_lbMustHaveSuffix";
             this._lbMustHaveSuffix.Size = new System.Drawing.Size(84, 13);
             this._lbMustHaveSuffix.TabIndex = 48;
-            this._lbMustHaveSuffix.Text = "Must have suffix";            
+            this._lbMustHaveSuffix.Text = "Must have suffix";
             // 
             // _lbMustNotHaveSuffix
             // 
@@ -229,7 +229,7 @@ namespace AgentSmith.Options
             // _mceNotMatches
             // 
             this._mceNotMatches.Location = new System.Drawing.Point(326, 71);
-            this._mceNotMatches.Matches = new Match[0];
+            this._mceNotMatches.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceNotMatches.Name = "_mceNotMatches";
             this._mceNotMatches.Size = new System.Drawing.Size(278, 78);
             this._mceNotMatches.TabIndex = 60;
@@ -237,7 +237,7 @@ namespace AgentSmith.Options
             // _mceMatches
             // 
             this._mceMatches.Location = new System.Drawing.Point(15, 68);
-            this._mceMatches.Matches = new Match[0];
+            this._mceMatches.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceMatches.Name = "_mceMatches";
             this._mceMatches.Size = new System.Drawing.Size(286, 81);
             this._mceMatches.TabIndex = 59;
@@ -272,6 +272,7 @@ namespace AgentSmith.Options
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EditRule";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Edit Rule";
             this.Validating += new System.ComponentModel.CancelEventHandler(this.editRule_Validating);
             this.ResumeLayout(false);
