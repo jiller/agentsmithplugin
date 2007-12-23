@@ -47,14 +47,15 @@ namespace AgentSmith.SpellCheck.NetSpell
     /// </summary>	
     public class WordDictionary
     {
+        private static readonly Regex _spaceRegx = new Regex(@"[^ ]+", RegexOptions.Compiled);
         private readonly Dictionary<string, Word> _baseWords = new Dictionary<string, Word>();
         private readonly List<PhoneticRule> _phoneticRules = new List<PhoneticRule>();
         private readonly Dictionary<string, AffixRule> _prefixRules = new Dictionary<string, AffixRule>();
         private readonly List<string> _replaceCharacters = new List<string>();
         private readonly Dictionary<string, AffixRule> _suffixRules = new Dictionary<string, AffixRule>();
         private string _tryCharacters = "";
-        
-        private readonly byte[]  _encodeTable = new byte[65536];
+
+        private readonly byte[] _encodeTable = new byte[65536];
         private readonly char[] _decodeTable = new char[256];
         private byte _currentChar = 128;
 
@@ -92,7 +93,8 @@ namespace AgentSmith.SpellCheck.NetSpell
                 byte c1 = _encodeTable[originalChar];
                 if (_currentChar == 255)
                 {
-                    throw new ArgumentException("Quite a few letters in the language. Currently we doesn't support so many. Sorry.");
+                    throw new ArgumentException(
+                        "Quite a few letters in the language. Currently we doesn't support so many. Sorry.");
                 }
                 if (c1 == 0 && _currentChar < 255)
                 {
@@ -113,12 +115,11 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </summary>
         public WordDictionary(TextReader inputDictionary)
         {
-            for (byte i=0; i<128; i++)
+            for (byte i = 0; i < 128; i++)
             {
                 _encodeTable[i] = i;
-                _decodeTable[i] = (char)i;
+                _decodeTable[i] = (char) i;
             }
-            Regex spaceRegx = new Regex(@"[^ ]+", RegexOptions.Compiled);
             MatchCollection partMatches;
 
             string currentSection = "";
@@ -159,7 +160,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                                 case "[Suffix]": // MySpell suffix rules
 
                                     // split line by white space
-                                    partMatches = spaceRegx.Matches(tempLine);
+                                    partMatches = _spaceRegx.Matches(tempLine);
 
                                     // if 3 parts, then new rule  
                                     if (partMatches.Count == 3)
@@ -210,7 +211,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                                     break;
                                 case "[Phonetic]": // ASpell phonetic rules
                                     // split line by white space
-                                    partMatches = spaceRegx.Matches(tempLine);
+                                    partMatches = _spaceRegx.Matches(tempLine);
                                     if (partMatches.Count >= 2)
                                     {
                                         PhoneticRule rule = new PhoneticRule();
@@ -276,7 +277,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         }
 
         /// <summary>
-        /// Searches all contained word lists for word
+        /// Searches all contained word lists for word.
         /// </summary>
         /// <param name="word" type="string">
         /// The word to search for.        
@@ -305,8 +306,11 @@ namespace AgentSmith.SpellCheck.NetSpell
 
             foreach (AffixRule rule in _suffixRules.Values)
             {
-                foreach (AffixEntry entry in rule.AffixEntries)
+                AffixEntry[] entries = rule.AffixEntries.ToArray();
+                int entryCount = entries.Length;
+                for (int i = 0; i < entryCount; i++)
                 {
+                    AffixEntry entry = entries[i];
                     string tempWord = AffixUtility.RemoveSuffix(word, entry);
                     if (tempWord != null)
                     {
@@ -331,18 +335,24 @@ namespace AgentSmith.SpellCheck.NetSpell
                     }
                 }
             }
+
+            string[] suffixWordsArr = suffixWords.ToArray();
             // saving possible base words for use in generating suggestions
             possibleBaseWords.AddRange(suffixWords);
 
             // Step 4 Remove Prefix, Search BaseWords
             foreach (AffixRule rule in _prefixRules.Values)
             {
-                foreach (AffixEntry entry in rule.AffixEntries)
+                AffixEntry[] entries = rule.AffixEntries.ToArray();
+                int entryCount = entries.Length;
+                for (int i = 0; i < entryCount; i++)
                 {
-                    foreach (string suffixWord in suffixWords)
+                    AffixEntry entry = entries[i];
+                    int suffixWordsCount = suffixWordsArr.Length;
+                    for (int j = 0; j < suffixWordsCount; j++)
                     {
-                        string tempWord = AffixUtility.RemovePrefix(suffixWord, entry);
-                        if (tempWord != suffixWord)
+                        string tempWord = AffixUtility.RemovePrefix(suffixWordsArr[j], entry);
+                        if (tempWord != null)
                         {
                             if (_baseWords.ContainsKey(tempWord))
                             {
@@ -371,7 +381,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// A <see cref="List<string>"/> of words expanded from base word.
         /// </returns>
         public IList<string> ExpandWord(Word word)
-        {            
+        {
             List<string> suffixWords = new List<string>();
             List<string> words = new List<string>();
 
@@ -471,7 +481,8 @@ namespace AgentSmith.SpellCheck.NetSpell
                         {
                             if (rule.ReplaceMode)
                             {
-                                tempWord = rule.ReplaceString + tempWord.Substring(rule.ConditionCount - rule.ConsumeCount);
+                                tempWord = rule.ReplaceString +
+                                           tempWord.Substring(rule.ConditionCount - rule.ConsumeCount);
                             }
                             else
                             {
@@ -514,6 +525,6 @@ namespace AgentSmith.SpellCheck.NetSpell
             Word baseWord = _baseWords[word];
             List<char> keys = new List<char>(baseWord.AffixKeys.ToCharArray());
             return keys.Contains(affixKey);
-        }        
+        }
     }
 }

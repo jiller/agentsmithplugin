@@ -82,7 +82,6 @@ namespace AgentSmith.Options
             this.label2.TabIndex = 3;
             this.label2.Text = "Dictionary Name (en-US, fr, ...).\nThis name is used to \nfind dictionary to check " +
                 ".resx files.";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // _btnImport
             // 
