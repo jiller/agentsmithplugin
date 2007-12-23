@@ -54,7 +54,11 @@ namespace AgentSmith.SpellCheck.NetSpell
             using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
             {
                 sr.ReadLine();
-                
+
+                StringBuilder prefix = new StringBuilder();
+                StringBuilder suffix = new StringBuilder();
+                StringBuilder replace = new StringBuilder();                
+
                 while (sr.Peek() >= 0)
                 {
                     string tempLine = sr.ReadLine().Trim();
@@ -66,20 +70,23 @@ namespace AgentSmith.SpellCheck.NetSpell
                                 _tryChars = tempLine.Substring(4);
                                 break;
                             case "PFX":
-                                _prefix += tempLine.Substring(4) + "\n";
+                                prefix.AppendLine(tempLine.Substring(4));
                                 break;
                             case "SFX":
-                                _suffix += tempLine.Substring(4) + "\n";
+                                suffix.AppendLine(tempLine.Substring(4));
                                 break;
                             case "REP":
                                 if (!char.IsNumber(tempLine.Substring(4)[0]))
                                 {
-                                    _replace += tempLine.Substring(4) + "\n";
+                                    replace.AppendLine(tempLine.Substring(4));
                                 }
                                 break;
                         }
                     }
                 }
+                _prefix = prefix.ToString();
+                _suffix = suffix.ToString();
+                _replace = replace.ToString();
             }
         }
 
@@ -93,7 +100,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                 {
                     string tempLine = sr.ReadLine().Trim();
                     
-                    if (!char.IsNumber(tempLine[0]))
+                    if (tempLine.Length > 0 && !char.IsNumber(tempLine[0]))
                     {
                         string[] parts = tempLine.Split('/');
                         string word = parts[0];

@@ -265,38 +265,54 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
             int tempLength = word.Length - entry.AddCharacters.Length;
             if ((tempLength > 0)
                 && (tempLength + entry.StripCharacters.Length >= entry.ConditionCount)
-                && (word.StartsWith(entry.AddCharacters)))
+                && (startsWith(word, entry.AddCharacters)))
             {
                 // word with out affix
                 string tempWord = word.Substring(entry.AddCharacters.Length);
                 // add back strip chars
                 tempWord = entry.StripCharacters + tempWord;
-                // check that this is valid
-                int passCount = 0;
+                // check that this is valid                
                 for (int i = 0; i < entry.ConditionCount; i++)
                 {
                     int charCode = tempWord[i];
-                    if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
+                    if ((entry.Condition[charCode] & (1 << i)) == 0)
                     {
-                        passCount++;
+                        return null;
                     }
                 }
-                if (passCount == entry.ConditionCount)
-                {
-                    return tempWord;
-                }
+                return tempWord;
             }
-            return word;
+            return null;
         }
 
         private static bool endsWith(string s, string suffix)
         {
             if (s.Length < suffix.Length)
+            {
                 return false;
+            }
             for (int i = s.Length - suffix.Length, j = 0; j < suffix.Length; j++, i++)
             {
                 if (s[i] != suffix[j])
+                {
                     return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool startsWith(string s, string prefix)
+        {
+            if (s.Length < prefix.Length)
+            {
+                return false;
+            }
+            for (int i = 0; i < prefix.Length; i++)
+            {
+                if (s[i] != prefix[i])
+                {
+                    return false;
+                }
             }
             return true;
         }
@@ -337,7 +353,8 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
                         return null;
                     }
                 }
-                return tempWord;                
+                
+                return tempWord;
             }
             return null;
         }
