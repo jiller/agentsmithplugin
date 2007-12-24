@@ -1,8 +1,9 @@
 using System;
+using AgentSmith.SpellCheck;
 using JetBrains.ReSharper.Psi.Parsing;
 using NUnit.Framework;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.SpellCheck
 {
     [TestFixture]
     public class WordLexerTest
