@@ -2,3 +2,6 @@
   * Added ability to import Open Office dictionaries.
   * Added .resx files spell checking.
   * Fixed a couple of defects
+
+==1.0.7 (12/10/2007) ==
+  * Added <code> and <c> XML doc comments tag support. 
