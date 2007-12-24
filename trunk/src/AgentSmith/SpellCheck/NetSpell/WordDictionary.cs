@@ -236,8 +236,8 @@ namespace AgentSmith.SpellCheck.NetSpell
                                     {
                                         tempWord.PhoneticCode = parts[2];
                                     }
-
-                                    _baseWords.Add(tempWord.Text, tempWord);
+                                    
+                                    _baseWords[tempWord.Text] = tempWord;
                                     break;
                             }
                             break;

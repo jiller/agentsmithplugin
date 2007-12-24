@@ -6,6 +6,7 @@ using System.Text;
 using System.Windows.Forms;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
 using JetBrains.UI.Options;
+using JetBrains.Util;
 
 namespace AgentSmith.Options
 {
@@ -106,12 +107,14 @@ namespace AgentSmith.Options
             return Path.Combine(assemblyDir, "dic");
         }
 
-        private void _btnImport_Click(object sender, EventArgs e)
+        private void btnImport_Click(object sender, EventArgs e)
         {
             ImportOpenOfficeDictionary frm = new ImportOpenOfficeDictionary(getDicDirectory());
             if (frm.ShowDialog() == DialogResult.OK)
             {
+                object selected = _cbDictionary.SelectedItem;
                 _cbDictionary.DataSource = loadDictionaries();
+                _cbDictionary.SelectedItem = selected;                
             }
         } 
     }

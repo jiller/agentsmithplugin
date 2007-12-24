@@ -44,7 +44,12 @@ namespace AgentSmith.SpellCheck.NetSpell
                 {
                     if (tempLine.StartsWith("SET "))
                     {
-                        _encoding = Encoding.GetEncoding(tempLine.Substring(4));
+                        string encodingName = tempLine.Substring(4);
+                        if (encodingName.ToLower().StartsWith("iso"))
+                        {
+                            encodingName = encodingName.Insert(3, "-");
+                        }
+                        _encoding = Encoding.GetEncoding(encodingName);
                         break;
                     }
                     tempLine = sr.ReadLine();
