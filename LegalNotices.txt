@@ -1,5 +1,6 @@
-Part of this plugin is based on the Paul Welter's NetSpell library 
-Following license applise to spell checking engine:
+Part of this plugin is based on the modified version of 
+Paul Welter's NetSpell library  and
+Following license applies to spell checking engine:
 
 * Copyright (c) 2003, Paul Welter
 * All rights reserved.
