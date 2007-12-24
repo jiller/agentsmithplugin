@@ -1,4 +1,4 @@
-using Match=AgentSmith.MemberMatch.Match;
+using System;
 
 namespace AgentSmith.Options
 {
@@ -133,9 +133,9 @@ namespace AgentSmith.Options
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label2.Location = new System.Drawing.Point(12, 177);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(178, 13);
+            this.label2.Size = new System.Drawing.Size(91, 13);
             this.label2.TabIndex = 62;
-            this.label2.Text = "XML comments spell checking";
+            this.label2.Text = "Spell checking";
             // 
             // label3
             // 
@@ -184,7 +184,7 @@ namespace AgentSmith.Options
             this._btnImport.TabIndex = 67;
             this._btnImport.Text = "Import...";
             this._btnImport.UseVisualStyleBackColor = true;
-            this._btnImport.Click += new System.EventHandler(this._btnImport_Click);
+            this._btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // AgentSmithSettingsPage
             // 

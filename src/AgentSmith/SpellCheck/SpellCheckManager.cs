@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -22,9 +23,21 @@ namespace AgentSmith.SpellCheck
                 if (parts.Length > 2)
                 {
                     string dictName = parts[parts.Length - 2];
+                    try
+                    {
+                        CultureInfo.GetCultureInfo(dictName);
+                    }
+                    catch (ArgumentException)
+                    {
+                        return GetSpellChecker(file.GetSolution());
+                    }
                     if (dictionaryExists(dictName))
                     {
                         return GetSpellChecker(file.GetSolution(), dictName);
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }
@@ -52,6 +65,10 @@ namespace AgentSmith.SpellCheck
             if (_dictionaryName != dictionaryName)
             {
                 string path = getDictPath(dictionaryName);
+                if (!File.Exists(path))
+                {
+                    return null;
+                }
                 try
                 {
                     using (TextReader reader = File.OpenText(path))
