@@ -1,0 +1,4 @@
+==1.0.8 (12/24/2007) ==
+  * Added ability to import Open Office dictionaries.
+  * Added .resx files spell checking.
+  * Fixed a couple of defects
