@@ -1,3 +1,4 @@
+  # Verify that you have ReSharper 3.0.2 or later version
   # Download plugin.
   # Extract to somewhere like {{{C:\Program Files\JetBrains\ReSharper\v3.0\vs8.0\Bin\Plugins\AgentSmith}}}
   # It should be listed among ReSharper plugins and settings are available under ReSharper Code Style settings. 
