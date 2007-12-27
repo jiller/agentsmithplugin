@@ -26,6 +26,6 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// <returns>
         /// Returns true if word is spelled correctly.
         /// </returns>
-        bool TestWord(string word, bool matchCase);        
+        bool TestWord(string word, bool matchCase);
     }
 }

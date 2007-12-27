@@ -17,14 +17,13 @@ namespace AgentSmith.NamingConventions
         private string _description;
         private bool _isDisabled = false;
         private Match[] _matches;
-        private string[] _mustHavePrefixes = new string[] {};
-        private string[] _mustHaveSuffixes = new string[] {};
-        private string[] _mustNotHavePrefixes = new string[] {};
-        private string[] _mustNotHaveSuffixes = new string[] {};
+        private string[] _mustHavePrefixes = new string[] { };
+        private string[] _mustHaveSuffixes = new string[] { };
+        private string[] _mustNotHavePrefixes = new string[] { };
+        private string[] _mustNotHaveSuffixes = new string[] { };
         private Match[] _notMatches;
         private Regex _regex;
         private RuleKind _rule = RuleKind.None;
-
 
         public bool IsDisabled
         {
@@ -53,13 +52,13 @@ namespace AgentSmith.NamingConventions
         public string[] MustHavePrefixes
         {
             get { return _mustHavePrefixes; }
-            set { _mustHavePrefixes = value ?? new string[] {}; }
+            set { _mustHavePrefixes = value ?? new string[] { }; }
         }
 
         public string[] MustNotHavePrefixes
         {
             get { return _mustNotHavePrefixes; }
-            set { _mustNotHavePrefixes = value ?? new string[] {}; }
+            set { _mustNotHavePrefixes = value ?? new string[] { }; }
         }
 
         public RuleKind Rule
@@ -71,13 +70,13 @@ namespace AgentSmith.NamingConventions
         public string[] MustHaveSuffixes
         {
             get { return _mustHaveSuffixes; }
-            set { _mustHaveSuffixes = value ?? new string[] {}; }
+            set { _mustHaveSuffixes = value ?? new string[] { }; }
         }
 
         public string[] MustNotHaveSuffixes
         {
             get { return _mustNotHaveSuffixes; }
-            set { _mustNotHaveSuffixes = value ?? new string[] {}; }
+            set { _mustNotHaveSuffixes = value ?? new string[] { }; }
         }
 
         public string Regex
@@ -136,6 +135,30 @@ namespace AgentSmith.NamingConventions
                 }
                 return true;
             }
+        }
+
+        public string[] GetCorrectedNames(IDeclaration declaration, IList<string> exclusions)
+        {
+            string name = declaration.DeclaredName;
+            if (!(declaration is INamespaceDeclaration))
+            {
+                return getCorrectedName(name, exclusions);
+            }
+            else
+            {
+                string[] parts = name.Split('.');
+                for (int i = 0; i < parts.Length; i++)
+                {
+                    string[] correctedNames = getCorrectedName(parts[i], exclusions);
+                    parts[i] = correctedNames.Length == 0 ? parts[i] : correctedNames[0];
+                }
+                return new string[] { string.Join(".", parts) };
+            }
+        }
+
+        public override string ToString()
+        {
+            return Description;
         }
 
         private bool checkName(string name, ICollection<string> exclusions)
@@ -278,30 +301,11 @@ namespace AgentSmith.NamingConventions
             return false;
         }
 
-        public string[] GetCorrectedNames(IDeclaration declaration, IList<string> exclusions)
-        {
-            string name = declaration.DeclaredName;
-            if (!(declaration is INamespaceDeclaration))
-            {
-                return getCorrectedName(name, exclusions);
-            }
-            else
-            {
-                string[] parts = name.Split('.');
-                for (int i = 0; i < parts.Length; i++)
-                {
-                    string[] correctedNames = getCorrectedName(parts[i], exclusions);
-                    parts[i] = correctedNames.Length == 0 ? parts[i] : correctedNames[0];
-                }
-                return new string[] {string.Join(".", parts)};
-            }
-        }
-
         private string[] getCorrectedName(string name, ICollection<string> exclusions)
         {
             if (exclusions.Contains(name))
             {
-                return new string[] {name};
+                return new string[] { name };
             }
             string originalName = name;
             bool forceError = false;
@@ -344,7 +348,7 @@ namespace AgentSmith.NamingConventions
                 }
             }
 
-            string[] returnNames = new string[] {name};
+            string[] returnNames = new string[] { name };
             if (name != originalName)
             {
                 forceError = true;
@@ -363,12 +367,12 @@ namespace AgentSmith.NamingConventions
 
             if (!checkedObligatorySuffixes)
             {
-                string[] newNames = new string[_mustHaveSuffixes.Length*returnNames.Length];
+                string[] newNames = new string[_mustHaveSuffixes.Length * returnNames.Length];
                 for (int i = 0; i < _mustHaveSuffixes.Length; i++)
                 {
                     for (int j = 0; j < returnNames.Length; j++)
                     {
-                        newNames[i + j*returnNames.Length] = returnNames[j] + _mustHaveSuffixes[i];
+                        newNames[i + j * returnNames.Length] = returnNames[j] + _mustHaveSuffixes[i];
                     }
                 }
                 returnNames = newNames;
@@ -383,11 +387,6 @@ namespace AgentSmith.NamingConventions
             {
                 return new string[0];
             }
-        }
-
-        public override string ToString()
-        {
-            return Description;
         }
     }
 }

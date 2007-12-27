@@ -12,19 +12,19 @@ namespace AgentSmith.Comments
     {
         public const string NAME = "WordIsNotInDictionary";
         private readonly IClassMemberDeclaration _decl;
-        
+
         private readonly DocumentRange _range;
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
         private readonly string _word;
 
         public WordIsNotInDictionarySuggestion(string word, DocumentRange range, ISolution solution,
-                                               CommentsSettings settings, 
+                                               CommentsSettings settings,
                                                IClassMemberDeclaration decl)
             : base(decl, String.Format("Word '{0}' is not in dictionary.", word))
         {
             _word = word;
-            _range = range;            
+            _range = range;
             _solution = solution;
             _settings = settings;
             _decl = decl;
@@ -60,7 +60,8 @@ namespace AgentSmith.Comments
         public override Severity Severity
         {
             get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-        }      
+        }
+
         #endregion
     }
 }

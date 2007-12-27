@@ -10,8 +10,8 @@ namespace AgentSmith.Comments
 {
     public class XmlDocLexer : ILexer
     {
-        private readonly IDocCommentBlockNode _myDocCommentBlock;
         public readonly XmlTokenTypes XmlTokenType = XmlTokenTypeFactory.GetTokenTypes(PsiLanguageType.UNKNOWN);
+        private readonly IDocCommentBlockNode _myDocCommentBlock;
         private IDocCommentNode _myCurrentCommentNode;
         private XmlLexerGenerated _myLexer;
 
@@ -34,7 +34,7 @@ namespace AgentSmith.Comments
                 {
                     return TextRange.InvalidRange;
                 }
-                LeafElement leaf = (LeafElement) _myCurrentCommentNode;
+                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
                 int offset = leaf.Offset - leaf.GetDocumentRange().TextRange.StartOffset;
                 return new TextRange(TokenStart - offset, TokenEnd - offset);
             }
@@ -148,7 +148,7 @@ namespace AgentSmith.Comments
             }
             if (_myCurrentCommentNode != null)
             {
-                LeafElement leaf = (LeafElement) _myCurrentCommentNode;
+                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
                 _myLexer = new XmlLexerGenerated(leaf.Buffer);
                 _myLexer.Start(leaf.Offset + 3, leaf.Offset + leaf.Length, state);
                 if (_myLexer.TokenType == null)

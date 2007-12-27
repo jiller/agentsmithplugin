@@ -33,7 +33,6 @@
 
 using System;
 using System.Globalization;
-using AgentSmith.SpellCheck.NetSpell.Phonetic;
 
 namespace AgentSmith.SpellCheck.NetSpell.Phonetic
 {

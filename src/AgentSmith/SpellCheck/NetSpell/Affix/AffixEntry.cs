@@ -44,20 +44,20 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
         ///  The characters to add to the string.
         /// </summary>
         public string AddCharacters = "";
-        
+
         /// <summary>
         ///  The condition to be met in order to add characters.
         /// </summary>
         public int[] Condition = new int[256];
-        
+
         /// <summary>
         ///  The number of conditions that must be met.
         /// </summary>
         public int ConditionCount;
-        
+
         /// <summary>
         ///  The characters to remove before adding characters.
         /// </summary>
-        public string StripCharacters = "";             
+        public string StripCharacters = "";
     }
 }

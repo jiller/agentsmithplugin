@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.MemberMatch;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace AgentSmith.MemberMatch
@@ -9,7 +8,7 @@ namespace AgentSmith.MemberMatch
     {
         private static readonly Dictionary<Type, Declaration> _typeDeclMap =
             new Dictionary<Type, Declaration>();
-                
+
         static TypeDeclarationMap()
         {
             _typeDeclMap.Add(typeof(IConstantDeclaration), Declaration.Constant);

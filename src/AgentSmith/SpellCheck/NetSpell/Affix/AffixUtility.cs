@@ -32,7 +32,6 @@
 #endregion Copyright
 
 using System;
-using AgentSmith.SpellCheck.NetSpell.Affix;
 
 namespace AgentSmith.SpellCheck.NetSpell.Affix
 {
@@ -285,38 +284,6 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
             return null;
         }
 
-        private static bool endsWith(string s, string suffix)
-        {
-            if (s.Length < suffix.Length)
-            {
-                return false;
-            }
-            for (int i = s.Length - suffix.Length, j = 0; j < suffix.Length; j++, i++)
-            {
-                if (s[i] != suffix[j])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        private static bool startsWith(string s, string prefix)
-        {
-            if (s.Length < prefix.Length)
-            {
-                return false;
-            }
-            for (int i = 0; i < prefix.Length; i++)
-            {
-                if (s[i] != prefix[i])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         /// <summary>
         /// Removes the affix suffix rule entry for the word if valid.
         /// </summary>
@@ -353,10 +320,42 @@ namespace AgentSmith.SpellCheck.NetSpell.Affix
                         return null;
                     }
                 }
-                
+
                 return tempWord;
             }
             return null;
+        }
+
+        private static bool endsWith(string s, string suffix)
+        {
+            if (s.Length < suffix.Length)
+            {
+                return false;
+            }
+            for (int i = s.Length - suffix.Length, j = 0; j < suffix.Length; j++, i++)
+            {
+                if (s[i] != suffix[j])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static bool startsWith(string s, string prefix)
+        {
+            if (s.Length < prefix.Length)
+            {
+                return false;
+            }
+            for (int i = 0; i < prefix.Length; i++)
+            {
+                if (s[i] != prefix[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }

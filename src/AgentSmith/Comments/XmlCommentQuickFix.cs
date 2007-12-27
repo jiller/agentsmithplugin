@@ -31,7 +31,7 @@ namespace AgentSmith.Comments
 
         public IBulbItem[] Items
         {
-            get { return new IBulbItem[] {new AddCommentBulbItem(_declaration)}; }
+            get { return new IBulbItem[] { new AddCommentBulbItem(_declaration) }; }
         }
 
         #endregion
@@ -46,6 +46,8 @@ namespace AgentSmith.Comments
             _declaration = declaration;
         }
 
+        #region IBulbItem Members
+
         public void Execute(ISolution solution, ITextControl textControl)
         {
             PsiManager psiManager = PsiManager.GetInstance(solution);
@@ -59,12 +61,12 @@ namespace AgentSmith.Comments
             }
         }
 
-        #region IBulbItem Members
-
         public string Text
         {
             get { return "Add comment stub."; }
         }
+
+        #endregion
 
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
@@ -84,10 +86,8 @@ namespace AgentSmith.Comments
                     CSharpElementFactory.GetInstance(solution).CreateTypeMemberDeclaration(text, new object[0]);
                 ICSharpTypeMemberDeclarationNode node = declaration.ToTreeNode();
                 docCommentBlockOwnerNode.SetDocCommentBlockNode(
-                    ((IDocCommentBlockOwnerNode) node).GetDocCommentBlockNode());
+                    ((IDocCommentBlockOwnerNode)node).GetDocCommentBlockNode());
             }
         }
-
-        #endregion
     }
 }

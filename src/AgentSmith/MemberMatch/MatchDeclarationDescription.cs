@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.MemberMatch;
 
 namespace AgentSmith.MemberMatch
 {
@@ -28,14 +27,14 @@ namespace AgentSmith.MemberMatch
             add(Declaration.Variable);
         }
 
-        private static void add(Declaration any)
-        {
-            _dict.Add(any, DeclarationDescription.DeclDescriptions[any]);
-        }
-
         public static Dictionary<Declaration, DeclarationDescription> DeclDescriptions
         {
             get { return _dict; }
+        }
+
+        private static void add(Declaration any)
+        {
+            _dict.Add(any, DeclarationDescription.DeclDescriptions[any]);
         }
     }
 }

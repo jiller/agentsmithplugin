@@ -10,12 +10,12 @@ namespace AgentSmith.SpellCheck.NetSpell
     /// </summary>
     public class OpenOfficeDictionaryImporter
     {
+        private readonly IDictionary<string, string> _words = new Dictionary<string, string>();
         private string _tryChars = "";
         private string _prefix = "";
         private string _suffix = "";
         private string _replace = "";
         private Encoding _encoding = Encoding.UTF7;
-        private readonly IDictionary<string, string> _words = new Dictionary<string, string>();
 
         public static void Import(string affixFile, string wordFile, string outFile)
         {
@@ -55,14 +55,14 @@ namespace AgentSmith.SpellCheck.NetSpell
                     tempLine = sr.ReadLine();
                 }
             }
-            
+
             using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
             {
                 sr.ReadLine();
 
                 StringBuilder prefix = new StringBuilder();
                 StringBuilder suffix = new StringBuilder();
-                StringBuilder replace = new StringBuilder();                
+                StringBuilder replace = new StringBuilder();
 
                 while (sr.Peek() >= 0)
                 {
@@ -70,7 +70,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                     if (tempLine.Length > 3)
                     {
                         switch (tempLine.Substring(0, 3))
-                        {            
+                        {
                             case "TRY":
                                 _tryChars = tempLine.Substring(4);
                                 break;
@@ -96,7 +96,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         }
 
         private void loadWords(string fileName)
-        {                        
+        {
             using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
             {
                 sr.ReadLine();
@@ -104,7 +104,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                 while (sr.Peek() >= 0)
                 {
                     string tempLine = sr.ReadLine().Trim();
-                    
+
                     if (tempLine.Length > 0 && !char.IsNumber(tempLine[0]))
                     {
                         string[] parts = tempLine.Split('/');

@@ -1,3 +1,5 @@
+using System;
+
 namespace AgentSmith.MemberMatch
 {
     public enum Declaration
@@ -17,7 +19,7 @@ namespace AgentSmith.MemberMatch
         Property,
         Struct,
         Variable,
-        
+
         Constructor,
         Destructor,
         Indexer,

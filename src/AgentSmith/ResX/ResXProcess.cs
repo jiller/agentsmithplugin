@@ -16,11 +16,13 @@ namespace AgentSmith.Resx
     {
         private readonly IProjectFile _file;
 
-        public ResXProcess(IProjectFile file)            
+        public ResXProcess(IProjectFile file)
         {
             _file = file;
         }
-      
+
+        #region IDaemonStageProcess Members
+
         public DaemonStageProcessResult Execute()
         {
             CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_file.GetSolution());
@@ -53,6 +55,8 @@ namespace AgentSmith.Resx
             result.FullyRehighlighted = result.Highlightings.Length > 0;
             return result;
         }
+
+        #endregion
 
         private IList<IXmlTokenNode> getStringsToCheck()
         {

@@ -22,7 +22,7 @@ namespace AgentSmith.SpellCheck
         #region IBulbItem Members
 
         public void Execute(ISolution solution, ITextControl textControl)
-        {            
+        {
             using (CommandCookie.Create(Text))
             {
                 using (ModificationCookie ensureWritable = _documentRange.Document.EnsureWritable())

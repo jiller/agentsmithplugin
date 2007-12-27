@@ -14,13 +14,15 @@ namespace AgentSmith.NamingConventions
 
         public NamingConventionsQuickFix(NamingConventionsSuggestion suggestion)
         {
-            _declaration = (IDeclaration) suggestion.Element;
-            _newNames = suggestion.NewNames;            
+            _declaration = (IDeclaration)suggestion.Element;
+            _newNames = suggestion.NewNames;
         }
+
+        #region IQuickFix Members
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return _newNames.Length > 0;            
+            return _newNames.Length > 0;
         }
 
         public IBulbItem[] Items
@@ -35,7 +37,7 @@ namespace AgentSmith.NamingConventions
                 return bulbItems;
             }
         }
-        
-        
+
+        #endregion
     }
 }

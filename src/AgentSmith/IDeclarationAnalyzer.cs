@@ -7,7 +7,7 @@ namespace AgentSmith
     /// Declaration analyzers should implement this.
     /// </summary>
     public interface IDeclarationAnalyzer
-    {        
+    {
         SuggestionBase[] Analyze(IDeclaration declaration);
     }
 }

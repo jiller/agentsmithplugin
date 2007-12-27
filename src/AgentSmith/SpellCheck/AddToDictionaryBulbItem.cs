@@ -20,6 +20,8 @@ namespace AgentSmith.SpellCheck
             _documentRange = range;
         }
 
+        #region IBulbItem Members
+
         public void Execute(ISolution solution, ITextControl textControl)
         {
             string words = _settings.UserWords.Trim();
@@ -36,5 +38,7 @@ namespace AgentSmith.SpellCheck
         {
             get { return String.Format("Add '{0}' to the dictionary", _word); }
         }
+
+        #endregion
     }
 }

@@ -16,17 +16,17 @@ using JetBrains.Util;
 namespace AgentSmith.Comments
 {
     public class CommentAnalyzer : IDeclarationAnalyzer
-    {        
+    {
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
         private readonly ISpellChecker _spellChecker;
 
         public CommentAnalyzer(CommentsSettings settings, ISolution solution)
         {
-            _settings = settings;            
+            _settings = settings;
             _solution = solution;
             _spellChecker = SpellCheckManager.GetSpellChecker(solution);
-            
+
             if (_settings.CommentMatch != null)
             {
                 foreach (Match match in _settings.CommentMatch)
@@ -52,12 +52,12 @@ namespace AgentSmith.Comments
                 return new SuggestionBase[0];
             }
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
-            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings);
+            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings);
             /* if (checkCommentIsCorrect(declaration))
              {
                  return _highlightings.ToArray();
              }*/
-            if (checkPublicMembersHaveComments((IClassMemberDeclaration) declaration, highlightings))
+            if (checkPublicMembersHaveComments((IClassMemberDeclaration)declaration, highlightings))
             {
                 return highlightings.ToArray();
             }
@@ -65,15 +65,14 @@ namespace AgentSmith.Comments
         }
 
         #endregion
-      
+
         private void checkCommentSpelling(IClassMemberDeclaration decl,
                                           ICollection<SuggestionBase> highlightings)
         {
             IDocCommentBlockNode docBlock = (this is IMultipleDeclarationMemberNode)
                                                 ? SharedImplUtil.GetDocCommentBlockNode(
-                                                      ((IMultipleDeclarationMemberNode) this).MultipleDeclaration)
+                                                      ((IMultipleDeclarationMemberNode)this).MultipleDeclaration)
                                                 : SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
-
 
             foreach (Range wordRange in getWordsFromXmlComment(docBlock))
             {
@@ -103,7 +102,7 @@ namespace AgentSmith.Comments
                     if (lexer.TokenType == lexer.XmlTokenType.TAG_START)
                     {
                         lexer.Advance();
-                        if (lexer.TokenType == lexer.XmlTokenType.IDENTIFIER && (lexer.TokenText == "code" || lexer.TokenText=="c"))
+                        if (lexer.TokenType == lexer.XmlTokenType.IDENTIFIER && (lexer.TokenText == "code" || lexer.TokenText == "c"))
                         {
                             inCode++;
                         }
@@ -139,7 +138,6 @@ namespace AgentSmith.Comments
             }
         }
 
-        
         /*private bool checkCommentIsCorrect(IClassMemberDeclaration decl, IList<IHighlighting> highlightings)
         {
             if (decl.GetXMLDoc(false) != null)
@@ -179,7 +177,7 @@ namespace AgentSmith.Comments
                     return true;
                 }
             }
-            return false;                        
+            return false;
         }
 
         #region Nested type: Range

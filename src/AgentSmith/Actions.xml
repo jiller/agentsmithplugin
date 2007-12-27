@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<actions>
+    <action id="SmartInsert" shortcut="Control+D7" text="Smart Insert."/>
+  
+    <insert group-id="VS#Code Window" position="last">
+        <separator/>
+        <action-ref id="SmartInsert" />
+    </insert>
+  
+</actions>

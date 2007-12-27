@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.MemberMatch;
 
 namespace AgentSmith.MemberMatch
 {
@@ -16,19 +15,6 @@ namespace AgentSmith.MemberMatch
         public readonly bool CanBeMarkedWithAttribute;
         public readonly bool CanBeStatic;
         public readonly bool CanBeReadonly;
-
-
-        public DeclarationDescription(Declaration declaration, string name, bool hasAccessLevel, bool canInherit,
-                                      bool canBeMarkedWithAttribute, bool canBeStatic, bool canBeReadonly)
-        {
-            Declaration = declaration;
-            Name = name;
-            HasAccessLevel = hasAccessLevel;
-            CanInherit = canInherit;
-            CanBeMarkedWithAttribute = canBeMarkedWithAttribute;
-            CanBeStatic = canBeStatic;
-            CanBeReadonly = canBeReadonly;
-        }
 
         static DeclarationDescription()
         {
@@ -52,6 +38,18 @@ namespace AgentSmith.MemberMatch
             _dict.Add(Declaration.Destructor, new DeclarationDescription(Declaration.Destructor, "Destructor", true, false, true, false, false));
             _dict.Add(Declaration.Indexer, new DeclarationDescription(Declaration.Indexer, "Indexer", true, false, true, true, false));
             _dict.Add(Declaration.Operator, new DeclarationDescription(Declaration.Operator, "Operator", true, false, true, false, false));
+        }
+
+        public DeclarationDescription(Declaration declaration, string name, bool hasAccessLevel, bool canInherit,
+                                      bool canBeMarkedWithAttribute, bool canBeStatic, bool canBeReadonly)
+        {
+            Declaration = declaration;
+            Name = name;
+            HasAccessLevel = hasAccessLevel;
+            CanInherit = canInherit;
+            CanBeMarkedWithAttribute = canBeMarkedWithAttribute;
+            CanBeStatic = canBeStatic;
+            CanBeReadonly = canBeReadonly;
         }
 
         public static Dictionary<Declaration, DeclarationDescription> DeclDescriptions

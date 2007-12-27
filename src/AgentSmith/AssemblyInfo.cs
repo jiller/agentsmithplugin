@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using JetBrains.ActionManagement;
 using JetBrains.UI.Shell.PluginSupport;
 
 //
@@ -60,3 +61,4 @@ using JetBrains.UI.Shell.PluginSupport;
 [assembly : PluginTitle("Agent Smith Plugin")]
 [assembly : PluginVendor("Sergey Zyuzin.")]
 [assembly : PluginDescription("Naming convention validation, XML comments spell checking.")]
+[assembly : ActionsXml("AgentSmith.Actions.xml")]

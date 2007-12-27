@@ -53,61 +53,11 @@ namespace AgentSmith.SpellCheck.NetSpell
         private readonly Dictionary<string, AffixRule> _prefixRules = new Dictionary<string, AffixRule>();
         private readonly List<string> _replaceCharacters = new List<string>();
         private readonly Dictionary<string, AffixRule> _suffixRules = new Dictionary<string, AffixRule>();
-        private string _tryCharacters = "";
 
         private readonly byte[] _encodeTable = new byte[65536];
         private readonly char[] _decodeTable = new char[256];
+        private string _tryCharacters = "";
         private byte _currentChar = 128;
-
-        private string decode(string s)
-        {
-            if (_currentChar == 128)
-            {
-                return s;
-            }
-            char[] chars = new char[s.Length];
-            for (int i = 0; i < s.Length; i++)
-            {
-                chars[i] = _decodeTable[s[i]];
-            }
-            return new string(chars);
-        }
-
-        private IList<string> decode(IList<string> list)
-        {
-            List<string> newList = new List<string>();
-            foreach (string s in list)
-            {
-                newList.Add(decode(s));
-            }
-            return newList;
-        }
-
-        private string encode(string s)
-        {
-            char[] chars = new char[s.Length];
-            for (int i = 0; i < s.Length; i++)
-            {
-                char originalChar = s[i];
-
-                byte c1 = _encodeTable[originalChar];
-                if (_currentChar == 255)
-                {
-                    throw new ArgumentException(
-                        "Quite a few letters in the language. Currently we doesn't support so many. Sorry.");
-                }
-                if (c1 == 0 && _currentChar < 255)
-                {
-                    _encodeTable[originalChar] = _currentChar;
-                    _decodeTable[_currentChar] = originalChar;
-                    c1 = _currentChar;
-                    _currentChar++;
-                }
-                chars[i] = (char) c1;
-            }
-
-            return new string(chars);
-        }
 
         /// <summary>
         /// Initializes the dictionary by loading and parsing the
@@ -118,7 +68,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             for (byte i = 0; i < 128; i++)
             {
                 _encodeTable[i] = i;
-                _decodeTable[i] = (char) i;
+                _decodeTable[i] = (char)i;
             }
             MatchCollection partMatches;
 
@@ -236,7 +186,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                                     {
                                         tempWord.PhoneticCode = parts[2];
                                     }
-                                    
+
                                     _baseWords[tempWord.Text] = tempWord;
                                     break;
                             }
@@ -505,6 +455,56 @@ namespace AgentSmith.SpellCheck.NetSpell
             } // while
 
             return code.ToString();
+        }
+
+        private string decode(string s)
+        {
+            if (_currentChar == 128)
+            {
+                return s;
+            }
+            char[] chars = new char[s.Length];
+            for (int i = 0; i < s.Length; i++)
+            {
+                chars[i] = _decodeTable[s[i]];
+            }
+            return new string(chars);
+        }
+
+        private IList<string> decode(IList<string> list)
+        {
+            List<string> newList = new List<string>();
+            foreach (string s in list)
+            {
+                newList.Add(decode(s));
+            }
+            return newList;
+        }
+
+        private string encode(string s)
+        {
+            char[] chars = new char[s.Length];
+            for (int i = 0; i < s.Length; i++)
+            {
+                char originalChar = s[i];
+
+                byte c1 = _encodeTable[originalChar];
+                if (_currentChar == 255)
+                {
+                    throw new ArgumentException(
+                        "Quite a few letters in the language. Currently we doesn't support so many. Sorry.");
+                }
+                if (c1 == 0 && _currentChar < 255)
+                {
+                    _encodeTable[originalChar] = _currentChar;
+                    _decodeTable[_currentChar] = originalChar;
+                    c1 = _currentChar;
+                    _currentChar++;
+                }
+                chars[i] = (char)c1;
+            }
+
+            return new string(chars);
         }
 
         /// <summary>

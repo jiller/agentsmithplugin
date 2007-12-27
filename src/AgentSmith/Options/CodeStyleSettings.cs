@@ -16,12 +16,12 @@ namespace AgentSmith.Options
     {
         private NamingConventionSettings _namingConventionSettings = new NamingConventionSettings();
         private CommentsSettings _commentsSettings = new CommentsSettings();
-        
+
         public CodeStyleSettings()
         {
             _namingConventionSettings.LoadDefaults();
         }
-       
+
         public CommentsSettings CommentsSettings
         {
             get { return _commentsSettings; }
@@ -33,7 +33,7 @@ namespace AgentSmith.Options
             get { return _namingConventionSettings; }
             set { _namingConventionSettings = value; }
         }
-       
+
         public static CodeStyleSettings GetInstance(ISolution solution)
         {
             JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = Shell.Instance.IsTestShell ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
@@ -41,6 +41,23 @@ namespace AgentSmith.Options
         }
 
         #region IXmlExternalizable implementation
+
+        #region ICloneable Members
+
+        public object Clone()
+        {
+            XmlDocument document = new XmlDocument();
+            XmlElement element = document.CreateElement("ID");
+            WriteToXml(element);
+            document.AppendChild(element);
+            CodeStyleSettings settings = new CodeStyleSettings();
+            settings.ReadFromXml(element);
+            return settings;
+        }
+
+        #endregion
+
+        #region IXmlExternalizable Members
 
         public void ReadFromXml(XmlElement element)
         {
@@ -51,19 +68,19 @@ namespace AgentSmith.Options
                     XmlSerializer serializer = new XmlSerializer(GetType());
                     XmlReader reader = XmlReader.Create(new StringReader(element.InnerXml));
                     CodeStyleSettings settings = (CodeStyleSettings)serializer.Deserialize(reader);
-                    _namingConventionSettings = settings.NamingConventionSettings;                   
-                    _commentsSettings = settings.CommentsSettings;     
+                    _namingConventionSettings = settings.NamingConventionSettings;
+                    _commentsSettings = settings.CommentsSettings;
                     if (_commentsSettings == null)
                     {
                         _commentsSettings = new CommentsSettings();
-                        _commentsSettings.CommentMatch = new Match[]{new Match(Declaration.Any, AccessLevels.Public) };                        
+                        _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.LogException("Failed to load Agent Smith settings", ex);
                 }
-            }            
+            }
         }
 
         public bool WriteToXml(XmlElement element)
@@ -81,16 +98,7 @@ namespace AgentSmith.Options
             return true;
         }
 
-        public object Clone()
-        {
-            XmlDocument document = new XmlDocument();
-            XmlElement element = document.CreateElement("ID");
-            WriteToXml(element);
-            document.AppendChild(element);
-            CodeStyleSettings settings = new CodeStyleSettings();
-            settings.ReadFromXml(element);
-            return settings;
-        }
+        #endregion
 
         #endregion
     }

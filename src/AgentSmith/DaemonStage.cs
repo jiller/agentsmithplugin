@@ -8,12 +8,12 @@ namespace AgentSmith
     /// <summary>
     /// Agent Smith stage.
     /// </summary>
-    [DaemonStage(StagesBefore = new Type[] {typeof (GlobalErrorStage)},
-        StagesAfter = new Type[] {typeof (LanguageSpecificDaemonStage)}, RunForInvisibleDocument = true)]
+    [DaemonStage(StagesBefore = new Type[] { typeof(GlobalErrorStage) },
+        StagesAfter = new Type[] { typeof(LanguageSpecificDaemonStage) }, RunForInvisibleDocument = true)]
     public class DaemonStage : CSharpDaemonStageBase
     {
         public override IDaemonStageProcess CreateProcess(IDaemonProcess process)
-        {            
+        {
             if (!IsSupported(process.ProjectFile))
             {
                 return null;

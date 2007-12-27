@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.NamingConventions
 {
-    [ConfigurableSeverityHighlighting(NamingConventionsSuggestion.NAME)]
+    [ConfigurableSeverityHighlighting(NAME)]
     public class NamingConventionsSuggestion : SuggestionBase
     {
         public const string NAME = "DelcarationDoesntConformToNamingConventions";
@@ -27,6 +27,6 @@ namespace AgentSmith.NamingConventions
         public override Severity Severity
         {
             get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-        }            
+        }
     }
 }

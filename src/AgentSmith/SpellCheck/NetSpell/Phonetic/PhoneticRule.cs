@@ -40,8 +40,8 @@ namespace AgentSmith.SpellCheck.NetSpell.Phonetic
     /// </summary>
     public class PhoneticRule
     {
-        private bool _beginningOnly;
         private readonly int[] _condition = new int[256];
+        private bool _beginningOnly;
         private int _conditionCount = 0;
         private int _consumeCount;
         private bool _endOnly;

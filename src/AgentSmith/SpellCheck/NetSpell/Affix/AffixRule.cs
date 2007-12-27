@@ -33,7 +33,6 @@
 
 using System;
 using System.Collections.Generic;
-using AgentSmith.SpellCheck.NetSpell.Affix;
 
 namespace AgentSmith.SpellCheck.NetSpell.Affix
 {

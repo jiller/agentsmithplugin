@@ -16,6 +16,8 @@ namespace AgentSmith.Resx
             _highlighting = highlighting;
         }
 
+        #region IQuickFix Members
+
         public bool IsAvailable(IUserDataHolder cache)
         {
             return true;
@@ -34,5 +36,7 @@ namespace AgentSmith.Resx
                 return items.ToArray();
             }
         }
+
+        #endregion
     }
 }
