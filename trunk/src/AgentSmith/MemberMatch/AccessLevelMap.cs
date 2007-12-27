@@ -6,9 +6,8 @@ namespace AgentSmith.MemberMatch
 {
     public static class AccessLevelMap
     {
-        private static readonly Dictionary<AccessRights, AccessLevels> _rightsMap = 
+        private static readonly Dictionary<AccessRights, AccessLevels> _rightsMap =
             new Dictionary<AccessRights, AccessLevels>();
-
 
         static AccessLevelMap()
         {
@@ -19,7 +18,6 @@ namespace AgentSmith.MemberMatch
             _rightsMap.Add(AccessRights.PROTECTED_OR_INTERNAL, AccessLevels.ProtectedInternal);
             _rightsMap.Add(AccessRights.PUBLIC, AccessLevels.Public);
             _rightsMap.Add(AccessRights.NONE, AccessLevels.Public);
-
         }
 
         public static Dictionary<AccessRights, AccessLevels> Map

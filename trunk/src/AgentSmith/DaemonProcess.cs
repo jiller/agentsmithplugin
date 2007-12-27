@@ -17,17 +17,18 @@ namespace AgentSmith
         private readonly IDaemonProcess _process;
         private readonly List<HighlightingInfo> _highlightings = new List<HighlightingInfo>();
 
-        public DaemonProcess(IDaemonProcess daemonProcess)            
+        public DaemonProcess(IDaemonProcess daemonProcess)
         {
             _process = daemonProcess;
             CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_process.Solution);
             _analyzers = new IDeclarationAnalyzer[]
                 {
                     new NamingConventionsAnalyzer(styleSettings.NamingConventionSettings, _process.Solution),
-                    new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),                    
+                    new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),
                 };
         }
 
+        #region IDaemonStageProcess Members
 
         public DaemonStageProcessResult Execute()
         {
@@ -35,15 +36,14 @@ namespace AgentSmith
             ICSharpFile myFile = (ICSharpFile)PsiManager.GetInstance(_process.Solution).GetPsiFile(_process.ProjectFile);
             ProcessFile(myFile);
             result.FullyRehighlighted = true;
-            
+
             result.Highlightings = _highlightings.ToArray();
             return result;
         }
 
-        public  void ProcessFile(ICSharpFile file)
-        {
-            file.ProcessDescendants(this);            
-        }
+        #endregion
+
+        #region IRecursiveElementProcessor Members
 
         public void ProcessBeforeInterior(IElement element)
         {
@@ -57,16 +57,10 @@ namespace AgentSmith
             {
                 foreach (SuggestionBase highlighting in analyzer.Analyze(declaration))
                 {
-                   addHighlighting(highlighting);                   
+                    addHighlighting(highlighting);
                 }
             }
         }
-
-        private void addHighlighting(SuggestionBase highlighting)
-        {
-            _highlightings.Add(new HighlightingInfo(highlighting.Range, highlighting));
-        }
-
 
         public bool InteriorShouldBeProcessed(IElement element)
         {
@@ -74,7 +68,7 @@ namespace AgentSmith
         }
 
         public void ProcessAfterInterior(IElement element)
-        {            
+        {
         }
 
         public bool ProcessingIsFinished
@@ -85,8 +79,20 @@ namespace AgentSmith
                 {
                     throw new ProcessCancelledException();
                 }
-                return false;                
+                return false;
             }
+        }
+
+        #endregion
+
+        public void ProcessFile(ICSharpFile file)
+        {
+            file.ProcessDescendants(this);
+        }
+
+        private void addHighlighting(SuggestionBase highlighting)
+        {
+            _highlightings.Add(new HighlightingInfo(highlighting.Range, highlighting));
         }
     }
 }

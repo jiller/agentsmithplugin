@@ -30,6 +30,7 @@
 * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.*/
 
 #endregion Copyright
+
 using System;
 
 namespace AgentSmith.SpellCheck.NetSpell
@@ -45,7 +46,6 @@ namespace AgentSmith.SpellCheck.NetSpell
         private int _index = 0;
         private string _phoneticCode = "";
         private string _text = "";
-
 
         public Word()
         {
@@ -198,7 +198,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </remarks>
         public int CompareTo(object obj)
         {
-            int result = EditDistance.CompareTo(((Word) obj).EditDistance);
+            int result = EditDistance.CompareTo(((Word)obj).EditDistance);
             return result; // * -1; // sorts desc order
         }
 

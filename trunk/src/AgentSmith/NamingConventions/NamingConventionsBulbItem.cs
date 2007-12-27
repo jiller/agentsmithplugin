@@ -17,6 +17,41 @@ namespace AgentSmith.NamingConventions
 {
     public class NamingConventionsBulbItem : IBulbItem
     {
+        private class DataContext : DataContextBase
+        {
+            private readonly IReference _reference;
+            private readonly IDeclaredElement _declaredElement;
+            private readonly ITextControl _textControl;
+
+            public DataContext(IReference reference, IDeclaredElement declaredElement, ITextControl textControl)
+            {
+                _reference = reference;
+                _declaredElement = declaredElement;
+                _textControl = textControl;
+            }
+
+            protected override object DoGetData(IDataConstant dataConstant)
+            {
+                if (dataConstant == DataConstants.REFERENCE)
+                {
+                    return _reference;
+                }
+                if (dataConstant == DataConstants.DECLARED_ELEMENT)
+                {
+                    return _declaredElement;
+                }
+                if (dataConstant == DataConstants.PSI_LANGUAGE_TYPE)
+                {
+                    return _declaredElement.Language;
+                }
+                if (dataConstant == DataConstants.TEXT_CONTROL)
+                {
+                    return _textControl;
+                }
+                return null;
+            }
+        }
+
         private readonly string _newName;
         private readonly IDeclaration _declaration;
         private readonly object _syncobj = new object();
@@ -37,7 +72,7 @@ namespace AgentSmith.NamingConventions
                 if (psiManager.WaitForCaches())
                 {
                     using (CommandCookie.Create("QuickFix: " + GetText()))
-                    {                        
+                    {
                         using (ModificationCookie modificationCookie = ensureWritable())
                         {
                             if (modificationCookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
@@ -53,51 +88,14 @@ namespace AgentSmith.NamingConventions
                                     else
                                     {
                                         PsiManager manager = PsiManager.GetInstance(solution);
-                                        manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });                                 
+                                        manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });
                                     }
-                                }                                
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-
-        private class DataContext: DataContextBase
-        {
-            private readonly IReference _reference;
-            private readonly IDeclaredElement _declaredElement;
-            private readonly ITextControl _textControl;
-
-
-            public DataContext(IReference reference, IDeclaredElement declaredElement, ITextControl textControl)
-            {
-                _reference = reference;
-                _declaredElement = declaredElement;
-                _textControl = textControl;
-            }
-
-
-            protected override object DoGetData(IDataConstant dataConstant)
-            {
-                if (dataConstant == DataConstants.REFERENCE)
-                {
-                    return _reference;
-                }
-                if (dataConstant == DataConstants.DECLARED_ELEMENT)
-                {
-                    return _declaredElement;
-                }
-                if (dataConstant == DataConstants.PSI_LANGUAGE_TYPE)
-                {
-                    return _declaredElement.Language;
-                }
-                if (dataConstant == DataConstants.TEXT_CONTROL)
-                {
-                    return _textControl;
-                }
-                return null;                
-            }                        
         }
 
         public string Text
@@ -109,7 +107,7 @@ namespace AgentSmith.NamingConventions
 
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
-            RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();            
+            RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
             if (wf.Initialize(new DataContext(null, _declaration.DeclaredElement, textControl), null))
             {
                 wf.SetName(_newName, NullProgressIndicator.INSTANCE, false);
@@ -121,16 +119,16 @@ namespace AgentSmith.NamingConventions
                 {
                     wf.Execute(NullProgressIndicator.INSTANCE);
                 }
-            }            
+            }
         }
 
         private ModificationCookie ensureWritable()
         {
-            HashSet<IProjectFile> set = new HashSet<IProjectFile>();            
+            HashSet<IProjectFile> set = new HashSet<IProjectFile>();
             IProjectFile projectFile = _declaration.GetContainingFile().ProjectItem;
             set.Add(projectFile);
             ISolution solution = projectFile.GetSolution();
-            
+
             return solution.EnsureFilesWritable(set.ToArray());
         }
 

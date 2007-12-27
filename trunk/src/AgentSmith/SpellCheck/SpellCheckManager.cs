@@ -102,7 +102,7 @@ namespace AgentSmith.SpellCheck
         private static string getDictPath(string dictionaryName)
         {
             return Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
-                                String.Format("dic\\{0}.dic", dictionaryName));
+                String.Format("dic\\{0}.dic", dictionaryName));
         }
 
         private static bool dictionaryExists(string dictName)

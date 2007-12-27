@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using AgentSmith.MemberMatch;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -12,6 +11,12 @@ namespace AgentSmith.MemberMatch
 {
     public class Match
     {
+        private static readonly Dictionary<AccessRights, int> _accessRightsOrder =
+            new Dictionary<AccessRights, int>();
+
+        private static readonly Dictionary<DeclaredElementType, Declaration> _declMap =
+            new Dictionary<DeclaredElementType, Declaration>();
+
         private AccessLevels _accessLevel = AccessLevels.Any;
         private Declaration _declaration = Declaration.Any;
         private string _inheritedFrom;
@@ -21,12 +26,6 @@ namespace AgentSmith.MemberMatch
 
         private ITypeElement _markedWithAttributeType;
         private ITypeElement _inheritedFromType;
-        
-        private static readonly Dictionary<AccessRights, int> _accessRightsOrder =
-            new Dictionary<AccessRights, int>();
-
-        private static readonly Dictionary<DeclaredElementType, Declaration> _declMap =
-            new Dictionary<DeclaredElementType, Declaration>();
 
         static Match()
         {
@@ -37,7 +36,7 @@ namespace AgentSmith.MemberMatch
             _declMap.Add(CLRDeclaredElementType.ENUM_MEMBER, Declaration.EnumerationMember);
             _declMap.Add(CLRDeclaredElementType.EVENT, Declaration.Event);
             _declMap.Add(CLRDeclaredElementType.FIELD, Declaration.Field);
-            _declMap.Add(CLRDeclaredElementType.INTERFACE, Declaration.Interface);            
+            _declMap.Add(CLRDeclaredElementType.INTERFACE, Declaration.Interface);
             //_declMap.Add(CSharpDeclaredElementType. LOCAL_CONSTANT, Declaration.Constant);
             _declMap.Add(CLRDeclaredElementType.LOCAL_VARIABLE, Declaration.Variable);
             _declMap.Add(CLRDeclaredElementType.METHOD, Declaration.Method);
@@ -46,7 +45,6 @@ namespace AgentSmith.MemberMatch
             _declMap.Add(CLRDeclaredElementType.PROPERTY, Declaration.Property);
             _declMap.Add(CLRDeclaredElementType.STRUCT, Declaration.Struct);
 
-            
             _accessRightsOrder.Add(AccessRights.PRIVATE, 1);
             _accessRightsOrder.Add(AccessRights.PROTECTED, 2);
             _accessRightsOrder.Add(AccessRights.INTERNAL, 2);
@@ -58,6 +56,32 @@ namespace AgentSmith.MemberMatch
 
         public Match()
         {
+        }
+
+        public Match(Declaration declaration)
+        {
+            _declaration = declaration;
+        }
+
+        public Match(Declaration declaration, AccessLevels accessLevel)
+        {
+            _accessLevel = accessLevel;
+            _declaration = declaration;
+        }
+
+        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom)
+        {
+            _accessLevel = accessLevel;
+            _declaration = declaration;
+            _inheritedFrom = inheritedFrom;
+        }
+
+        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom, string markedWithAttribute)
+        {
+            _accessLevel = accessLevel;
+            _declaration = declaration;
+            _inheritedFrom = inheritedFrom;
+            _markedWithAttribute = markedWithAttribute;
         }
 
         public AccessLevels AccessLevel
@@ -87,43 +111,13 @@ namespace AgentSmith.MemberMatch
         public FuzzyBool IsReadonly
         {
             get { return _readonly; }
-            set { _readonly = value;}
+            set { _readonly = value; }
         }
 
         public FuzzyBool IsStatic
         {
             get { return _static; }
-            set { _static = value;}
-        }
-
-
-        public Match(Declaration declaration)
-        {
-            _declaration = declaration;
-        }
-
-
-        public Match(Declaration declaration, AccessLevels accessLevel)
-        {
-            _accessLevel = accessLevel;
-            _declaration = declaration;
-        }
-
-
-        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom)
-        {
-            _accessLevel = accessLevel;
-            _declaration = declaration;
-            _inheritedFrom = inheritedFrom;
-        }
-
-
-        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom, string markedWithAttribute)
-        {
-            _accessLevel = accessLevel;
-            _declaration = declaration;
-            _inheritedFrom = inheritedFrom;
-            _markedWithAttribute = markedWithAttribute;
+            set { _static = value; }
         }
 
         public void Prepare(ISolution solution, PsiManager manager)
@@ -158,10 +152,38 @@ namespace AgentSmith.MemberMatch
                 return isDeclMatch(declaration) &&
                        isRightsMatch(declaration, useEffectiveRights) &&
                        markedWithAttributeMatch(declaration) &&
-                       inheritsMatch(declaration)&&
+                       inheritsMatch(declaration) &&
                        isReadonlyMatch(declaration) &&
                        isStaticMatch(declaration);
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            DeclarationDescription description = DeclarationDescription.DeclDescriptions[_declaration];
+            if (description.HasAccessLevel)
+            {
+                sb.AppendFormat("{0} ", getAccesslevel());
+            }
+            if (_static != FuzzyBool.Maybe)
+            {
+                sb.Append(_static == FuzzyBool.True ? "static " : "not static ");
+            }
+            if (_readonly != FuzzyBool.Maybe)
+            {
+                sb.Append(_readonly == FuzzyBool.True ? "readonly " : "not readonly ");
+            }
+            sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration " : description.Name.ToLower());
+            if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
+            {
+                sb.AppendFormat("inherited from '{0}' ", _inheritedFrom);
+            }
+            if (description.CanBeMarkedWithAttribute && !string.IsNullOrEmpty(_markedWithAttribute))
+            {
+                sb.AppendFormat("marked with '{0}' ", _markedWithAttribute);
+            }
+            return sb.ToString();
         }
 
         private bool isReadonlyMatch(IDeclaration declaration)
@@ -169,7 +191,7 @@ namespace AgentSmith.MemberMatch
             IClassMemberDeclaration decl = declaration as IClassMemberDeclaration;
             return decl != null && (IsReadonly == FuzzyBool.Maybe ||
                                     IsReadonly == FuzzyBool.True && decl.IsReadonly ||
-                                    IsReadonly == FuzzyBool.False && !decl.IsReadonly);            
+                                    IsReadonly == FuzzyBool.False && !decl.IsReadonly);
         }
 
         private bool isStaticMatch(IDeclaration declaration)
@@ -186,7 +208,7 @@ namespace AgentSmith.MemberMatch
             {
                 return true;
             }
-            
+
             if (_inheritedFromType == null)
             {
                 return false;
@@ -206,7 +228,7 @@ namespace AgentSmith.MemberMatch
             {
                 return true;
             }
-            
+
             if (_markedWithAttributeType == null)
             {
                 return false;
@@ -235,7 +257,7 @@ namespace AgentSmith.MemberMatch
                 return false;
             }
 
-            AccessRights rights = getRights((IModifiersOwner) declaration, useEffectiveRights);            
+            AccessRights rights = getRights((IModifiersOwner)declaration, useEffectiveRights);
             return _accessLevel == AccessLevels.Any ||
                    AccessLevelMap.Map.ContainsKey(rights) && ((AccessLevelMap.Map[rights] & _accessLevel) != 0);
         }
@@ -250,7 +272,7 @@ namespace AgentSmith.MemberMatch
 
             owner = ((IClassMemberDeclaration)owner).GetContainingTypeDeclaration();
             while (owner != null)
-            {                
+            {
                 AccessRights ownerRights = owner.GetAccessRights();
                 if (_accessRightsOrder.ContainsKey(ownerRights) &&
                     _accessRightsOrder.ContainsKey(effectiveRights) &&
@@ -283,38 +305,10 @@ namespace AgentSmith.MemberMatch
             }
         }
 
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            DeclarationDescription description = DeclarationDescription.DeclDescriptions[_declaration];
-            if (description.HasAccessLevel)
-            {
-                sb.AppendFormat("{0} ", getAccesslevel());
-            }
-            if (_static != FuzzyBool.Maybe)
-            {
-                sb.Append(_static == FuzzyBool.True ? "static " : "not static ");
-            }
-            if (_readonly != FuzzyBool.Maybe)
-            {
-                sb.Append(_readonly == FuzzyBool.True ? "readonly " : "not readonly ");
-            }
-            sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration " : description.Name.ToLower());
-            if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
-            {
-                sb.AppendFormat("inherited from '{0}' ", _inheritedFrom);
-            }
-            if (description.CanBeMarkedWithAttribute && !string.IsNullOrEmpty(_markedWithAttribute))
-            {
-                sb.AppendFormat("marked with '{0}' ", _markedWithAttribute);
-            }
-            return sb.ToString();
-        }
-
         private string getAccesslevel()
         {
             StringBuilder sb = new StringBuilder();
-            
+
             if (AccessLevel == AccessLevels.Any)
             {
                 sb.Append("Any");
@@ -329,11 +323,11 @@ namespace AgentSmith.MemberMatch
                         {
                             sb.Append(", ");
                         }
-                        sb.Append(desc.Name);                        
-                    }                                            
+                        sb.Append(desc.Name);
+                    }
                 }
             }
             return sb.ToString();
-        }        
+        }
     }
 }

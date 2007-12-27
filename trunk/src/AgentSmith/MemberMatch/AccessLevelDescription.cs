@@ -8,7 +8,6 @@ namespace AgentSmith.MemberMatch
         public readonly AccessLevels AccessLevel;
         public readonly string Name;
 
-
         public AccessLevelDescription(AccessLevels accessLevel, string name)
         {
             AccessLevel = accessLevel;
@@ -29,7 +28,6 @@ namespace AgentSmith.MemberMatch
                 return _descrs;
             }
         }
-
 
         public override string ToString()
         {

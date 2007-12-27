@@ -35,7 +35,6 @@ namespace AgentSmith.Comments
             {
                 List<IBulbItem> items = new List<IBulbItem>();
 
-
                 DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(_suggestion.Solution, true);
                 PsiManager manager = PsiManager.GetInstance(_suggestion.Solution);
 
@@ -48,12 +47,11 @@ namespace AgentSmith.Comments
                         {
                             items.Add(
                                 new ReplaceWordWithBulbItem(_suggestion.Range,
-                                                            String.Format("<paramref name=\"{0}\"/>", _suggestion.Word)));
+                                    String.Format("<paramref name=\"{0}\"/>", _suggestion.Word)));
                             break;
                         }
                     }
                 }
-
 
                 IMemberOwnerDeclaration containingType = _suggestion.Declaration.GetContainingTypeDeclaration();
                 if (containingType != null)
@@ -65,7 +63,7 @@ namespace AgentSmith.Comments
                         {
                             items.Add(
                                 new ReplaceWordWithBulbItem(_suggestion.Range,
-                                                            String.Format("<see cref=\"{0}\"/>", _suggestion.Word)));
+                                    String.Format("<see cref=\"{0}\"/>", _suggestion.Word)));
                             break;
                         }
                     }
@@ -79,14 +77,13 @@ namespace AgentSmith.Comments
                             {
                                 items.Add(
                                     new ReplaceWordWithBulbItem(_suggestion.Range,
-                                                                String.Format("<typeparamref name=\"{0}\"/>",
-                                                                              _suggestion.Word)));
+                                        String.Format("<typeparamref name=\"{0}\"/>",
+                                            _suggestion.Word)));
                                 break;
                             }
                         }
                     }
                 }
-
 
                 IDeclaredElement[] declaredElements =
                     manager.GetDeclarationsCache(scope, true).GetElementsByShortName(_suggestion.Word);
@@ -94,7 +91,7 @@ namespace AgentSmith.Comments
                 {
                     items.Add(
                         new ReplaceWordWithBulbItem(_suggestion.Range,
-                                                    String.Format("<see cref=\"{0}\"/>", _suggestion.Word)));
+                            String.Format("<see cref=\"{0}\"/>", _suggestion.Word)));
                 }
 
                 ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution);

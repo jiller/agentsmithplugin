@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Resx
 {
-    [ConfigurableSeverityHighlighting(ResXSpellHighlighting.NAME)]
+    [ConfigurableSeverityHighlighting(NAME)]
     public class ResXSpellHighlighting : SuggestionBase
     {
         public const string NAME = "ResxSpellCheckSuggestion";

@@ -72,7 +72,10 @@ namespace AgentSmith
             get { return OverlapResolvePolicy.WARNING; }
         }
 
-        public abstract Severity Severity { get; }
+        public abstract Severity Severity
+        {
+            get;
+        }
 
         public virtual string ToolTip
         {
