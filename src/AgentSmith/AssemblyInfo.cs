@@ -8,6 +8,7 @@ using JetBrains.UI.Shell.PluginSupport;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
+
 [assembly : AssemblyTitle("")]
 [assembly : AssemblyDescription("")]
 [assembly : AssemblyConfiguration("")]
@@ -55,10 +56,11 @@ using JetBrains.UI.Shell.PluginSupport;
 //   (*) Delay Signing is an advanced option - see the Microsoft .NET Framework
 //       documentation for more information on this.
 //
+
 [assembly : AssemblyDelaySign(false)]
 [assembly : AssemblyKeyFile("")]
 [assembly : AssemblyKeyName("")]
 [assembly : PluginTitle("Agent Smith Plugin")]
 [assembly : PluginVendor("Sergey Zyuzin.")]
 [assembly : PluginDescription("Naming convention validation, XML comments spell checking.")]
-[assembly : ActionsXml("AgentSmith.Actions.xml")]
+[assembly : ActionsXml("AgentSmith.Actions.xml", Precompile=false)]
