@@ -149,6 +149,7 @@
     <Reference Include="System.Drawing">
       <Name>system.drawing</Name>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms">
       <Name>system.windows.forms</Name>
     </Reference>
@@ -160,7 +161,7 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="SmartInsert\SmartInsertAction.cs" />
+    <Compile Include="SmartPaste\SmartPasteAction.cs" />
     <Compile Include="SpellCheck\SpellCheckManager.cs" />
     <Compile Include="SpellCheck\SpellCheckUtil.cs" />
     <Compile Include="Options\ImportOpenOfficeDictionary.cs">
