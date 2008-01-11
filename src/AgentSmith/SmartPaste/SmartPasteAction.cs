@@ -21,7 +21,7 @@ namespace AgentSmith.SmartInsert
     internal class SmartInsertAction : IActionHandler
     {
         #region IActionHandler Members
-
+        
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
             if (!isAvailable(context))
