@@ -8,6 +8,7 @@ using JetBrains.ReSharper;
 using JetBrains.ReSharper.ClipboardManager;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.TextControl;
@@ -16,11 +17,11 @@ using JetBrains.Util;
 
 namespace AgentSmith.SmartInsert
 {
-    [ActionHandler(new string[] {"AgentSmith.SmartPaste"})]
+    [ActionHandler(new string[] { "AgentSmith.SmartPaste" })]
     internal class SmartInsertAction : IActionHandler
     {
         #region IActionHandler Members
-        
+
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
             if (!isAvailable(context))
@@ -61,17 +62,22 @@ namespace AgentSmith.SmartInsert
                 using (ModificationCookie cookie = editor.Document.EnsureWritable())
                 {
                     if (cookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
-                    {                       
+                    {
                         IElement element = file.FindElementAt(new TextRange(editor.CaretModel.Offset));
-                        handleElement(editor, element);                     
+                        handleElement(editor, element, editor.CaretModel.Offset);
                     }
                 }
             }
         }
 
-        private void handleElement(ITextControl editor, IElement element)
+        private void handleElement(ITextControl editor, IElement element, int offset)
         {
             string stringToInsert = ClipboardManager.Instance.ClipboardEntries.RecentItem;
+            if (stringToInsert == null)
+            {
+                return;
+            }
+
             if (element is IDocCommentNode)
             {
                 int currentLineNumber = editor.Document.GetCoordsByOffset(editor.CaretModel.Offset).Line;
@@ -82,24 +88,47 @@ namespace AgentSmith.SmartInsert
                     return;
                 }
                 string prefix = currentLine.Substring(0, index);
-                if (stringToInsert != null)
-                {                    
-                    if (shallEscape((IDocCommentNode) element, editor.CaretModel.Offset) &&
-                        HttpUtility.HtmlEncode(stringToInsert) != stringToInsert &&
-                        MessageBox.Show("Do you want the text to be escaped?", "Confirm", MessageBoxButtons.YesNo) ==
-                        DialogResult.Yes)
-                    {
-                        stringToInsert = HttpUtility.HtmlEncode(stringToInsert);
-                    }
 
-                    stringToInsert = stringToInsert.Replace("\n", "\n" + prefix + "///");                    
+                if (shallEscape((IDocCommentNode)element, editor.CaretModel.Offset) &&
+                    HttpUtility.HtmlEncode(stringToInsert) != stringToInsert &&
+                    MessageBox.Show("Do you want the text to be escaped?", "Confirm", MessageBoxButtons.YesNo) ==
+                    DialogResult.Yes)
+                {
+                    stringToInsert = HttpUtility.HtmlEncode(stringToInsert);
+                }
+
+                stringToInsert = stringToInsert.Replace("\n", "\n" + prefix + "///");
+            }
+
+            if (element is ITokenNode)
+            {
+                ITokenNode token = (ITokenNode)element;
+                if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL &&
+                    offset < token.GetTreeTextRange().EndOffset)
+                {
+                    string text = token.GetText();
+                    if (text.StartsWith("@") && offset > token.GetTreeTextRange().StartOffset + 1)
+                    {
+                        stringToInsert = stringToInsert.Replace("\"", "\"\"");
+                    }
+                    else if (!text.StartsWith("@"))
+                    {
+                        stringToInsert = stringToInsert.
+                            Replace("\\", "\\\\").
+                            Replace("\a", "\\a").
+                            Replace("\b", "\\b").
+                            Replace("\f", "\\f").
+                            Replace("\n", "\\n").
+                            Replace("\r", "\\r").
+                            Replace("\t", "\\t").
+                            Replace("\v", "\\v").
+                            Replace("\'", "\\'").
+                            Replace("\"", "\\\"");
+                    }
                 }
             }
 
-            if (stringToInsert != null)
-            {
-                editor.Document.InsertText(editor.CaretModel.Offset, stringToInsert);
-            }
+            editor.Document.InsertText(editor.CaretModel.Offset, stringToInsert);
         }
 
         private bool shallEscape(IDocCommentNode node, int offset)

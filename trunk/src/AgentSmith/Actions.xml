@@ -5,7 +5,7 @@
   <!-- Insert 'Show Current Line' action into editor's popup menu. -->
   <insert group-id="VS#Code Window" position="last">
     <separator/>
-    <action id="AgentSmith.SmartPaste" text="Smart Paste" shortcut="Control+Shift+Insert"/>    
+    <action id="AgentSmith.SmartPaste" text="Smart Paste" shortcut="Shift+Alt+Insert"/>    
   </insert>
   
 </actions>
