@@ -106,7 +106,8 @@ namespace AgentSmith.NamingConventions
         public bool IsMatch(IDeclaration declaration)
         {
             if (declaration is IIndexerDeclaration ||
-                declaration.DeclaredName.Contains("."))
+                declaration.DeclaredName.Contains(".") ||
+                declaration is IDestructorDeclaration)
             {
                 return false;
             }
