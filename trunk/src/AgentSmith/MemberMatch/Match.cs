@@ -187,18 +187,24 @@ namespace AgentSmith.MemberMatch
         }
 
         private bool isReadonlyMatch(IDeclaration declaration)
-        {
+        {            
+            if (IsReadonly == FuzzyBool.Maybe)
+            {
+                return true;
+            }
             IClassMemberDeclaration decl = declaration as IClassMemberDeclaration;
-            return decl != null && (IsReadonly == FuzzyBool.Maybe ||
-                                    IsReadonly == FuzzyBool.True && decl.IsReadonly ||
+            return decl != null && (IsReadonly == FuzzyBool.True && decl.IsReadonly ||
                                     IsReadonly == FuzzyBool.False && !decl.IsReadonly);
         }
 
         private bool isStaticMatch(IDeclaration declaration)
         {
+            if (IsStatic == FuzzyBool.Maybe)
+            {
+                return true;
+            }
             IClassMemberDeclaration decl = declaration as IClassMemberDeclaration;
-            return decl != null && (IsStatic == FuzzyBool.Maybe ||
-                                    IsStatic == FuzzyBool.True && decl.IsStatic ||
+            return decl != null && (IsStatic == FuzzyBool.True && decl.IsStatic ||
                                     IsStatic == FuzzyBool.False && !decl.IsStatic);
         }
 
@@ -252,14 +258,18 @@ namespace AgentSmith.MemberMatch
 
         private bool isRightsMatch(IDeclaration declaration, bool useEffectiveRights)
         {
+            if (_accessLevel == AccessLevels.Any)
+            {
+                return true;
+            }
+
             if (!(declaration is IModifiersOwner))
             {
                 return false;
             }
 
             AccessRights rights = getRights((IModifiersOwner)declaration, useEffectiveRights);
-            return _accessLevel == AccessLevels.Any ||
-                   AccessLevelMap.Map.ContainsKey(rights) && ((AccessLevelMap.Map[rights] & _accessLevel) != 0);
+            return AccessLevelMap.Map.ContainsKey(rights) && ((AccessLevelMap.Map[rights] & _accessLevel) != 0);
         }
 
         private static AccessRights getRights(IModifiersOwner owner, bool useEffectiveRights)

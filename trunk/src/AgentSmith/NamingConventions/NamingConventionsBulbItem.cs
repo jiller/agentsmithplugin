@@ -1,11 +1,8 @@
 using System;
 using System.Windows.Forms;
-using JetBrains.ActionManagement;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Refactorings.Rename;
 using JetBrains.ReSharper.TextControl;
@@ -17,41 +14,6 @@ namespace AgentSmith.NamingConventions
 {
     public class NamingConventionsBulbItem : IBulbItem
     {
-        private class DataContext : DataContextBase
-        {
-            private readonly IReference _reference;
-            private readonly IDeclaredElement _declaredElement;
-            private readonly ITextControl _textControl;
-
-            public DataContext(IReference reference, IDeclaredElement declaredElement, ITextControl textControl)
-            {
-                _reference = reference;
-                _declaredElement = declaredElement;
-                _textControl = textControl;
-            }
-
-            protected override object DoGetData(IDataConstant dataConstant)
-            {
-                if (dataConstant == DataConstants.REFERENCE)
-                {
-                    return _reference;
-                }
-                if (dataConstant == DataConstants.DECLARED_ELEMENT)
-                {
-                    return _declaredElement;
-                }
-                if (dataConstant == DataConstants.PSI_LANGUAGE_TYPE)
-                {
-                    return _declaredElement.Language;
-                }
-                if (dataConstant == DataConstants.TEXT_CONTROL)
-                {
-                    return _textControl;
-                }
-                return null;
-            }
-        }
-
         private readonly string _newName;
         private readonly IDeclaration _declaration;
         private readonly object _syncobj = new object();

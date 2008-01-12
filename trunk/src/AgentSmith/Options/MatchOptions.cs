@@ -76,13 +76,16 @@ namespace AgentSmith.Options
         private void btnOK_Click(object sender, EventArgs e)
         {
             DeclarationDescription decl = (DeclarationDescription) _lbMember.SelectedItem;
+            _match.AccessLevel = AccessLevels.Any;
             _match.Declaration = decl.Declaration;
-            _match.AccessLevel = AccessLevels.None;
-            _match.IsReadonly = convertToBool(_cbReadonly.CheckState);
-            _match.IsStatic = convertToBool(_cbStatic.CheckState);
+            _match.MarkedWithAttribute = null;
+            _match.InheritedFrom = null;
+            _match.IsReadonly = FuzzyBool.Maybe;
+            _match.IsStatic = FuzzyBool.Maybe;
 
             if (decl.HasAccessLevel)
             {
+                _match.AccessLevel = AccessLevels.None;
                 foreach (AccessLevelDescription descr in _cbVisibility.CheckedItems)
                 {
                     _match.AccessLevel |= descr.AccessLevel;
@@ -93,18 +96,20 @@ namespace AgentSmith.Options
             {
                 _match.InheritedFrom = _tbInheritedFrom.Text.Trim();
             }
-            else
-            {
-                _match.InheritedFrom = null;
-            }
-
+            
             if (decl.CanBeMarkedWithAttribute)
             {
                 _match.MarkedWithAttribute = _tbMarkedWithAttribute.Text.Trim();
             }
-            else
+            
+            if (decl.CanBeReadonly)
             {
-                _match.MarkedWithAttribute = null;
+                _match.IsReadonly = convertToBool(_cbReadonly.CheckState);
+            }
+
+            if (decl.CanBeStatic)
+            {
+                _match.IsStatic = convertToBool(_cbStatic.CheckState);
             }
         }
 
