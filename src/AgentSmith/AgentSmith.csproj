@@ -161,6 +161,8 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="NamingConventions\DataContext.cs" />
+    <Compile Include="NamingConventions\RenameBulbItem.cs" />
     <Compile Include="SmartPaste\SmartPasteAction.cs" />
     <Compile Include="SpellCheck\SpellCheckManager.cs" />
     <Compile Include="SpellCheck\SpellCheckUtil.cs" />

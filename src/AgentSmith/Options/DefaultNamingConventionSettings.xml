@@ -22,7 +22,9 @@
             <NotMatches />
             <Description>Classes, Enumerations, Enumeration values should be named in Pascal</Description>
             <MustHavePrefixes />
-            <MustNotHavePrefixes />
+            <MustNotHavePrefixes>
+              <string>_</string>
+            </MustNotHavePrefixes>
             <Rule>Pascal</Rule>
             <MustHaveSuffixes />
             <MustNotHaveSuffixes />
@@ -49,7 +51,9 @@
             <NotMatches />
             <Description>Non private properties, methods, events should be in pascal.</Description>
             <MustHavePrefixes />
-            <MustNotHavePrefixes />
+            <MustNotHavePrefixes>
+              <string>_</string>
+            </MustNotHavePrefixes>
             <Rule>Pascal</Rule>
             <MustHaveSuffixes />
             <MustNotHaveSuffixes />
@@ -112,7 +116,9 @@
             </Matches>
             <Description>Variable should be declared in camel.</Description>
             <MustHavePrefixes />
-            <MustNotHavePrefixes />
+            <MustNotHavePrefixes>
+              <string>_</string>
+            </MustNotHavePrefixes>            
             <Rule>Camel</Rule>
             <MustHaveSuffixes />
             <MustNotHaveSuffixes />
@@ -127,7 +133,9 @@
             </Matches>
             <Description>Function parameters should be in camel.</Description>
             <MustHavePrefixes />
-            <MustNotHavePrefixes />
+            <MustNotHavePrefixes>
+              <string>_</string>
+            </MustNotHavePrefixes>
             <Rule>Camel</Rule>
             <MustHaveSuffixes />
             <MustNotHaveSuffixes />
@@ -142,7 +150,9 @@
             </Matches>
             <Description>Namespaces should be in Pascal.</Description>
             <MustHavePrefixes />
-            <MustNotHavePrefixes />
+            <MustNotHavePrefixes>
+              <string>_</string>
+            </MustNotHavePrefixes>
             <Rule>Pascal</Rule>
             <MustHaveSuffixes />
             <MustNotHaveSuffixes />

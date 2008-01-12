@@ -306,7 +306,7 @@ namespace AgentSmith.NamingConventions
         {
             if (exclusions.Contains(name))
             {
-                return new string[] { name };
+                return new string[0];
             }
             string originalName = name;
             bool forceError = false;
@@ -349,10 +349,11 @@ namespace AgentSmith.NamingConventions
                 }
             }
 
-            string[] returnNames = new string[] { name };
+            string[] returnNames = new string[] {};
             if (name != originalName)
             {
                 forceError = true;
+                returnNames = new string[] {name};
             }
 
             if (!checkedObligatoryPrefixes)
@@ -360,7 +361,7 @@ namespace AgentSmith.NamingConventions
                 string[] prefixedNames = new string[_mustHavePrefixes.Length];
                 for (int i = 0; i < _mustHavePrefixes.Length; i++)
                 {
-                    prefixedNames[i] = _mustHavePrefixes[i] + returnNames[0];
+                    prefixedNames[i] = _mustHavePrefixes[i] + name;
                 }
                 returnNames = prefixedNames;
                 forceError = true;
