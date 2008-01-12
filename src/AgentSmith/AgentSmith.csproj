@@ -161,6 +161,9 @@
     <Compile Include="AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Comments\CanBeSurroundedWithMetatagsSuggestion.cs" />
+    <Compile Include="Comments\IdentifierResolver.cs" />
+    <Compile Include="Comments\SurroundWithMetatagsQuickFix.cs" />
     <Compile Include="NamingConventions\DataContext.cs" />
     <Compile Include="NamingConventions\RenameBulbItem.cs" />
     <Compile Include="SmartPaste\SmartPasteAction.cs" />

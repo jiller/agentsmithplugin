@@ -25,6 +25,7 @@ namespace AgentSmith
             HighlightingSettingsManager manager = HighlightingSettingsManager.Instance;
             string group = "Agent Smith";
             manager.RegisterConfigurableSeverity(WordIsNotInDictionarySuggestion.NAME, group, "Word doesn't exist in dictionary.", "Word doesn't exist in default or user dictionary.", Severity.SUGGESTION);
+            manager.RegisterConfigurableSeverity(CanBeSurroundedWithMetatagsSuggestion.NAME, group, "Word can be surrounded with meta tags.", "Word seems to be an identifier and can be surrounded by &lt;see cref=''..> or &lt;paramref ..> or similar tags.", Severity.SUGGESTION);
             manager.RegisterConfigurableSeverity(FixCommentSuggestion.NAME, group, "Public members must have XML comment.", "Public members must have XML comments.", Severity.SUGGESTION);
             manager.RegisterConfigurableSeverity(NamingConventionsSuggestion.NAME, group, "Declarations must conform to naming conventions.", "Declarations must conform to naming conventions", Severity.WARNING);
             manager.RegisterConfigurableSeverity(ResXSpellHighlighting.NAME, group, "Word doesn't exist in dictionary.", "Word doesn't exist in default or user dictionary.", Severity.WARNING);

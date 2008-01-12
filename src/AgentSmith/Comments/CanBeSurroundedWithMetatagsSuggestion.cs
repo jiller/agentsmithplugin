@@ -1,5 +1,4 @@
 using System;
-using AgentSmith.Options;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
@@ -8,26 +7,22 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 namespace AgentSmith.Comments
 {
     [ConfigurableSeverityHighlighting(NAME)]
-    public class WordIsNotInDictionarySuggestion : SuggestionBase, IHighlighting
+    public class CanBeSurroundedWithMetatagsSuggestion : SuggestionBase, IHighlighting
     {
-        public const string NAME = "WordIsNotInDictionary";
-        
-        private readonly IClassMemberDeclaration _decl;
+        public const string NAME = "WordCanBeSurroundedWithMetaTags";
         private readonly DocumentRange _range;
-        private readonly CommentsSettings _settings;
+        private readonly IClassMemberDeclaration _decl;
         private readonly ISolution _solution;
         private readonly string _word;
-        
-        public WordIsNotInDictionarySuggestion(string word, DocumentRange range, ISolution solution,
-                                               CommentsSettings settings,
-                                               IClassMemberDeclaration decl)
-            : base(decl, String.Format("Word '{0}' is not in dictionary.", word))
+
+        public CanBeSurroundedWithMetatagsSuggestion(string word, DocumentRange range, IClassMemberDeclaration decl, ISolution solution)
+            :base(decl,
+                String.Format("Word '{0}' appears to be an identifier and can be surrounded with metatag.", word))
         {
-            _word = word;
             _range = range;
             _solution = solution;
-            _settings = settings;
             _decl = decl;
+            _word = word;
         }
 
         public override DocumentRange Range
@@ -43,11 +38,6 @@ namespace AgentSmith.Comments
         public ISolution Solution
         {
             get { return _solution; }
-        }
-
-        public CommentsSettings Settings
-        {
-            get { return _settings; }
         }
 
         public string Word
