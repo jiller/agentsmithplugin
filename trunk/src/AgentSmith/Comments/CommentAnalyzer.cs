@@ -82,9 +82,17 @@ namespace AgentSmith.Comments
                     if (_spellChecker != null && !_spellChecker.TestWord(wordRange.Word, false))
                     {
                         DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
-                        WordIsNotInDictionarySuggestion highlighting =
-                            new WordIsNotInDictionarySuggestion(wordRange.Word, range, _solution, _settings, decl);
-                        highlightings.Add(highlighting);
+                        SuggestionBase suggestion;
+                        if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                        {
+                            suggestion = new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word, range, decl, _solution);
+                        }
+                        else
+                        {                            
+                            suggestion  = new WordIsNotInDictionarySuggestion(wordRange.Word, range, _solution, _settings, decl);
+                            
+                        }
+                        highlightings.Add(suggestion);
                     }
                 }
             }
