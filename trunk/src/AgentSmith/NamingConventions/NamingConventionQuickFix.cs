@@ -28,7 +28,7 @@ namespace AgentSmith.NamingConventions
         {
             get
             {
-                if (_newNames.Length == 0)
+                if (_newNames.Length == 0 || _declaration is INamespaceDeclaration)
                 {
                     return new IBulbItem[] {new RenameBulbItem(_declaration)};
                 }

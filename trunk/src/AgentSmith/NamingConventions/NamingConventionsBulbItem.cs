@@ -5,6 +5,8 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Refactorings.Rename;
+using JetBrains.ReSharper.Refactorings.RenameNamespace;
+using JetBrains.ReSharper.Refactorings.Workflow;
 using JetBrains.ReSharper.TextControl;
 using JetBrains.Shell;
 using JetBrains.Shell.Progress;
@@ -14,8 +16,8 @@ namespace AgentSmith.NamingConventions
 {
     public class NamingConventionsBulbItem : IBulbItem
     {
-        private readonly string _newName;
         private readonly IDeclaration _declaration;
+        private readonly string _newName;
         private readonly object _syncobj = new object();
 
         public NamingConventionsBulbItem(IDeclaration declaration, string newName)
@@ -39,19 +41,11 @@ namespace AgentSmith.NamingConventions
                         {
                             if (modificationCookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
                             {
-                                RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
-                                if (wf.Initialize(new DataContext(null, _declaration.DeclaredElement, textControl), null))
-                                {
-                                    wf.SetName(_newName, NullProgressIndicator.INSTANCE, false);
-                                    if (wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE).Conflicts.Count > 0)
-                                    {
-                                        MessageBox.Show("Conflicts were found. Can not rename.");
-                                    }
-                                    else
-                                    {
-                                        PsiManager manager = PsiManager.GetInstance(solution);
-                                        manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });
-                                    }
+                                IRefactoringWorkflow wf = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
+                                if (wf != null)
+                                {                                    
+                                    PsiManager manager = PsiManager.GetInstance(solution);
+                                    manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });                                    
                                 }
                             }
                         }
@@ -67,20 +61,42 @@ namespace AgentSmith.NamingConventions
 
         #endregion
 
+        private static IRefactoringWorkflow getRefactoringWorkflow(IDeclaredElement declaredElement, string newName,
+                                                                   ITextControl textControl)
+        {
+            if (declaredElement is INamespace)
+            {
+                RenameNamespaceRefactoringWorkflow wf = new RenameNamespaceRefactoringWorkflow();
+                if (wf.Initialize(new DataContext(null, declaredElement, textControl), null))
+                {
+                    wf.InitializeRefactoring(newName, NullProgressIndicator.INSTANCE, false);                    
+                    return wf;
+                }
+                return null;
+            }
+            else
+            {
+                RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
+                if (wf.Initialize(new DataContext(null, declaredElement, textControl), null))
+                {
+                    wf.SetName(newName, NullProgressIndicator.INSTANCE, false);
+                    if (wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE).Conflicts.Count > 0)
+                    {
+                        MessageBox.Show("Conflicts were found. Can not rename.");
+                        return null;
+                    }
+                    return wf;
+                }
+                return null;
+            }            
+        }
+
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
-            RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
-            if (wf.Initialize(new DataContext(null, _declaration.DeclaredElement, textControl), null))
-            {
-                wf.SetName(_newName, NullProgressIndicator.INSTANCE, false);
-                if (wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE).Conflicts.Count > 0)
-                {
-                    MessageBox.Show("Conflicts were found. Can not rename.");
-                }
-                else
-                {
-                    wf.Execute(NullProgressIndicator.INSTANCE);
-                }
+            IRefactoringWorkflow wf = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
+            if (wf != null)
+            {                
+                wf.Execute(NullProgressIndicator.INSTANCE);                
             }
         }
 
