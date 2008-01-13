@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using AgentSmith.Comments;
 using AgentSmith.NamingConventions;
 using AgentSmith.Options;
+using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Shell.Progress;
+using JetBrains.Util;
 
 namespace AgentSmith
 {
@@ -47,6 +53,17 @@ namespace AgentSmith
 
         public void ProcessBeforeInterior(IElement element)
         {
+            if (element is ITokenNode)
+            {
+                ITokenNode token = (ITokenNode)element;
+                if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
+                {                    
+                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution);
+
+                    spellCheck(element.GetDocumentRange().Document, token, spellChecker);
+                }
+            }
+
             IDeclaration declaration = element as IDeclaration;
             if (declaration == null)
             {
@@ -60,6 +77,60 @@ namespace AgentSmith
                     addHighlighting(highlighting);
                 }
             }
+        }
+
+
+        /*public override void VisitElement(IElement element)
+        {
+            if (element is ITokenNode)
+            {
+                ITokenNode token = (ITokenNode)element;
+                if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
+                {
+                    MessageBox.Show(token.GetText());
+                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution);
+
+                    spellCheck(element.GetDocumentRange().Document, token, spellChecker);            
+                }
+            }
+        }*/
+
+        public string _s = "heladsfasdflo";
+        private string unescape(string text)
+        {
+            if (!text.StartsWith("@"))
+            {
+                return text.Replace("\\a", "  ").
+                    Replace("\\b", "  ").
+                    Replace("\\f", "  ").
+                    Replace("\\n", "  ").
+                    Replace("\\r", "  ").
+                    Replace("\\t", "  ").
+                    Replace("\\v", "  ");
+            }
+            return text;
+        }
+
+        private void spellCheck(IDocument document, ITokenNode token, ISpellChecker spellChecker)
+        {
+            ILexer wordLexer = new WordLexer(unescape(token.GetText()));
+            wordLexer.Start();
+            while (wordLexer.TokenType != null)
+            {
+                if (SpellCheckUtil.ShouldSpellCheck(wordLexer.TokenText))
+                {
+                    if (spellChecker != null && !spellChecker.TestWord(wordLexer.TokenText, false))
+                    {
+                        int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
+                        int end = start + wordLexer.TokenText.Length;
+
+                        DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
+                        addHighlighting(new StringSpellCheckSuggestion(documentRange));                        
+                    }
+                }
+
+                wordLexer.Advance();
+            }            
         }
 
         public bool InteriorShouldBeProcessed(IElement element)

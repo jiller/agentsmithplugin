@@ -171,7 +171,6 @@
     <Compile Include="NamingConventions\DataContext.cs" />
     <Compile Include="NamingConventions\RenameBulbItem.cs" />
     <Compile Include="SmartPaste\SmartPasteAction.cs" />
-    <Compile Include="SpellCheckAction.cs" />
     <Compile Include="SpellCheck\SpellCheckManager.cs" />
     <Compile Include="SpellCheck\SpellCheckUtil.cs" />
     <Compile Include="Options\ImportOpenOfficeDictionary.cs">
@@ -214,6 +213,7 @@
     <Compile Include="MemberMatch\ComplexMatchEvaluator.cs" />
     <Compile Include="MemberMatch\FuzzyBool.cs" />
     <Compile Include="ResX\ResXDaemonStage.cs" />
+    <Compile Include="StringSpellCheckSuggestion.cs" />
     <Compile Include="SuggestionBase.cs">
       <SubType>Code</SubType>
     </Compile>

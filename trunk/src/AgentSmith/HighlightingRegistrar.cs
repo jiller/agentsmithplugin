@@ -24,6 +24,7 @@ namespace AgentSmith
         {
             HighlightingSettingsManager manager = HighlightingSettingsManager.Instance;
             string group = "Agent Smith";
+
             manager.RegisterConfigurableSeverity(WordIsNotInDictionarySuggestion.NAME, group,
                 "Word found in XML comment doesn't exist in dictionary.",
                 "Spell checking of XML comments have found a word that doesn't exist in default or user dictionary and is probably misspelled.",
