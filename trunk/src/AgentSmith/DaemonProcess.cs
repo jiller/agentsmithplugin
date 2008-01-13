@@ -77,25 +77,8 @@ namespace AgentSmith
                     addHighlighting(highlighting);
                 }
             }
-        }
-
-
-        /*public override void VisitElement(IElement element)
-        {
-            if (element is ITokenNode)
-            {
-                ITokenNode token = (ITokenNode)element;
-                if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
-                {
-                    MessageBox.Show(token.GetText());
-                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution);
-
-                    spellCheck(element.GetDocumentRange().Document, token, spellChecker);            
-                }
-            }
-        }*/
-
-        public string _s = "heladsfasdflo";
+        }      
+        
         private string unescape(string text)
         {
             if (!text.StartsWith("@"))

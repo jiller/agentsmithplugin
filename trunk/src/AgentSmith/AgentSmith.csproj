@@ -82,10 +82,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.CodeInsight.Services.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.ReSharper.CodeView, Version=3.0.517.8, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.CodeView.dll</HintPath>
-    </Reference>
     <Reference Include="JetBrains.ReSharper.CommonActions, Version=3.0.565.4, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.CommonActions.dll</HintPath>
