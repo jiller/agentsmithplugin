@@ -106,7 +106,7 @@ namespace AgentSmith.NamingConventions
         public bool IsMatch(IDeclaration declaration)
         {
             if (declaration is IIndexerDeclaration ||
-                declaration.DeclaredName.Contains(".") ||
+                (declaration.DeclaredName.Contains(".") && !(declaration is INamespaceDeclaration)) ||
                 declaration is IDestructorDeclaration)
             {
                 return false;
@@ -153,7 +153,8 @@ namespace AgentSmith.NamingConventions
                     string[] correctedNames = getCorrectedName(parts[i], exclusions);
                     parts[i] = correctedNames.Length == 0 ? parts[i] : correctedNames[0];
                 }
-                return new string[] { string.Join(".", parts) };
+                string newName = string.Join(".", parts);
+                return newName == name ? new string[]{} : new string[] { newName };
             }
         }
 
