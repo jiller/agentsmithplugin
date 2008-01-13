@@ -341,7 +341,7 @@
             <MustNotHaveSuffixes />
         </NamingConventionRule>
         <NamingConventionRule>
-            <IsDisabled>false</IsDisabled>
+            <IsDisabled>true</IsDisabled>
             <Matches>
                 <Match>
                     <AccessLevel>Any</AccessLevel>
