@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- PowerToy Installer File. -->
 <!-- This is a part of the JetBrains ReSharper PowerToys pack. -->
 <!-- The file can be used for building an installer for your own R# Plugins. -->
@@ -9,7 +9,7 @@
 		<Package InstallerVersion="200" Compressed="yes" />
 
 		<!-- Defines the pack of source files. -->
-		<Media Id="1" Cabinet="ReSharperPowerToySetup.cab" EmbedCab="yes" />
+		<Media Id="1" Cabinet="AgentSmithSetup.cab" EmbedCab="yes" />
 
 		<!-- Directory structure for the plugin. -->
 		<Directory Id="TARGETDIR" Name="SourceDir">
@@ -47,11 +47,11 @@
 		<UIRef Id="WixUI_Advanced" />
 
 		<!-- Specify the license agreement text to be shown in the UI. -->
-		<WixVariable Id="WixUILicenseRtf" Value="$(var.DynSetupFilesDir)/ReSharperPowerToySetup.License.rtf" />
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.DynSetupFilesDir)/AgentSmithSetup.License.rtf" />
 
 		<!-- Wizard clipart. -->
-		<WixVariable Id="WixUIBannerBmp" Value="$(var.DynSetupFilesDir)/ReSharperPowerToySetup.Banner.bmp"/>
-		<WixVariable Id="WixUIDialogBmp" Value="$(var.DynSetupFilesDir)/ReSharperPowerToySetup.Dialog.bmp"/>
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.DynSetupFilesDir)/AgentSmithSetup.Banner.bmp"/>
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.DynSetupFilesDir)/AgentSmithSetup.Dialog.bmp"/>
 
 		<!-- This includes the whole fragment with property declarations. -->
 		<PropertyRef Id="RESHARPERVERSION2"/>
