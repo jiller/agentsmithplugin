@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<!-- Home folder for the PowerToys build site. -->
-		<AgentSmithHomeDir>$(MSBuildProjectDirectory)/../..</AgentSmithHomeDir>
+		<AgentSmithHomeDir>$(MSBuildProjectDirectory)/..</AgentSmithHomeDir>
 		<!-- Binaries dir; redirect the build output by setting it externally. -->
 		<AgentSmithBinariesDir Condition="'$(AgentSmithBinariesDir)'==''">$(AgentSmithHomeDir)/Bin</AgentSmithBinariesDir>
 	</PropertyGroup>
