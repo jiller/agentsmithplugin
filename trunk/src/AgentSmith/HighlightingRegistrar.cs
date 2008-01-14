@@ -2,6 +2,7 @@ using System;
 using AgentSmith.Comments;
 using AgentSmith.NamingConventions;
 using AgentSmith.Resx;
+using AgentSmith.Strings;
 using JetBrains.ComponentModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.Shell;
@@ -49,6 +50,11 @@ namespace AgentSmith
                 "Word found in ResX file doesn't exist in dictionary.",
                 "Spell checking of strings in a ResX file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
                 Severity.WARNING);
+
+            manager.RegisterConfigurableSeverity(StringSpellCheckSuggestion.NAME, group,
+                "Word found in c# literal doesn't exist in dictionary.",
+                "Spell checking of a string in c# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
+                Severity.SUGGESTION);
         }
 
         #endregion

@@ -5,6 +5,7 @@ using AgentSmith.NamingConventions;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using AgentSmith.Strings;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
@@ -102,13 +103,21 @@ namespace AgentSmith
             {
                 if (SpellCheckUtil.ShouldSpellCheck(wordLexer.TokenText))
                 {
-                    if (spellChecker != null && !spellChecker.TestWord(wordLexer.TokenText, false))
+                    if (spellChecker != null &&
+                        !spellChecker.TestWord(wordLexer.TokenText, false))
                     {
-                        int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
-                        int end = start + wordLexer.TokenText.Length;
+                        IClassMemberDeclaration containingElement = token.GetContainingElement<IClassMemberDeclaration>(false);
+                        if (containingElement == null || 
+                            !IdentifierResolver.IsIdentifier(containingElement, _process.Solution, wordLexer.TokenText))
+                        {
+                            int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
+                            int end = start + wordLexer.TokenText.Length;
 
-                        DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
-                        addHighlighting(new StringSpellCheckSuggestion(documentRange));                        
+                            DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
+                            addHighlighting(new StringSpellCheckSuggestion(documentRange, wordLexer.TokenText,
+                                _process.Solution,
+                                CodeStyleSettings.GetInstance(_process.Solution).CommentsSettings));
+                        }
                     }
                 }
 

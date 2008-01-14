@@ -40,12 +40,10 @@ namespace AgentSmith.Resx
                     {
                         if (SpellCheckUtil.ShouldSpellCheck(lexer.TokenText) && !checker.TestWord(lexer.TokenText, false))
                         {
-                            string text = String.Format("Word '{0}' is not in dictionary.", lexer.TokenText);
-
                             DocumentRange docRange = token.GetDocumentRange();
                             DocumentRange range = new DocumentRange(docRange.Document, new TextRange(docRange.TextRange.StartOffset + lexer.TokenStart, docRange.TextRange.StartOffset + lexer.TokenEnd));
                             highlightings.Add(new HighlightingInfo(range,
-                                new ResXSpellHighlighting(lexer.TokenText, _file, styleSettings.CommentsSettings, range, token, text)));
+                                new ResXSpellHighlighting(lexer.TokenText, _file, styleSettings.CommentsSettings, range, token)));
                         }
                         lexer.Advance();
                     }

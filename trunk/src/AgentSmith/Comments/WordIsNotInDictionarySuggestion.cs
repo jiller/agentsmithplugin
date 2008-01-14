@@ -1,5 +1,6 @@
 using System;
 using AgentSmith.Options;
+using AgentSmith.SpellCheck;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
@@ -8,25 +9,20 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 namespace AgentSmith.Comments
 {
     [ConfigurableSeverityHighlighting(NAME)]
-    public class WordIsNotInDictionarySuggestion : SuggestionBase, IHighlighting
+    public class WordIsNotInDictionarySuggestion : SpellCheckSuggestionBase, IHighlighting
     {
         public const string NAME = "WordIsNotInDictionary";
         
         private readonly IClassMemberDeclaration _decl;
         private readonly DocumentRange _range;
-        private readonly CommentsSettings _settings;
-        private readonly ISolution _solution;
-        private readonly string _word;
+        
         
         public WordIsNotInDictionarySuggestion(string word, DocumentRange range, ISolution solution,
                                                CommentsSettings settings,
                                                IClassMemberDeclaration decl)
-            : base(decl, String.Format("Word '{0}' is not in dictionary.", word))
-        {
-            _word = word;
-            _range = range;
-            _solution = solution;
-            _settings = settings;
+            : base(decl, word, solution, settings)
+        {        
+            _range = range;         
             _decl = decl;
         }
 
@@ -39,22 +35,7 @@ namespace AgentSmith.Comments
         {
             get { return _decl; }
         }
-
-        public ISolution Solution
-        {
-            get { return _solution; }
-        }
-
-        public CommentsSettings Settings
-        {
-            get { return _settings; }
-        }
-
-        public string Word
-        {
-            get { return _word; }
-        }
-
+       
         #region IHighlighting Members
 
         public override Severity Severity

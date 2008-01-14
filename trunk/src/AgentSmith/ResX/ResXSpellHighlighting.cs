@@ -1,5 +1,6 @@
 using System;
 using AgentSmith.Options;
+using AgentSmith.SpellCheck;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
@@ -8,31 +9,17 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace AgentSmith.Resx
 {
     [ConfigurableSeverityHighlighting(NAME)]
-    public class ResXSpellHighlighting : SuggestionBase
+    public class ResXSpellHighlighting : SpellCheckSuggestionBase
     {
         public const string NAME = "ResxSpellCheckSuggestion";
         private readonly DocumentRange _range;
-        private readonly CommentsSettings _settings;
-        private readonly string _word;
         private readonly IProjectFile _file;
 
-        public ResXSpellHighlighting(string word, IProjectFile file, CommentsSettings settings, DocumentRange range, IElement element, string toolTip)
-            : base(element, toolTip)
+        public ResXSpellHighlighting(string word, IProjectFile file, CommentsSettings settings, DocumentRange range, IElement element)
+            : base(element, word, file.GetSolution(), settings)
         {
-            _range = range;
-            _settings = settings;
-            _word = word;
+            _range = range;                    
             _file = file;
-        }
-
-        public CommentsSettings Settings
-        {
-            get { return _settings; }
-        }
-
-        public string Word
-        {
-            get { return _word; }
         }
 
         public override Severity Severity

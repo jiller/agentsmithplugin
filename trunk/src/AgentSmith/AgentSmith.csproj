@@ -209,7 +209,8 @@
     <Compile Include="MemberMatch\ComplexMatchEvaluator.cs" />
     <Compile Include="MemberMatch\FuzzyBool.cs" />
     <Compile Include="ResX\ResXDaemonStage.cs" />
-    <Compile Include="StringSpellCheckSuggestion.cs" />
+    <Compile Include="SpellCheck\SpellCheckSuggestionBase.cs" />
+    <Compile Include="Strings\StringSpellCheckSuggestion.cs" />
     <Compile Include="SuggestionBase.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -278,6 +279,7 @@
       <DependentUpon>SortedListBox.cs</DependentUpon>
     </Compile>
     <Compile Include="HighlightingRegistrar.cs" />
+    <Compile Include="Strings\StringSpellCheckQuickFix.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Options\MatchCollectionEdit.resx">
