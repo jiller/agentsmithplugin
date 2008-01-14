@@ -54,7 +54,7 @@
 		</SetupsBuildProperties>
 	</PropertyGroup>
 	<ItemGroup>
-		<SetupProject Include="$(AgentSmithHomeDir)/Src/*/*.Setup.Proj" />
+		<SetupProject Include="$(AgentSmithHomeDir)/src/*.Setup.Proj" />
 	</ItemGroup>
 	<Target Name="InvokeSetupsBuild">
 		<MSBuild Projects="@(SetupProject)" Targets="Build" Properties="$(SetupsBuildProperties)" />
