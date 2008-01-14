@@ -16,11 +16,20 @@
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="APPLICATIONFOLDER" Name="[ApplicationFolderName]">
 					<!-- This will be redirected into either R# installdir or user-data folder. -->
-
+          <Directory Id="Dic" Name="dic">
+            <Component Id="C.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694565C}" Location="local">
+              <File Id="F.enUSdic" Checksum="yes" DiskId="1" Name="en-US.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-US.dic" Vital="yes"/>
+              <File Id="F.enCAdic" Checksum="yes" DiskId="1" Name="en-CA.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-CA.dic" Vital="yes"/>
+              <File Id="F.enGBdic" Checksum="yes" DiskId="1" Name="en-GB.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-GB.dic" Vital="yes"/>
+              <File Id="F.enAUdic" Checksum="yes" DiskId="1" Name="en-AU.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-AU.dic" Vital="yes"/>
+              <File Id="F.deDEdic" Checksum="yes" DiskId="1" Name="de-DE.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/de-DE.dic" Vital="yes"/>
+            </Component>
+          </Directory>
 					<!-- Install the plugin assembly. -->
 					<Component Id="C.ProductAssembly" Guid="$(var.DynMsiComponentGuid00)" Location="local">
-						<File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="Plugin.Dll" ReadOnly="yes" Source="$(var.DynAssemblyFile)" Vital="yes" />
-					</Component>
+						<File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="AgentSmith.dll" ReadOnly="yes" Source="$(var.DynAssemblyFile)" Vital="yes" />
+            <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" Name="AgentSmith.pdb" ReadOnly="yes" Source="$(var.DynPdbFile)" Vital="yes" />
+          </Component>
 
 					<!-- Cause the one-time-init to happen in R# after the plugin is installed, either per-user or all-users. -->
 					<Component Id="C.OneTimeInit" Guid="$(var.DynMsiComponentGuid01)" Location="local">
@@ -34,6 +43,7 @@
 		<!-- Feature tree: just mount the components. -->
 		<Feature Id="ProductFeature" Title="Everything" Level="1" AllowAdvertise="no" Display="expand" InstallDefault="local" Description="Installs the [ProductName] either under the R# directory, or into the user's Local Applocation Data folder.">
 			<ComponentRef Id="C.ProductAssembly" />
+      <ComponentRef Id="C.dic" />
 			<ComponentRef Id="C.OneTimeInit" />
 		</Feature>
 
