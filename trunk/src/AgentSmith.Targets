@@ -1,0 +1,25 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+	<!-- Inputs. -->
+	<PropertyGroup>
+		<!-- This folder must point to the ReSharper binaries location on your system. -->
+		<ReSharperBinariesDir Condition="'$(ReSharperBinariesDir)'==''">$(AgentSmithHomeDir)/Lib</ReSharperBinariesDir>
+		<PowerToysBinariesDir Condition="'$(PowerToysBinariesDir)'==''">$(AgentSmithHomeDir)/Bin</PowerToysBinariesDir>
+	</PropertyGroup>
+
+	<!-- Outputs. -->
+	<PropertyGroup>
+		<OutputPath>$(AgentSmithBinariesDir)\</OutputPath>
+		<IntermediateOutputPath>$(AgentSmithHomeDir)\Obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+	</PropertyGroup>
+
+	<!-- Other Settings. -->
+	<PropertyGroup>
+		<TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+		<DebugSymbols>True</DebugSymbols>
+		<DebugType>Full</DebugType>
+		<DocumentationFile>$(IntermediateOutputPath)$(AssemblyName).Xml</DocumentationFile>
+		<NoWarn>$(NoWarn); 1591</NoWarn>
+		<SignAssembly Condition="'$(Configuration)'=='Release'">True</SignAssembly>
+		<AssemblyOriginatorKeyFile>$(AgentSmithHomeDir)/Src/Key.Snk</AssemblyOriginatorKeyFile>
+	</PropertyGroup>
+</Project>
