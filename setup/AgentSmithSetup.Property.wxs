@@ -62,7 +62,7 @@
 
 		<!-- Specifies the primary icon for the installation package. -->
 		<Property Id="ARPPRODUCTICON">F.ProductIcon.ico</Property>
-		<Icon Id="F.ProductIcon.ico" SourceFile="$(var.DynSetupFilesDir)/ReSharperPowerToySetup.ico" />
+		<Icon Id="F.ProductIcon.ico" SourceFile="$(var.DynSetupFilesDir)/AgentSmithSetup.ico" />
 
 	</Fragment>
 </Wix>
