@@ -1,8 +1,8 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="2.0">
 	<!-- Inputs. -->
 	<PropertyGroup>
 		<!-- This folder must point to the ReSharper binaries location on your system. -->
-		<ReSharperBinariesDir Condition="'$(ReSharperBinariesDir)'==''">$(AgentSmithHomeDir)/Lib</ReSharperBinariesDir>
+		<ReSharperBinariesDir Condition="'$(ReSharperBinariesDir)'==''">$(AgentSmithHomeDir)/Lib/Resharper</ReSharperBinariesDir>
 		<AgentSmithBinariesDir Condition="'$(AgentSmithBinariesDir)'==''">$(AgentSmithHomeDir)/Bin</AgentSmithBinariesDir>
 	</PropertyGroup>
 
