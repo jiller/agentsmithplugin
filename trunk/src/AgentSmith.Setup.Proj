@@ -15,7 +15,7 @@
 		<ProductVersion>1.0.9.0</ProductVersion>
 
 		<!-- Version of R# (two components only) that the plugin is targeting. -->
-		<ReSharperVersion2>3.1</ReSharperVersion2>
+		<ReSharperVersion2>3.0</ReSharperVersion2>
 		
 		<!-- Plugin vendor name. -->
 		<CompanyName>Sergey Zyuzin</CompanyName>
