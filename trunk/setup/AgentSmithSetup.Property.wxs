@@ -5,7 +5,7 @@
 	<!-- The “Dyn”-prefixed variables are coming from the project file. This way you can build a typical R# plugin installer without touching the installer sources themselves, just modify the settings file (Setup.Proj). -->
 	<Fragment>
 		<!-- Try a per-user installation by default. -->
-		<Property Id="ALLUSERS" Secure="yes" />
+		<!--<Property Id="ALLUSERS" Secure="yes" />-->
 
 		<!-- Directory selectable by the user as the installation target, public prop. -->
 		<Property Id="INSTALLDIR" Secure="yes"/>
@@ -20,7 +20,7 @@
 		<Property Id="DISABLEADVTSHORTCUTS" Secure="yes">1</Property>
 
 		<!-- Instructs the WiX UI on which installdir to chose. -->
-		<!-- <Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" Secure="yes" />-->
+		<!--<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" Secure="yes" /> TODO -->
 
 		<!-- A two-component version of R# we're targeting. -->
 		<Property Id="RESHARPERVERSION2" Value="$(var.DynReSharperVersion2)" Secure="yes" />	
@@ -33,7 +33,7 @@
 		<Property Id="VSROOTSUFFIX" Secure="yes" />
 
 		<!-- Set this property if you'd like to prevent the installation from uninstalling any other versions of the same product, for example, if you'd like to install a few versions side-by-side for different VS Hives. -->
-                <!--<Property Id="NOUPGRADE" Secure="yes">1</Property>-->
+                <Property Id="NOUPGRADE" Secure="yes">1</Property>
 
 		<!-- If an installed product of the same version is detected, abort the installation. -->
                 <Property Id="CANNOTUPGRADESAME" Secure="yes">1</Property>
