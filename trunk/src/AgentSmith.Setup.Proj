@@ -12,10 +12,10 @@
 		<ProductName>Agent Smith</ProductName>
 		
 		<!-- Version of the plugin, to be specified in the installer. -->
-		<ProductVersion>1.0.9.0</ProductVersion>
+		<ProductVersion>1.1.1</ProductVersion>
 
 		<!-- Version of R# (two components only) that the plugin is targeting. -->
-		<ReSharperVersion2>3.0</ReSharperVersion2>
+		<ReSharperVersion2>3.1</ReSharperVersion2>
 		
 		<!-- Plugin vendor name. -->
 		<CompanyName>Sergey Zyuzin</CompanyName>
