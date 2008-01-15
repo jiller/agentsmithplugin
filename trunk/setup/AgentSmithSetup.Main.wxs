@@ -5,7 +5,7 @@
 <!-- To do that, do not modify this file; instead, see how the “Setup.Proj” files are organized inside the PowerToy folders. -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<!-- The “Dyn”-prefixed variables are coming from the project file. This way you can build a typical R# plugin installer without touching the installer sources themselves, just modify the settings file (Setup.Proj). -->
-	<Product Id="*" Name="$(var.DynProductName) ReSharper $(var.DynReSharperVersion2) Plugin (VS $(var.DynVsVersion))" Language="1033" Version="$(var.DynProductVersion)" Manufacturer="$(var.DynCompanyName)" UpgradeCode="$(var.DynUpgradeCode)">
+	<Product Id="*" Name="$(var.DynProductName) $(var.DynProductVersion) R# $(var.DynReSharperVersion2) Plugin (VS $(var.DynVsVersion))" Language="1033" Version="$(var.DynProductVersion)" Manufacturer="$(var.DynCompanyName)" UpgradeCode="$(var.DynUpgradeCode)">
 		<Package InstallerVersion="200" Compressed="yes" />
 
 		<!-- Defines the pack of source files. -->
@@ -16,20 +16,20 @@
 			<Directory Id="ProgramFilesFolder">
 				<Directory Id="APPLICATIONFOLDER" Name="[ApplicationFolderName]">
 					<!-- This will be redirected into either R# installdir or user-data folder. -->
-          <Directory Id="Dic" Name="dic">
-            <Component Id="C.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694565C}" Location="local">
-              <File Id="F.enUSdic" Checksum="yes" DiskId="1" Name="en-US.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-US.dic" Vital="yes"/>
-              <File Id="F.enCAdic" Checksum="yes" DiskId="1" Name="en-CA.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-CA.dic" Vital="yes"/>
-              <File Id="F.enGBdic" Checksum="yes" DiskId="1" Name="en-GB.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-GB.dic" Vital="yes"/>
-              <File Id="F.enAUdic" Checksum="yes" DiskId="1" Name="en-AU.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-AU.dic" Vital="yes"/>
-              <File Id="F.deDEdic" Checksum="yes" DiskId="1" Name="de-DE.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/de-DE.dic" Vital="yes"/>
-            </Component>
-          </Directory>
+                                       <Directory Id="Dic" Name="dic">
+                                           <Component Id="C.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694565C}" Location="local">
+                                               <File Id="F.enUSdic" Checksum="yes" DiskId="1" Name="en-US.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-US.dic" Vital="yes"/>
+                                               <File Id="F.enCAdic" Checksum="yes" DiskId="1" Name="en-CA.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-CA.dic" Vital="yes"/>
+                                               <File Id="F.enGBdic" Checksum="yes" DiskId="1" Name="en-GB.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-GB.dic" Vital="yes"/>
+                                               <File Id="F.enAUdic" Checksum="yes" DiskId="1" Name="en-AU.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-AU.dic" Vital="yes"/>
+                                               <File Id="F.deDEdic" Checksum="yes" DiskId="1" Name="de-DE.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/de-DE.dic" Vital="yes"/>
+                                           </Component>
+                                        </Directory>
 					<!-- Install the plugin assembly. -->
 					<Component Id="C.ProductAssembly" Guid="$(var.DynMsiComponentGuid00)" Location="local">
 						<File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="AgentSmith.dll" ReadOnly="yes" Source="$(var.DynAssemblyFile)" Vital="yes" />
-            <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" Name="AgentSmith.pdb" ReadOnly="yes" Source="$(var.DynPdbFile)" Vital="yes" />
-          </Component>
+                                                <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" Name="AgentSmith.pdb" ReadOnly="yes" Source="$(var.DynPdbFile)" Vital="yes" />
+                                        </Component>
 
 					<!-- Cause the one-time-init to happen in R# after the plugin is installed, either per-user or all-users. -->
 					<Component Id="C.OneTimeInit" Guid="$(var.DynMsiComponentGuid01)" Location="local">
@@ -43,7 +43,7 @@
 		<!-- Feature tree: just mount the components. -->
 		<Feature Id="ProductFeature" Title="Everything" Level="1" AllowAdvertise="no" Display="expand" InstallDefault="local" Description="Installs the [ProductName] either under the R# directory, or into the user's Local Applocation Data folder.">
 			<ComponentRef Id="C.ProductAssembly" />
-      <ComponentRef Id="C.dic" />
+                        <ComponentRef Id="C.dic" />
 			<ComponentRef Id="C.OneTimeInit" />
 		</Feature>
 
@@ -51,10 +51,10 @@
 		<Property Id="ApplicationFolderName" Value="$(var.DynProductName)" />
 
 		<!-- Default selection for the “per user or per machine?” dialog. -->
-		<Property Id="WixAppFolder" Value="WixPerUserFolder" />
+		<Property Id="WixAppFolder" Value="WixPerMachineFolder" />
 
 		<!-- Mount the WiX Wizard Dialogs. -->
-		<UIRef Id="WixUI_Advanced" />
+		<UIRef Id="WixUI_InstallDir " />
 
 		<!-- Specify the license agreement text to be shown in the UI. -->
 		<WixVariable Id="WixUILicenseRtf" Value="$(var.DynSetupFilesDir)/AgentSmithSetup.License.rtf" />
@@ -71,6 +71,10 @@
 			<RegistrySearch Id="AS.ReSharperBinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]" Name="InstallDir" Type="directory" />
 		</Property>
 
+                <!--<Upgrade Id='$(var.DynUpgradeCode)'>
+                    <UpgradeVersion OnlyDetect='yes' Property='PATCHFOUND' IncludeMinimum='yes' IncludeMaximum='yes' Minimum='1.0.9' Maximum='1.0.9'/>
+                </Upgrade>-->
+		
 		<!-- Assign the installation folder for the all users / current user scenarios. -->
 		<CustomAction Id="WixSetDefaultPerMachineFolder.Custom" Property="WixPerMachineFolder" Value="[ProgramFilesFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Bin\Plugins\[ApplicationFolderName]" Execute="immediate" />
 		<!-- Per-machine folder, as for the default installation dir. -->
@@ -79,6 +83,7 @@
 		<CustomAction Id="WixSetDefaultPerUserFolder.Custom" Property="WixPerUserFolder" Value="[LocalAppDataFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Plugins\[ApplicationFolderName]" Execute="immediate" />
 		<!-- Per-user folder in the application data. -->
 		<InstallExecuteSequence>
+                        <!--<RemoveExistingProducts Before="InstallInitialize"/>-->
 			<Custom Action="WixSetDefaultPerMachineFolder.Custom" Before="WixSetPerMachineFolder">Not RESHARPERINSTALLDIR</Custom>
 			<Custom Action="WixSetDefaultPerMachineFolder.InstallDir" Before="WixSetPerMachineFolder">RESHARPERINSTALLDIR</Custom>
 			<Custom Action="WixSetDefaultPerUserFolder.Custom" Before="WixSetPerUserFolder" />
