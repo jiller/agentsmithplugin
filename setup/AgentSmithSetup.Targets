@@ -5,10 +5,10 @@
 	<PropertyGroup>
 		<!-- Path for the WiX build tasks to locate the DLLs and EXEs. -->
 		<!-- If you're building on machines with WiX installed by an installer, and its EXEs are added to the %PATH%, you may delete the following line. -->
-		<!--<WixToolPath>C:\Program Files\Windows Installer XML v3\bin</WixToolPath>-->
+		<WixToolPath>C:\Program Files\Windows Installer XML v3\bin</WixToolPath>
 		<!-- Path for the WiX Targets file to locate the tasks and their DLLs. -->
 		<!-- If you're building on machines with WiX installed by an installer, and its tasks are added to the system MSBuild Extensions folder, delete the following line. -->
-		<!--<MSBuildExtensionsPath>$(AgentSmithHomeDir)\..\tools\MSBuild\</MSBuildExtensionsPath>-->
+		<!--MSBuildExtensionsPath>$(AgentSmithHomeDir)\tools\</MSBuildExtensionsPath>-->
 	</PropertyGroup>
 
 	<!-- Outputs. -->
@@ -57,8 +57,7 @@
 
 	</PropertyGroup>
 
-	<!--<Import Project="$(MSBuildExtensionsPath)\Microsoft\WiX\v3.0\Wix.targets" />-->
-	<Import Project="Wix.targets" />
+	<Import Project="$(MSBuildExtensionsPath)\Microsoft\wix\v3.0\Wix.targets" />
 
 	<!-- Checks for the mandatory properties. -->
 	<Target Name="CheckAgentSmithHomeDir">
