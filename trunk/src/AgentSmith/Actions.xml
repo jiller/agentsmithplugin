@@ -2,11 +2,9 @@
 <actions>     
   <insert group-id="VS#Code Window" position="last">
     <separator/>
-    <action id="AgentSmith.SmartPaste" text="Smart Paste" shortcut="Shift+Alt+Insert"/>
-    <!--<action id="AgentSmith.SpellCheck" text="Spell Check">
-      <vs-shortcut>Control+S C</vs-shortcut>
+    <action id="AgentSmith.SmartPaste" text="Smart Paste" shortcut="Shift+Alt+Insert">
+        <vs-shortcut>Control+S P</vs-shortcut>
     </action>
-    -->
   </insert>
   
 </actions>

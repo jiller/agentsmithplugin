@@ -28,11 +28,19 @@ namespace AgentSmith
         {
             _process = daemonProcess;
             CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_process.Solution);
-            _analyzers = new IDeclarationAnalyzer[]
-                {
-                    new NamingConventionsAnalyzer(styleSettings.NamingConventionSettings, _process.Solution),
-                    new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),
-                };
+            //TODO:This might happen if plugin is activated manually
+            if (styleSettings == null)
+            {
+                _analyzers = new IDeclarationAnalyzer[0];
+            }
+            else
+            {
+                _analyzers = new IDeclarationAnalyzer[]
+                    {
+                        new NamingConventionsAnalyzer(styleSettings.NamingConventionSettings, _process.Solution),
+                        new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),
+                    };
+            }
         }
 
         #region IDaemonStageProcess Members
@@ -97,6 +105,13 @@ namespace AgentSmith
 
         private void spellCheck(IDocument document, ITokenNode token, ISpellChecker spellChecker)
         {
+            CodeStyleSettings settings = CodeStyleSettings.GetInstance(_process.Solution);
+            if (settings == null)
+            {
+                //TODO:This might happen if plugin is activated manually
+                return;
+            }
+
             ILexer wordLexer = new WordLexer(unescape(token.GetText()));
             wordLexer.Start();
             while (wordLexer.TokenType != null)
@@ -114,9 +129,9 @@ namespace AgentSmith
                             int end = start + wordLexer.TokenText.Length;
 
                             DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
+                            
                             addHighlighting(new StringSpellCheckSuggestion(documentRange, wordLexer.TokenText,
-                                _process.Solution,
-                                CodeStyleSettings.GetInstance(_process.Solution).CommentsSettings));
+                                _process.Solution, settings.CommentsSettings));
                         }
                     }
                 }

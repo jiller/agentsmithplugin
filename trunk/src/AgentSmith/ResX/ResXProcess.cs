@@ -25,9 +25,14 @@ namespace AgentSmith.Resx
 
         public DaemonStageProcessResult Execute()
         {
-            CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_file.GetSolution());
-
             DaemonStageProcessResult result = new DaemonStageProcessResult();
+            CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_file.GetSolution());
+            if (styleSettings == null)
+            {
+                //TODO:This might happen if plugin is activated manually
+                return result;
+            }
+
             List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
             ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file);
             if (checker != null)

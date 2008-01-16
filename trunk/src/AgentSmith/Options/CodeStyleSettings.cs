@@ -20,6 +20,8 @@ namespace AgentSmith.Options
         public CodeStyleSettings()
         {
             _namingConventionSettings.LoadDefaults();
+            _commentsSettings = new CommentsSettings();
+            _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
         }
 
         public CommentsSettings CommentsSettings
@@ -69,12 +71,7 @@ namespace AgentSmith.Options
                     XmlReader reader = XmlReader.Create(new StringReader(element.InnerXml));
                     CodeStyleSettings settings = (CodeStyleSettings)serializer.Deserialize(reader);
                     _namingConventionSettings = settings.NamingConventionSettings;
-                    _commentsSettings = settings.CommentsSettings;
-                    if (_commentsSettings == null)
-                    {
-                        _commentsSettings = new CommentsSettings();
-                        _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
-                    }
+                    _commentsSettings = settings.CommentsSettings;                    
                 }
                 catch (Exception ex)
                 {
