@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
 using AgentSmith.Comments;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
@@ -64,18 +63,19 @@ namespace AgentSmith.Strings
                         !IdentifierResolver.IsIdentifier(containingElement, solution, wordLexer.TokenText))
                     {
                                                 
-                        foreach (CamelHumpLexer.LexerToken humpToken in new CamelHumpLexer(buffer, wordLexer.TokenStart, wordLexer.TokenEnd))
+                        foreach (LexerToken humpToken in new CamelHumpLexer(buffer, wordLexer.TokenStart, wordLexer.TokenEnd))
                         {                            
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                                 !spellChecker.TestWord(humpToken.Value, false))
                             {
-                                int start = token.GetTreeStartOffset() + humpToken.Start;
-                                int end = start + humpToken.Length;
+                                int start = token.GetTreeStartOffset();
+                                int end = start + wordLexer.TokenText.Length;
 
                                 DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
 
-                                suggestions.Add(new StringSpellCheckSuggestion(documentRange, humpToken.Value,
+                                suggestions.Add(new StringSpellCheckSuggestion(documentRange, wordLexer.TokenText,
                                                                                solution, settings.CommentsSettings));
+                                break;
                             }
                         }                                                
                     }

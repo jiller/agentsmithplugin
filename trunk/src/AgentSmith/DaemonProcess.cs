@@ -60,7 +60,7 @@ namespace AgentSmith
 
         public void ProcessBeforeInterior(IElement element)
         {
-            if (element is ITokenNode)
+            if (StringSpellCheckSuggestion.Enabled && element is ITokenNode)
             {
                 ITokenNode token = (ITokenNode) element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)

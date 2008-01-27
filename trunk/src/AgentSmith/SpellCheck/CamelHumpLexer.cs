@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace AgentSmith.SpellCheck
 {
-    public class CamelHumpLexer : IEnumerable<CamelHumpLexer.LexerToken>
+    public class CamelHumpLexer : IEnumerable<LexerToken>
     {
         private readonly string _buffer;
         private readonly int _start;
@@ -64,34 +64,6 @@ namespace AgentSmith.SpellCheck
             return ((IEnumerable<LexerToken>) this).GetEnumerator();
         }
 
-        #endregion
-
-        #region Nested type: LexerToken
-
-        public struct LexerToken
-        {
-            public string Buffer;
-            public int End;
-            public int Start;
-
-            public LexerToken(string buffer, int start, int end)
-            {
-                Buffer = buffer;
-                Start = start;
-                End = end;
-            }
-
-            public string Value
-            {
-                get { return Buffer.Substring(Start, Length); }
-            }
-
-            public int Length
-            {
-                get { return End - Start; }
-            }
-        }
-
-        #endregion
+        #endregion        
     }
 }
