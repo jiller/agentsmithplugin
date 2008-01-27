@@ -12,17 +12,17 @@ namespace AgentSmith.Comments
     public class WordIsNotInDictionarySuggestion : SpellCheckSuggestionBase, IHighlighting
     {
         public const string NAME = "WordIsNotInDictionary";
-        
+
         private readonly IClassMemberDeclaration _decl;
         private readonly DocumentRange _range;
-        
-        
+
+
         public WordIsNotInDictionarySuggestion(string word, DocumentRange range, ISolution solution,
                                                CommentsSettings settings,
                                                IClassMemberDeclaration decl)
             : base(decl, word, solution, settings)
-        {        
-            _range = range;         
+        {
+            _range = range;
             _decl = decl;
         }
 
@@ -35,7 +35,16 @@ namespace AgentSmith.Comments
         {
             get { return _decl; }
         }
-       
+
+        public static bool Enabled
+        {
+            get
+            {
+                return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME) !=
+                       Severity.DO_NOT_SHOW;
+            }
+        }
+
         #region IHighlighting Members
 
         public override Severity Severity

@@ -34,5 +34,14 @@ namespace AgentSmith.Strings
                 //return "ReSharper Suggestion";
             }
         }
+
+        public static bool Enabled
+        {
+            get
+            {
+                return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME) !=
+                       Severity.DO_NOT_SHOW;
+            }
+        }
     }
 }

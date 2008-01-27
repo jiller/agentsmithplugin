@@ -52,6 +52,15 @@ namespace AgentSmith.Comments
             get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
         }
 
+        public static bool Enabled
+        {
+            get
+            {
+                return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME) !=
+                       Severity.DO_NOT_SHOW;
+            }
+        }
+
         #endregion
     }
 }

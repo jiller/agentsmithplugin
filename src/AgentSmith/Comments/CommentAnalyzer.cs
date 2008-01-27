@@ -47,17 +47,15 @@ namespace AgentSmith.Comments
 
         public SuggestionBase[] Analyze(IDeclaration declaration)
         {
-            if (!(declaration is IClassMemberDeclaration))
+            if (!(declaration is IClassMemberDeclaration) || !CanBeSurroundedWithMetatagsSuggestion.Enabled &&
+                                                             !WordIsNotInDictionarySuggestion.Enabled)
             {
                 return new SuggestionBase[0];
             }
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
-            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings);
-            /* if (checkCommentIsCorrect(declaration))
-             {
-                 return _highlightings.ToArray();
-             }*/
-            if (checkPublicMembersHaveComments((IClassMemberDeclaration)declaration, highlightings))
+            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings);
+
+            if (checkPublicMembersHaveComments((IClassMemberDeclaration) declaration, highlightings))
             {
                 return highlightings.ToArray();
             }
@@ -69,30 +67,40 @@ namespace AgentSmith.Comments
         private void checkCommentSpelling(IClassMemberDeclaration decl,
                                           ICollection<SuggestionBase> highlightings)
         {
+            if (_spellChecker == null)
+            {
+                return;
+            }
+
             IDocCommentBlockNode docBlock = (this is IMultipleDeclarationMemberNode)
                                                 ? SharedImplUtil.GetDocCommentBlockNode(
-                                                      ((IMultipleDeclarationMemberNode)this).MultipleDeclaration)
+                                                      ((IMultipleDeclarationMemberNode) this).MultipleDeclaration)
                                                 : SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
 
             foreach (Range wordRange in getWordsFromXmlComment(docBlock))
             {
-                string word = wordRange.Word;
-                if (SpellCheckUtil.ShouldSpellCheck(word))
+                if (SpellCheckUtil.ShouldSpellCheck(wordRange.Word) && 
+                    !_spellChecker.TestWord(wordRange.Word, false))
                 {
-                    if (_spellChecker != null && !_spellChecker.TestWord(wordRange.Word, false))
+                    DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
+                    if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
                     {
-                        DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
-                        SuggestionBase suggestion;
-                        if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                        highlightings.Add(
+                            new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word, range, decl, _solution));
+                    }
+                    else
+                    {
+                        foreach (LexerToken humpToken in new CamelHumpLexer(wordRange.Word, 0, wordRange.Word.Length))
                         {
-                            suggestion = new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word, range, decl, _solution);
+                            if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
+                                !_spellChecker.TestWord(humpToken.Value, false))
+                            {
+                                highlightings.Add(
+                                    new WordIsNotInDictionarySuggestion(wordRange.Word, range, _solution, _settings,
+                                                                        decl));
+                                break;
+                            }
                         }
-                        else
-                        {                            
-                            suggestion  = new WordIsNotInDictionarySuggestion(wordRange.Word, range, _solution, _settings, decl);
-                            
-                        }
-                        highlightings.Add(suggestion);
                     }
                 }
             }
@@ -110,7 +118,8 @@ namespace AgentSmith.Comments
                     if (lexer.TokenType == lexer.XmlTokenType.TAG_START)
                     {
                         lexer.Advance();
-                        if (lexer.TokenType == lexer.XmlTokenType.IDENTIFIER && (lexer.TokenText == "code" || lexer.TokenText == "c"))
+                        if (lexer.TokenType == lexer.XmlTokenType.IDENTIFIER &&
+                            (lexer.TokenText == "code" || lexer.TokenText == "c"))
                         {
                             inCode++;
                         }
@@ -123,7 +132,8 @@ namespace AgentSmith.Comments
                     if (lexer.TokenType == lexer.XmlTokenType.TAG_START1)
                     {
                         lexer.Advance();
-                        if (lexer.TokenType == lexer.XmlTokenType.IDENTIFIER && (lexer.TokenText == "code" || lexer.TokenText == "c"))
+                        if (lexer.TokenType == lexer.XmlTokenType.IDENTIFIER &&
+                            (lexer.TokenText == "code" || lexer.TokenText == "c"))
                         {
                             inCode--;
                         }
