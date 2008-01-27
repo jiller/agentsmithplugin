@@ -163,6 +163,7 @@
     </Compile>
     <Compile Include="Comments\CanBeSurroundedWithMetatagsSuggestion.cs" />
     <Compile Include="Comments\IdentifierResolver.cs" />
+    <Compile Include="SpellCheck\CamelHumpLexer.cs" />
     <Compile Include="Comments\SurroundWithMetatagsQuickFix.cs" />
     <Compile Include="NamingConventions\DataContext.cs" />
     <Compile Include="NamingConventions\RenameBulbItem.cs" />
@@ -199,6 +200,7 @@
     <Compile Include="SpellCheck\NetSpell\WordDictionary.cs">
     </Compile>
     <Compile Include="Comments\WordIsNotInDictionarySuggestion.cs" />
+    <Compile Include="SpellCheck\TokenNodeTypeBase.cs" />
     <Compile Include="SpellCheck\WordLexer.cs" />
     <Compile Include="Comments\XmlCommentQuickFix.cs" />
     <Compile Include="Comments\XmlCommentSyntaxQuickFix.cs" />
@@ -210,6 +212,7 @@
     <Compile Include="MemberMatch\FuzzyBool.cs" />
     <Compile Include="ResX\ResXDaemonStage.cs" />
     <Compile Include="SpellCheck\SpellCheckSuggestionBase.cs" />
+    <Compile Include="Strings\StringSpellChecker.cs" />
     <Compile Include="Strings\StringSpellCheckSuggestion.cs" />
     <Compile Include="SuggestionBase.cs">
       <SubType>Code</SubType>

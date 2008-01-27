@@ -1,6 +1,4 @@
 using System;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.Util;
 
@@ -8,43 +6,10 @@ namespace AgentSmith.SpellCheck
 {
     public class WordLexer : ILexer
     {
-        public class WordTokenType : TokenNodeType
-        {
-            public WordTokenType()
-                : base("WORD")
-            {
-            }
-
-            public override bool IsWhitespace
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override bool IsComment
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override bool IsStringLiteral
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override PsiLanguageType LanguageType
-            {
-                get { throw new NotImplementedException(); }
-            }
-
-            public override LeafElement Create(IBuffer buffer, int startOffset, int endOffset)
-            {
-                throw new NotImplementedException();
-            }
-        }
-
         private readonly string _data;
         private readonly TokenNodeType _word = new WordTokenType();
-        private int _tokenStart = 0;
         private int _tokenEnd = 0;
+        private int _tokenStart = 0;
         private TokenNodeType _tokenType;
 
         public WordLexer(string data)
@@ -122,5 +87,17 @@ namespace AgentSmith.SpellCheck
         {
             return !(char.IsLetterOrDigit(_data, i) || _data[i] == '\'' || _data[i] == '_') || _data[i] == '-';
         }
+
+        #region Nested type: WordTokenType
+
+        public class WordTokenType : TokenNodeTypeBase
+        {
+            public WordTokenType()
+                : base("WORD")
+            {
+            }
+        }
+
+        #endregion
     }
 }
