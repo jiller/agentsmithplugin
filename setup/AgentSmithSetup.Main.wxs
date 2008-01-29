@@ -20,6 +20,11 @@
         <Property Id="RESHARPERINSTALLDIR" Secure="yes">
             <RegistrySearch Id="AS.ReSharperBinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]" Name="InstallDir" Type="directory" />            
         </Property>
+
+        <Upgrade Id="$(var.DynUpgradeCode)">
+           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" Minimum="1.0.9" Maximum="1.1.0" />
+        </Upgrade>
+
                                        
         <!-- Directory structure for the plugin. -->
         <Directory Id="TARGETDIR" Name="SourceDir">
@@ -89,23 +94,17 @@
         <!-- Assign the installation folder for the all users / current user scenarios. -->
         <CustomAction Id="WixSetInstallFolder.NoResharperInstalled" Property="RESHARPERROOT" Value="[ProgramFilesFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Bin" Execute="immediate" />
         <CustomAction Id="WixSetInstallFolder.ResharperInstalled" Property="RESHARPERROOT" Value="[RESHARPERINSTALLDIR]" Execute="immediate" />
-        <!-- Per-machine folder, as for the default installation dir. -->
-        <!--<CustomAction Id="WixSetDefaultPerMachineFolder.InstallDir" Property="WIXUI_INSTALLDIR.InstallDir" Value="[RESHARPERINSTALLDIR]\Plugins\[ApplicationFolderName]" Execute="immediate" />-->
-        <!-- Per-machine folder, as specified by the InstallDir (preferred, if available). -->
-        <!--<CustomAction Id="WixSetDefaultPerUserFolder.Custom" Property="WixPerUserFolder" Value="[LocalAppDataFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Plugins\[ApplicationFolderName]" Execute="immediate" />-->
-        <!-- Per-user folder in the application data. -->
+
         <InstallExecuteSequence>
-            <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="1">Not RESHARPERINSTALLDIR</Custom>
-            <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="2">RESHARPERINSTALLDIR</Custom>
-			<!--<Custom Action="WixSetDefaultPerMachineFolder.InstallDir" Sequence="2">RESHARPERINSTALLDIR</Custom>-->
-            <!--<Custom Action="WixSetDefaultPerUserFolder.Custom" Before="WixSetPerUserFolder" />-->
+            <FindRelatedProducts Sequence="1" />
+	    <RemoveExistingProducts After="InstallInitialize" />            
+            <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="3">Not RESHARPERINSTALLDIR</Custom>
+            <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="4">RESHARPERINSTALLDIR</Custom>			            
         </InstallExecuteSequence>
         <InstallUISequence>
-            <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="1">Not RESHARPERINSTALLDIR</Custom>
-            <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="2">RESHARPERINSTALLDIR</Custom>
-            <!--<Custom Action="WixSetDefaultPerMachineFolder.Custom" Sequence="1">Not RESHARPERINSTALLDIR</Custom>
-			<Custom Action="WixSetDefaultPerMachineFolder.InstallDir" Sequence="2">RESHARPERINSTALLDIR</Custom>-->
-            <!--<Custom Action="WixSetDefaultPerUserFolder.Custom" Before="WixSetPerUserFolder" />-->
+            <FindRelatedProducts Sequence="1" />
+            <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="2">Not RESHARPERINSTALLDIR</Custom>
+            <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="3">RESHARPERINSTALLDIR</Custom>           
         </InstallUISequence>
 
     </Product>
