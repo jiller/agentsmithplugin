@@ -7,6 +7,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace AgentSmith.Identifiers
 {
@@ -33,25 +34,25 @@ namespace AgentSmith.Identifiers
             if (declaration is IIndexerDeclaration ||
                 declaration is IDestructorDeclaration ||
                 declaration is IAccessorDeclaration ||
+                declaration is IConstructorDeclaration ||
                 (declaration.DeclaredName.Contains(".") && !(declaration is INamespaceDeclaration)))
             {
                 return null;
             }
 
-            if (isAcronym(declaration))
-            {
-                return null;
-            }
-
+            HashSet<string> localNames = getLocalNames(declaration);
+            
             CamelHumpLexer lexer =
                 new CamelHumpLexer(declaration.DeclaredName, 0, declaration.DeclaredName.Length);
 
             List<SuggestionBase> suggestions = new List<SuggestionBase>();
             foreach (LexerToken token in lexer)
             {
-                if (SpellCheckUtil.ShouldSpellCheck(token.Value) &&
-                    !_spellChecker.TestWord(token.Value, false))
-                {
+                string val = token.Value;
+                if (SpellCheckUtil.ShouldSpellCheck(val) &&
+                    !localNames.Contains(val.ToLower()) &&
+                    !_spellChecker.TestWord(val, false))
+                {                    
                     suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _settings));
                 }
             }
@@ -59,9 +60,10 @@ namespace AgentSmith.Identifiers
             return suggestions.ToArray();
         }
 
-        private bool isAcronym(IDeclaration declaration)
+        private HashSet<string> getLocalNames(IDeclaration declaration)
         {
-            ITypeOwner var = declaration as ITypeOwner;            
+            HashSet<string> localNames = new HashSet<string>();
+            ITypeOwner var = declaration as ITypeOwner;
             if (var != null)
             {
                 string name = var.Type.GetPresentableName(declaration.Language);
@@ -73,9 +75,29 @@ namespace AgentSmith.Identifiers
                         acronym += c;
                     }
                 }
-                return acronym == declaration.DeclaredName;
+                localNames.Add(acronym);
+
+                CamelHumpLexer lexer = new CamelHumpLexer(name, 0, name.Length);
+                foreach (LexerToken token in lexer)
+                {
+                    localNames.Add(token.Value.ToLower());
+                }
             }
-            return false;
-        }
+
+            IClassLikeDeclaration decl = declaration as IClassLikeDeclaration;
+            if (decl != null)
+            {
+                foreach (IDeclaredType type in decl.SuperTypes)
+                {
+                    string name = type.GetPresentableName(declaration.Language);
+                    CamelHumpLexer lexer = new CamelHumpLexer(name, 0, name.Length);
+                    foreach (LexerToken token in lexer)
+                    {
+                        localNames.Add(token.Value.ToLower());
+                    }
+                }
+            }
+            return localNames;
+        }                
     }
 }

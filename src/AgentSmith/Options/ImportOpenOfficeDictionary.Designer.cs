@@ -60,7 +60,7 @@ namespace AgentSmith.Options
             this._dictionaryLink.Location = new System.Drawing.Point(12, 22);
             this._dictionaryLink.Name = "_dictionaryLink";
             this._dictionaryLink.Size = new System.Drawing.Size(252, 13);
-            this._dictionaryLink.TabIndex = 1;
+            this._dictionaryLink.TabIndex = 0;
             this._dictionaryLink.TabStop = true;
             this._dictionaryLink.Text = "http://wiki.services.openoffice.org/wiki/Dictionaries";
             this._dictionaryLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.dictionaryLink_LinkClicked);
@@ -70,7 +70,7 @@ namespace AgentSmith.Options
             this._tbDictName.Location = new System.Drawing.Point(184, 113);
             this._tbDictName.Name = "_tbDictName";
             this._tbDictName.Size = new System.Drawing.Size(154, 20);
-            this._tbDictName.TabIndex = 2;
+            this._tbDictName.TabIndex = 5;
             this._tbDictName.Validating += new System.ComponentModel.CancelEventHandler(this.tbDictName_Validating);
             // 
             // label2
@@ -88,7 +88,7 @@ namespace AgentSmith.Options
             this._btnImport.Location = new System.Drawing.Point(272, 168);
             this._btnImport.Name = "_btnImport";
             this._btnImport.Size = new System.Drawing.Size(75, 23);
-            this._btnImport.TabIndex = 4;
+            this._btnImport.TabIndex = 6;
             this._btnImport.Text = "&Import";
             this._btnImport.UseVisualStyleBackColor = true;
             this._btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -99,7 +99,7 @@ namespace AgentSmith.Options
             this._btnCancel.Location = new System.Drawing.Point(354, 168);
             this._btnCancel.Name = "_btnCancel";
             this._btnCancel.Size = new System.Drawing.Size(75, 23);
-            this._btnCancel.TabIndex = 5;
+            this._btnCancel.TabIndex = 7;
             this._btnCancel.Text = "&Cancel";
             this._btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -117,7 +117,7 @@ namespace AgentSmith.Options
             this._tbAffixFile.Location = new System.Drawing.Point(184, 52);
             this._tbAffixFile.Name = "_tbAffixFile";
             this._tbAffixFile.Size = new System.Drawing.Size(154, 20);
-            this._tbAffixFile.TabIndex = 7;
+            this._tbAffixFile.TabIndex = 1;
             this._tbAffixFile.Validating += new System.ComponentModel.CancelEventHandler(this.tbAffixFile_Validating);
             // 
             // _btnBrowseAffix
@@ -125,7 +125,7 @@ namespace AgentSmith.Options
             this._btnBrowseAffix.Location = new System.Drawing.Point(354, 49);
             this._btnBrowseAffix.Name = "_btnBrowseAffix";
             this._btnBrowseAffix.Size = new System.Drawing.Size(75, 23);
-            this._btnBrowseAffix.TabIndex = 8;
+            this._btnBrowseAffix.TabIndex = 2;
             this._btnBrowseAffix.Text = "Browse...";
             this._btnBrowseAffix.UseVisualStyleBackColor = true;
             this._btnBrowseAffix.Click += new System.EventHandler(this.btnBrowseAffix_Click);
@@ -135,7 +135,7 @@ namespace AgentSmith.Options
             this._btnBrowseDict.Location = new System.Drawing.Point(354, 71);
             this._btnBrowseDict.Name = "_btnBrowseDict";
             this._btnBrowseDict.Size = new System.Drawing.Size(75, 23);
-            this._btnBrowseDict.TabIndex = 9;
+            this._btnBrowseDict.TabIndex = 4;
             this._btnBrowseDict.Text = "Browse...";
             this._btnBrowseDict.UseVisualStyleBackColor = true;
             this._btnBrowseDict.Click += new System.EventHandler(this.btnBrowseDict_Click);
@@ -145,7 +145,7 @@ namespace AgentSmith.Options
             this._tbDicFile.Location = new System.Drawing.Point(184, 73);
             this._tbDicFile.Name = "_tbDicFile";
             this._tbDicFile.Size = new System.Drawing.Size(154, 20);
-            this._tbDicFile.TabIndex = 10;
+            this._tbDicFile.TabIndex = 3;
             this._tbDicFile.Validating += new System.ComponentModel.CancelEventHandler(this.tbDicFile_Validating);
             // 
             // label4
