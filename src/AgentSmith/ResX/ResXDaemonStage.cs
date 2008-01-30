@@ -1,5 +1,4 @@
 using System;
-using AgentSmith.Resx;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;

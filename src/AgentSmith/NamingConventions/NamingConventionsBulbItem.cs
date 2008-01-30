@@ -13,12 +13,13 @@ using JetBrains.Shell.Progress;
 using JetBrains.Util;
 
 namespace AgentSmith.NamingConventions
-{
+{    
+    //TODO: rename this to something like IdentifierRenameBulbItem and move to appropriate place.
     public class NamingConventionsBulbItem : IBulbItem
     {
         private readonly IDeclaration _declaration;
         private readonly string _newName;
-        private readonly object _syncobj = new object();
+        private readonly object _syncObj = new object();
 
         public NamingConventionsBulbItem(IDeclaration declaration, string newName)
         {
@@ -30,7 +31,7 @@ namespace AgentSmith.NamingConventions
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            lock (_syncobj)
+            lock (_syncObj)
             {
                 PsiManager psiManager = PsiManager.GetInstance(solution);
                 if (psiManager.WaitForCaches())
@@ -41,11 +42,11 @@ namespace AgentSmith.NamingConventions
                         {
                             if (modificationCookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
                             {
-                                IRefactoringWorkflow wf = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
-                                if (wf != null)
+                                IRefactoringWorkflow workflow = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
+                                if (workflow != null)
                                 {                                    
                                     PsiManager manager = PsiManager.GetInstance(solution);
-                                    manager.DoTransaction(delegate { wf.Execute(NullProgressIndicator.INSTANCE); });                                    
+                                    manager.DoTransaction(delegate { workflow.Execute(NullProgressIndicator.INSTANCE); });                                    
                                 }
                             }
                         }

@@ -41,7 +41,7 @@ namespace AgentSmith.MemberMatch
         }
 
         public DeclarationDescription(Declaration declaration, string name, bool hasAccessLevel, bool canInherit,
-                                      bool canBeMarkedWithAttribute, bool canBeStatic, bool canBeReadonly)
+                                      bool canBeMarkedWithAttribute, bool canBeStatic, bool canBeReadOnly)
         {
             Declaration = declaration;
             Name = name;
@@ -49,7 +49,7 @@ namespace AgentSmith.MemberMatch
             CanInherit = canInherit;
             CanBeMarkedWithAttribute = canBeMarkedWithAttribute;
             CanBeStatic = canBeStatic;
-            CanBeReadonly = canBeReadonly;
+            CanBeReadonly = canBeReadOnly;
         }
 
         public static Dictionary<Declaration, DeclarationDescription> DeclDescriptions

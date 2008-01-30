@@ -13,26 +13,26 @@ namespace AgentSmith
     {
         private readonly IElement _element;
         private readonly DocumentRange _range;
-        private readonly string _tooltip;
+        private readonly string _toolTip;
 
         public SuggestionBase(IElement element, string toolTip)
         {
             _range = element.GetDocumentRange();
-            _tooltip = toolTip;
+            _toolTip = toolTip;
             _element = element;
         }
 
         public SuggestionBase(IDeclaration element, string toolTip)
         {
             _range = element.GetNameDocumentRange();
-            _tooltip = toolTip;
+            _toolTip = toolTip;
             _element = element;
         }
 
-        public SuggestionBase(DocumentRange range, string tooltip)
+        public SuggestionBase(DocumentRange range, string toolTip)
         {
             _range = range;
-            _tooltip = tooltip;
+            _toolTip = toolTip;
         }
 
         public IElement Element
@@ -79,7 +79,7 @@ namespace AgentSmith
 
         public virtual string ToolTip
         {
-            get { return _tooltip + "[Agent Smith]"; }
+            get { return _toolTip + "[Agent Smith]"; }
         }
 
         public string ErrorStripeToolTip

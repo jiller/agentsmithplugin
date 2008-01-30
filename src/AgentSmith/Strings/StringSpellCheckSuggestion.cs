@@ -30,8 +30,7 @@ namespace AgentSmith.Strings
         {
             get
             {
-                return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION);
-                //return "ReSharper Suggestion";
+                return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION);                
             }
         }
 

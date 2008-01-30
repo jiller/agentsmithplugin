@@ -18,14 +18,14 @@ namespace AgentSmith.MemberMatch
         {
             get
             {
-                Dictionary<AccessLevels, AccessLevelDescription> _descrs = new Dictionary<AccessLevels, AccessLevelDescription>();
-                _descrs.Add(AccessLevels.Any, new AccessLevelDescription(AccessLevels.Any, "Any"));
-                _descrs.Add(AccessLevels.Internal, new AccessLevelDescription(AccessLevels.Internal, "Internal"));
-                _descrs.Add(AccessLevels.Private, new AccessLevelDescription(AccessLevels.Private, "Private"));
-                _descrs.Add(AccessLevels.Protected, new AccessLevelDescription(AccessLevels.Protected, "Protected"));
-                _descrs.Add(AccessLevels.ProtectedInternal, new AccessLevelDescription(AccessLevels.ProtectedInternal, "Protected Internal"));
-                _descrs.Add(AccessLevels.Public, new AccessLevelDescription(AccessLevels.Public, "Public"));
-                return _descrs;
+                Dictionary<AccessLevels, AccessLevelDescription> descrs = new Dictionary<AccessLevels, AccessLevelDescription>();
+                descrs.Add(AccessLevels.Any, new AccessLevelDescription(AccessLevels.Any, "Any"));
+                descrs.Add(AccessLevels.Internal, new AccessLevelDescription(AccessLevels.Internal, "Internal"));
+                descrs.Add(AccessLevels.Private, new AccessLevelDescription(AccessLevels.Private, "Private"));
+                descrs.Add(AccessLevels.Protected, new AccessLevelDescription(AccessLevels.Protected, "Protected"));
+                descrs.Add(AccessLevels.ProtectedInternal, new AccessLevelDescription(AccessLevels.ProtectedInternal, "Protected Internal"));
+                descrs.Add(AccessLevels.Public, new AccessLevelDescription(AccessLevels.Public, "Public"));
+                return descrs;
             }
         }
 

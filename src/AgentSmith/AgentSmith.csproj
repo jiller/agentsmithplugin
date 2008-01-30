@@ -163,6 +163,9 @@
     </Compile>
     <Compile Include="Comments\CanBeSurroundedWithMetatagsSuggestion.cs" />
     <Compile Include="Comments\IdentifierResolver.cs" />
+    <Compile Include="Identifiers\IdentifierSpellCheckAnalyzer.cs" />
+    <Compile Include="Identifiers\IdentifierSpellCheckQuickFix.cs" />
+    <Compile Include="Identifiers\IdentifierSpellCheckSuggestion.cs" />
     <Compile Include="SpellCheck\CamelHumpLexer.cs" />
     <Compile Include="Comments\SurroundWithMetatagsQuickFix.cs" />
     <Compile Include="NamingConventions\DataContext.cs" />

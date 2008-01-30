@@ -18,9 +18,9 @@ namespace AgentSmith.MemberMatch
                 {
                     if (notMatches != null)
                     {
-                        foreach (Match notmatch in notMatches)
+                        foreach (Match notMatch in notMatches)
                         {
-                            if (notmatch.IsMatch(decl, useEffectiveRights))
+                            if (notMatch.IsMatch(decl, useEffectiveRights))
                             {
                                 return null;
                             }

@@ -26,7 +26,7 @@ namespace AgentSmith.SpellCheck
             while (currentToken.End < _end)
             {
                 char c = _buffer[currentToken.End];
-                if ((c == '_' || c == '@'))
+                if ((c == '_' || c == '@' || c == '.'))
                 {
                     if (currentToken.Length > 0)
                     {

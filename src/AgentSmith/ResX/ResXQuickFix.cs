@@ -4,7 +4,7 @@ using AgentSmith.SpellCheck;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.Util;
 
-namespace AgentSmith.Resx
+namespace AgentSmith.ResX
 {
     [QuickFix]
     public class ResXQuickFix : IQuickFix

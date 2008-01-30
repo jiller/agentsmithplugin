@@ -11,17 +11,19 @@ namespace AgentSmith.Comments
     {
         public const string NAME = "WordCanBeSurroundedWithMetaTags";
         private readonly DocumentRange _range;
-        private readonly IClassMemberDeclaration _decl;
+        private readonly IClassMemberDeclaration _declaration;
         private readonly ISolution _solution;
         private readonly string _word;
 
-        public CanBeSurroundedWithMetatagsSuggestion(string word, DocumentRange range, IClassMemberDeclaration decl, ISolution solution)
-            :base(decl,
+        public CanBeSurroundedWithMetatagsSuggestion(
+            string word, DocumentRange range,
+            IClassMemberDeclaration declaration, ISolution solution)
+            : base(declaration,
                 String.Format("Word '{0}' appears to be an identifier and can be surrounded with metatag.", word))
         {
             _range = range;
             _solution = solution;
-            _decl = decl;
+            _declaration = declaration;
             _word = word;
         }
 
@@ -32,7 +34,7 @@ namespace AgentSmith.Comments
 
         public IClassMemberDeclaration Declaration
         {
-            get { return _decl; }
+            get { return _declaration; }
         }
 
         public ISolution Solution

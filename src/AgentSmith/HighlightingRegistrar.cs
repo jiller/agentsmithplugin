@@ -1,7 +1,8 @@
 using System;
 using AgentSmith.Comments;
+using AgentSmith.Identifiers;
 using AgentSmith.NamingConventions;
-using AgentSmith.Resx;
+using AgentSmith.ResX;
 using AgentSmith.Strings;
 using JetBrains.ComponentModel;
 using JetBrains.ReSharper.Daemon;
@@ -54,6 +55,11 @@ namespace AgentSmith
             manager.RegisterConfigurableSeverity(StringSpellCheckSuggestion.NAME, group,
                 "Word found in c# literal doesn't exist in dictionary.",
                 "Spell checking of a string in c# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
+                Severity.SUGGESTION);
+
+            manager.RegisterConfigurableSeverity(IdentifierSpellCheckSuggestion.NAME, group,
+                "Word found in c# declaration doesn't exist in dictionary.",
+                "Spell checking of c# declaration found a word that doesn't exist in default or user dictionary and is probably misspelled.",
                 Severity.SUGGESTION);
         }
 
