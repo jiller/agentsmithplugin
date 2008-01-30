@@ -7,7 +7,7 @@ namespace AgentSmith.SpellCheck
 {
     [TestFixture]
     public class WordLexerTest
-    {
+    {        
         [Test]
         public void Test()
         {

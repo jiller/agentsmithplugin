@@ -67,13 +67,13 @@ namespace AgentSmith.Strings
                         {                            
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                                 !spellChecker.TestWord(humpToken.Value, false))
-                            {
-                                int start = token.GetTreeStartOffset();
+                            {                                
+                                int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
                                 int end = start + wordLexer.TokenText.Length;
 
                                 DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
 
-                                suggestions.Add(new StringSpellCheckSuggestion(documentRange, wordLexer.TokenText,
+                                suggestions.Add(new StringSpellCheckSuggestion(documentRange, humpToken.Value,
                                                                                solution, settings.CommentsSettings));
                                 break;
                             }

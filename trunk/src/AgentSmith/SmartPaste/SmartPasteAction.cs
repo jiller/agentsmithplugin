@@ -15,7 +15,7 @@ using JetBrains.ReSharper.TextControl;
 using JetBrains.Shell;
 using JetBrains.Util;
 
-namespace AgentSmith.SmartInsert
+namespace AgentSmith.SmartPaste
 {
     [ActionHandler(new string[] { "AgentSmith.SmartPaste" })]
     internal class SmartInsertAction : IActionHandler
@@ -70,7 +70,7 @@ namespace AgentSmith.SmartInsert
             }
         }
 
-        private void handleElement(ITextControl editor, IElement element, int offset)
+        private static void handleElement(ITextControl editor, IElement element, int offset)
         {
             string stringToInsert = ClipboardManager.Instance.ClipboardEntries.RecentItem;
             if (stringToInsert == null)
@@ -131,7 +131,7 @@ namespace AgentSmith.SmartInsert
             editor.Document.InsertText(editor.CaretModel.Offset, stringToInsert);
         }
 
-        private bool shallEscape(IDocCommentNode node, int offset)
+        private static bool shallEscape(IDocCommentNode node, int offset)
         {
             IDocCommentBlockNode docBlock = node.GetContainingElement<IDocCommentBlockNode>(true);
             if (docBlock == null)

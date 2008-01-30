@@ -21,7 +21,7 @@ namespace AgentSmith.MemberMatch
         private Declaration _declaration = Declaration.Any;
         private string _inheritedFrom;
         private string _markedWithAttribute;
-        private FuzzyBool _readonly = FuzzyBool.Maybe;
+        private FuzzyBool _readOnly = FuzzyBool.Maybe;
         private FuzzyBool _static = FuzzyBool.Maybe;
 
         private ITypeElement _markedWithAttributeType;
@@ -108,10 +108,10 @@ namespace AgentSmith.MemberMatch
             set { _markedWithAttribute = value; }
         }
 
-        public FuzzyBool IsReadonly
+        public FuzzyBool IsReadOnly
         {
-            get { return _readonly; }
-            set { _readonly = value; }
+            get { return _readOnly; }
+            set { _readOnly = value; }
         }
 
         public FuzzyBool IsStatic
@@ -153,7 +153,7 @@ namespace AgentSmith.MemberMatch
                        isRightsMatch(declaration, useEffectiveRights) &&
                        markedWithAttributeMatch(declaration) &&
                        inheritsMatch(declaration) &&
-                       isReadonlyMatch(declaration) &&
+                       isReadOnlyMatch(declaration) &&
                        isStaticMatch(declaration);
             }
         }
@@ -164,15 +164,15 @@ namespace AgentSmith.MemberMatch
             DeclarationDescription description = DeclarationDescription.DeclDescriptions[_declaration];
             if (description.HasAccessLevel)
             {
-                sb.AppendFormat("{0} ", getAccesslevel());
+                sb.AppendFormat("{0} ", getAccessLevel());
             }
             if (_static != FuzzyBool.Maybe)
             {
                 sb.Append(_static == FuzzyBool.True ? "static " : "not static ");
             }
-            if (_readonly != FuzzyBool.Maybe)
+            if (_readOnly != FuzzyBool.Maybe)
             {
-                sb.Append(_readonly == FuzzyBool.True ? "readonly " : "not readonly ");
+                sb.Append(_readOnly == FuzzyBool.True ? "readonly " : "not readonly ");
             }
             sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration " : description.Name.ToLower());
             if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
@@ -186,15 +186,15 @@ namespace AgentSmith.MemberMatch
             return sb.ToString();
         }
 
-        private bool isReadonlyMatch(IDeclaration declaration)
+        private bool isReadOnlyMatch(IDeclaration declaration)
         {            
-            if (IsReadonly == FuzzyBool.Maybe)
+            if (IsReadOnly == FuzzyBool.Maybe)
             {
                 return true;
             }
             IClassMemberDeclaration decl = declaration as IClassMemberDeclaration;
-            return decl != null && (IsReadonly == FuzzyBool.True && decl.IsReadonly ||
-                                    IsReadonly == FuzzyBool.False && !decl.IsReadonly);
+            return decl != null && (IsReadOnly == FuzzyBool.True && decl.IsReadonly ||
+                                    IsReadOnly == FuzzyBool.False && !decl.IsReadonly);
         }
 
         private bool isStaticMatch(IDeclaration declaration)
@@ -315,7 +315,7 @@ namespace AgentSmith.MemberMatch
             }
         }
 
-        private string getAccesslevel()
+        private string getAccessLevel()
         {
             StringBuilder sb = new StringBuilder();
 

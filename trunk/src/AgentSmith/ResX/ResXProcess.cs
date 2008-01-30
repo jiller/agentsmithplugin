@@ -10,7 +10,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.Util;
 
-namespace AgentSmith.Resx
+namespace AgentSmith.ResX
 {
     internal class ResXProcess : IDaemonStageProcess
     {

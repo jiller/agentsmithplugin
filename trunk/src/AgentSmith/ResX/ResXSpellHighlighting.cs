@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace AgentSmith.Resx
+namespace AgentSmith.ResX
 {
     [ConfigurableSeverityHighlighting(NAME)]
     public class ResXSpellHighlighting : SpellCheckSuggestionBase

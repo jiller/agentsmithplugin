@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AgentSmith.Comments;
+using AgentSmith.Identifiers;
 using AgentSmith.NamingConventions;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
@@ -36,6 +37,7 @@ namespace AgentSmith
                     {
                         new NamingConventionsAnalyzer(styleSettings.NamingConventionSettings, _process.Solution),
                         new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),
+                        new IdentifierSpellCheckAnalyzer(styleSettings.CommentsSettings, _process.Solution)
                     };
             }
         }
@@ -85,9 +87,13 @@ namespace AgentSmith
 
             foreach (IDeclarationAnalyzer analyzer in _analyzers)
             {
-                foreach (SuggestionBase highlighting in analyzer.Analyze(declaration))
+                SuggestionBase[] result = analyzer.Analyze(declaration);
+                if (result != null)
                 {
-                    addHighlighting(highlighting);
+                    foreach (SuggestionBase highlighting in result)
+                    {
+                        addHighlighting(highlighting);
+                    }
                 }
             }
         }

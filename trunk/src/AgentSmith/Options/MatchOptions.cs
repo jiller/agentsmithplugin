@@ -42,7 +42,7 @@ namespace AgentSmith.Options
             _lbMember.SelectedItem = DeclarationDescription.DeclDescriptions[_match.Declaration];
             _tbInheritedFrom.Text = _match.InheritedFrom;
             _tbMarkedWithAttribute.Text = _match.MarkedWithAttribute;
-            _cbReadonly.CheckState = convertBool(_match.IsReadonly);
+            _cbReadonly.CheckState = convertBool(_match.IsReadOnly);
             _cbStatic.CheckState = convertBool(_match.IsStatic);
 
         }
@@ -80,7 +80,7 @@ namespace AgentSmith.Options
             _match.Declaration = decl.Declaration;
             _match.MarkedWithAttribute = null;
             _match.InheritedFrom = null;
-            _match.IsReadonly = FuzzyBool.Maybe;
+            _match.IsReadOnly = FuzzyBool.Maybe;
             _match.IsStatic = FuzzyBool.Maybe;
 
             if (decl.HasAccessLevel)
@@ -104,7 +104,7 @@ namespace AgentSmith.Options
             
             if (decl.CanBeReadonly)
             {
-                _match.IsReadonly = convertToBool(_cbReadonly.CheckState);
+                _match.IsReadOnly = convertToBool(_cbReadonly.CheckState);
             }
 
             if (decl.CanBeStatic)

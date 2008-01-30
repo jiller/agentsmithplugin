@@ -95,8 +95,13 @@ namespace AgentSmith.Comments
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                                 !_spellChecker.TestWord(humpToken.Value, false))
                             {
+                                TextRange textRange = new TextRange(humpToken.Start + range.TextRange.StartOffset,
+                                    humpToken.End + range.TextRange.StartOffset);
+
+                                DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(textRange);
+                                
                                 highlightings.Add(
-                                    new WordIsNotInDictionarySuggestion(wordRange.Word, range, _solution, _settings,
+                                    new WordIsNotInDictionarySuggestion(humpToken.Value, tokenRange, _solution, _settings,
                                                                         decl));
                                 break;
                             }
@@ -179,18 +184,18 @@ namespace AgentSmith.Comments
             return false;
         }*/
 
-        private bool checkPublicMembersHaveComments(IClassMemberDeclaration decl,
+        private bool checkPublicMembersHaveComments(IClassMemberDeclaration declaration,
                                                     List<SuggestionBase> highlightings)
         {
-            if (decl.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
+            if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
                 Match match =
-                    ComplexMatchEvaluator.IsMatch(decl, _settings.CommentMatch, _settings.CommentNotMatch, true);
+                    ComplexMatchEvaluator.IsMatch(declaration, _settings.CommentMatch, _settings.CommentNotMatch, true);
 
                 if (match != null)
                 {
                     FixCommentSuggestion suggestion =
-                        new FixCommentSuggestion(decl, match + "should have XML comment.");
+                        new FixCommentSuggestion(declaration, match + "should have XML comment.");
                     highlightings.Add(suggestion);
                     return true;
                 }
