@@ -27,7 +27,7 @@ namespace AgentSmith.SpellCheck
         public void Advance()
         {
             _tokenStart = _tokenEnd;
-            while (_tokenStart < _data.Length && isSeparator(_tokenStart))
+            while (_tokenStart < _data.Length && (isSeparator(_tokenStart) || _data[_tokenStart] == '\''))
             {
                 _tokenStart++;
             }
@@ -43,6 +43,11 @@ namespace AgentSmith.SpellCheck
             else
             {
                 _tokenType = _word;
+            }
+
+            while (_tokenStart <_data.Length && _tokenEnd > _tokenStart && _data[_tokenEnd - 1] == '\'')
+            {
+                _tokenEnd--;
             }
         }
 

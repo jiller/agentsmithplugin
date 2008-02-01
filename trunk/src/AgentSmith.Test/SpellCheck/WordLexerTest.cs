@@ -11,15 +11,23 @@ namespace AgentSmith.SpellCheck
         [Test]
         public void Test()
         {
-            ILexer lexer = new WordLexer(" hello 256th (seconds");
+            testTokens(" hello 256th (seconds", "hello", "256th", "seconds");
+            testTokens(" 'word1''  ''word2''", "word1", "word2");
+            testTokens("''''", new string[0]);
+        }
+
+        private static void testTokens(string word, params string[] tokens)
+        {
+            ILexer lexer = new WordLexer(word);
             lexer.Start();
-            Assert.AreEqual("hello", lexer.TokenText);
-            lexer.Advance();
-            Assert.AreEqual("256th", lexer.TokenText);
-            lexer.Advance();
-            Assert.AreEqual("seconds", lexer.TokenText);
-            lexer.Advance();
-            Assert.IsNull(lexer.TokenType);
+            int i = 0;
+            while (lexer.TokenType != null)
+            {
+                Assert.AreEqual(tokens[i], lexer.TokenText);
+                lexer.Advance();
+                i++;
+            }
+            Assert.AreEqual(i, tokens.Length, "Number of tokens returned is different.");                        
         }
     }    
 }

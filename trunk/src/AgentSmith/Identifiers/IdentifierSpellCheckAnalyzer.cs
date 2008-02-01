@@ -17,6 +17,8 @@ namespace AgentSmith.Identifiers
         private readonly CommentsSettings _settings;
         private readonly ISpellChecker _spellChecker;
 
+        private const int MAX_LENGTH_TO_SKIP = 3;
+
         public IdentifierSpellCheckAnalyzer(CommentsSettings settings, ISolution solution)
         {
             _solution = solution;
@@ -41,7 +43,7 @@ namespace AgentSmith.Identifiers
             }
 
             HashSet<string> localNames = getLocalNames(declaration);
-            
+
             CamelHumpLexer lexer =
                 new CamelHumpLexer(declaration.DeclaredName, 0, declaration.DeclaredName.Length);
 
@@ -49,11 +51,25 @@ namespace AgentSmith.Identifiers
             foreach (LexerToken token in lexer)
             {
                 string val = token.Value;
-                if (SpellCheckUtil.ShouldSpellCheck(val) &&
-                    !localNames.Contains(val.ToLower()) &&
+                string lowerVal = val.ToLower();
+                if (val.Length > MAX_LENGTH_TO_SKIP &&
+                    SpellCheckUtil.ShouldSpellCheck(val) &&
+                    !localNames.Contains(lowerVal) &&
                     !_spellChecker.TestWord(val, false))
-                {                    
-                    suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _settings));
+                {
+                    bool found = false;
+                    foreach (string entry in localNames)
+                    {
+                        if (entry.StartsWith(lowerVal))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found)
+                    {
+                        suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _settings));
+                    }
                 }
             }
 
@@ -75,7 +91,7 @@ namespace AgentSmith.Identifiers
                         acronym += c;
                     }
                 }
-                localNames.Add(acronym);
+                localNames.Add(acronym.ToLower());
 
                 CamelHumpLexer lexer = new CamelHumpLexer(name, 0, name.Length);
                 foreach (LexerToken token in lexer)
@@ -98,6 +114,6 @@ namespace AgentSmith.Identifiers
                 }
             }
             return localNames;
-        }                
+        }
     }
 }
