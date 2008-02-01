@@ -28,7 +28,7 @@ namespace AgentSmith.Strings
                     Replace("\\n", "  ").
                     Replace("\\r", "  ").
                     Replace("\\t", "  ").
-                    Replace("\\v", "  ");
+                    Replace("\\v", "  ");                    
             }
             return text;
         }
