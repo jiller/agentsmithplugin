@@ -28,11 +28,11 @@ namespace AgentSmith.ResX
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-                foreach (string suggestion in SpellCheckManager.GetSpellChecker(_highlighting.File).Suggest(_highlighting.Word, 5))
+                foreach (string suggestion in SpellCheckManager.GetSpellChecker(_highlighting.File).Suggest(_highlighting.MisspelledWord, 5))
                 {
                     items.Add(new ReplaceWordWithBulbItem(_highlighting.Range, suggestion));
                 }
-                items.Add(new AddToDictionaryBulbItem(_highlighting.Word, _highlighting.Settings, _highlighting.Range));
+                items.Add(new AddToDictionaryBulbItem(_highlighting.MisspelledWord, _highlighting.Settings, _highlighting.Range));
                 return items.ToArray();
             }
         }

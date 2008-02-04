@@ -27,7 +27,7 @@ namespace AgentSmith.Test.SpellCheck
         private static void testTokens(string word, params string[] tokens)
         {
             List<LexerToken> list = new List<LexerToken>(new CamelHumpLexer(word, 0, word.Length));
-            Assert.AreEqual(tokens.Length, list.Count, "Number of tokens returned is different.");
+            Assert.AreEqual(tokens.Length, list.Count, "Number of aTokens returned is different.");
             for (int i = 0; i < tokens.Length; i++)
             {
                 Assert.AreEqual(tokens[i], list[i].Value, "Incorrect token.");

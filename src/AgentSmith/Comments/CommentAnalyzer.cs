@@ -104,14 +104,11 @@ namespace AgentSmith.Comments
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                                 !_spellChecker.TestWord(humpToken.Value, false))
                             {
-                                TextRange textRange = new TextRange(humpToken.Start + range.TextRange.StartOffset,
-                                                                    humpToken.End + range.TextRange.StartOffset);
-
-                                DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(textRange);
+                                
+                                DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
 
                                 highlightings.Add(
-                                    new WordIsNotInDictionarySuggestion(humpToken.Value, tokenRange, _solution,
-                                                                        _settings));
+                                    new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange, humpToken, _solution, _settings));
                                 break;
                             }
                         }

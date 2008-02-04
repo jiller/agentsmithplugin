@@ -4,23 +4,26 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Editor;
 
 namespace AgentSmith.SpellCheck
-{
+{    
+    /// <summary>
+    /// anIdentifier
+    /// </summary>
     public abstract class SpellCheckSuggestionBase : SuggestionBase
     {
         private readonly string _word;
         private readonly ISolution _solution;
         private readonly CommentsSettings _settings;
 
-        public SpellCheckSuggestionBase(string suggestionName, DocumentRange range, string word,
+        public SpellCheckSuggestionBase(string suggestionName, DocumentRange range, string misspelledWord,
             ISolution solution, CommentsSettings settings)
-            : base(suggestionName, null, range, String.Format("Word '{0}' is not in dictionary.", word))
+            : base(suggestionName, null, range, String.Format("Word '{0}' is not in dictionary.", misspelledWord))
         {
-            _word = word;
+            _word = misspelledWord;
             _solution = solution;
             _settings = settings;
         }
 
-        public string Word
+        public string MisspelledWord
         {
             get { return _word; }
         }

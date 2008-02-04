@@ -28,7 +28,7 @@ namespace AgentSmith.Strings
                     Replace("\\n", "  ").
                     Replace("\\r", "  ").
                     Replace("\\t", "  ").
-                    Replace("\\v", "  ");                    
+                    Replace("\\v", "  ");
             }
             return text;
         }
@@ -62,22 +62,23 @@ namespace AgentSmith.Strings
                     if (containingElement == null ||
                         !IdentifierResolver.IsIdentifier(containingElement, solution, wordLexer.TokenText))
                     {
-                                                
                         foreach (LexerToken humpToken in new CamelHumpLexer(buffer, wordLexer.TokenStart, wordLexer.TokenEnd))
-                        {                            
+                        {
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                                 !spellChecker.TestWord(humpToken.Value, false))
-                            {                                
+                            {
                                 int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
                                 int end = start + wordLexer.TokenText.Length;
 
-                                DocumentRange documentRange = new DocumentRange(document, new TextRange(start, end));
+                                TextRange range = new TextRange(start, end);
+                                DocumentRange documentRange = new DocumentRange(document, range);
 
-                                suggestions.Add(new StringSpellCheckSuggestion(documentRange, humpToken.Value,
-                                                                               solution, settings.CommentsSettings));
+                                suggestions.Add(new StringSpellCheckSuggestion(document.GetText(range), documentRange,
+                                    humpToken.Value, new TextRange(humpToken.Start - wordLexer.TokenStart, humpToken.End - wordLexer.TokenStart),
+                                    solution, settings.CommentsSettings));
                                 break;
                             }
-                        }                                                
+                        }
                     }
                 }
 
