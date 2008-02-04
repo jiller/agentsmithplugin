@@ -1,4 +1,5 @@
 using System;
+using AgentSmith.MemberMatch;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -9,14 +10,9 @@ namespace AgentSmith.Comments
     {
         public const string NAME = "PublicMembersMustHaveComments";
 
-        public FixCommentSuggestion(IDeclaration element, string toolTip)
-            : base(element, toolTip)
+        public FixCommentSuggestion(IDeclaration declaration, Match match)
+            : base(NAME, declaration, declaration.GetNameDocumentRange(), match + "should have XML comment.")
         {
-        }
-
-        public override Severity Severity
-        {
-            get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-        }
+        }        
     }
 }

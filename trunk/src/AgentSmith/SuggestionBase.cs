@@ -14,25 +14,14 @@ namespace AgentSmith
         private readonly IElement _element;
         private readonly DocumentRange _range;
         private readonly string _toolTip;
+        private readonly string _suggestionName;
 
-        public SuggestionBase(IElement element, string toolTip)
+        public SuggestionBase(string suggestionName, IElement element, DocumentRange highlightingRange, string toolTip)
         {
-            _range = element.GetDocumentRange();
+            _range = highlightingRange;
             _toolTip = toolTip;
             _element = element;
-        }
-
-        public SuggestionBase(IDeclaration element, string toolTip)
-        {
-            _range = element.GetNameDocumentRange();
-            _toolTip = toolTip;
-            _element = element;
-        }
-
-        public SuggestionBase(DocumentRange range, string toolTip)
-        {
-            _range = range;
-            _toolTip = toolTip;
+            _suggestionName = suggestionName;
         }
 
         public IElement Element
@@ -72,11 +61,11 @@ namespace AgentSmith
             get { return OverlapResolvePolicy.WARNING; }
         }
 
-        public abstract Severity Severity
+        public virtual Severity Severity
         {
-            get;
+            get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(_suggestionName); }
         }
-
+        
         public virtual string ToolTip
         {
             get { return _toolTip + "[Agent Smith]"; }

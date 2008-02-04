@@ -13,7 +13,7 @@ namespace AgentSmith.Strings
         public const string NAME = "StringLiteralsWordIsNotInDictionary";
 
         public StringSpellCheckSuggestion(DocumentRange range, string word, ISolution solution, CommentsSettings settings)
-            : base(range, word, solution, settings)
+            : base(NAME, range, word, solution, settings)
         {
         }
 

@@ -7,29 +7,25 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 namespace AgentSmith.Comments
 {
     [ConfigurableSeverityHighlighting(NAME)]
-    public class CanBeSurroundedWithMetatagsSuggestion : SuggestionBase, IHighlighting
+    public class CanBeSurroundedWithMetatagsSuggestion : SuggestionBase
     {
         public const string NAME = "WordCanBeSurroundedWithMetaTags";
-        private readonly DocumentRange _range;
+
+        private const string SUGGESTION_TEXT =
+            "Word '{0}' appears to be an identifier and can be surrounded with metatag.";
+
         private readonly IClassMemberDeclaration _declaration;
         private readonly ISolution _solution;
         private readonly string _word;
 
         public CanBeSurroundedWithMetatagsSuggestion(
-            string word, DocumentRange range,
+            string word, DocumentRange highlightingRange,
             IClassMemberDeclaration declaration, ISolution solution)
-            : base(declaration,
-                String.Format("Word '{0}' appears to be an identifier and can be surrounded with metatag.", word))
+            : base(NAME, declaration, highlightingRange, String.Format(SUGGESTION_TEXT, word))
         {
-            _range = range;
             _solution = solution;
             _declaration = declaration;
             _word = word;
-        }
-
-        public override DocumentRange Range
-        {
-            get { return _range; }
         }
 
         public IClassMemberDeclaration Declaration
@@ -47,13 +43,6 @@ namespace AgentSmith.Comments
             get { return _word; }
         }
 
-        #region IHighlighting Members
-
-        public override Severity Severity
-        {
-            get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-        }
-
         public static bool Enabled
         {
             get
@@ -61,8 +50,6 @@ namespace AgentSmith.Comments
                 return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME) !=
                        Severity.DO_NOT_SHOW;
             }
-        }
-
-        #endregion
+        }        
     }
 }

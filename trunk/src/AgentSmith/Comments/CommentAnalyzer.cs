@@ -43,12 +43,26 @@ namespace AgentSmith.Comments
             }
         }
 
+        
+        private  IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
+        {
+            if (decl is IMultipleDeclarationMemberNode)
+            {
+                return SharedImplUtil.GetDocCommentBlockNode(
+                    ((IMultipleDeclarationMemberNode) decl).MultipleDeclaration);
+            }
+            else
+            {
+                return SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
+            }
+        }
+
         #region IDeclarationAnalyzer Members
 
         public SuggestionBase[] Analyze(IDeclaration declaration)
         {
-            if (!(declaration is IClassMemberDeclaration) || !CanBeSurroundedWithMetatagsSuggestion.Enabled &&
-                                                             !WordIsNotInDictionarySuggestion.Enabled)
+            if (!(declaration is IClassMemberDeclaration) ||
+                !CanBeSurroundedWithMetatagsSuggestion.Enabled && !WordIsNotInDictionarySuggestion.Enabled)
             {
                 return new SuggestionBase[0];
             }
@@ -72,14 +86,9 @@ namespace AgentSmith.Comments
                 return;
             }
 
-            IDocCommentBlockNode docBlock = (this is IMultipleDeclarationMemberNode)
-                                                ? SharedImplUtil.GetDocCommentBlockNode(
-                                                      ((IMultipleDeclarationMemberNode) this).MultipleDeclaration)
-                                                : SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
-
-            foreach (Range wordRange in getWordsFromXmlComment(docBlock))
+            foreach (Range wordRange in getWordsFromXmlComment(getDocBlock(decl)))
             {
-                if (SpellCheckUtil.ShouldSpellCheck(wordRange.Word) && 
+                if (SpellCheckUtil.ShouldSpellCheck(wordRange.Word) &&
                     !_spellChecker.TestWord(wordRange.Word, false))
                 {
                     DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
@@ -96,13 +105,13 @@ namespace AgentSmith.Comments
                                 !_spellChecker.TestWord(humpToken.Value, false))
                             {
                                 TextRange textRange = new TextRange(humpToken.Start + range.TextRange.StartOffset,
-                                    humpToken.End + range.TextRange.StartOffset);
+                                                                    humpToken.End + range.TextRange.StartOffset);
 
                                 DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(textRange);
-                                
+
                                 highlightings.Add(
-                                    new WordIsNotInDictionarySuggestion(humpToken.Value, tokenRange, _solution, _settings,
-                                                                        decl));
+                                    new WordIsNotInDictionarySuggestion(humpToken.Value, tokenRange, _solution,
+                                                                        _settings));
                                 break;
                             }
                         }
@@ -161,29 +170,6 @@ namespace AgentSmith.Comments
             }
         }
 
-        /*private bool checkCommentIsCorrect(IClassMemberDeclaration decl, IList<IHighlighting> highlightings)
-        {
-            if (decl.GetXMLDoc(false) != null)
-            {
-                XmlNodeList nodes = decl.GetXMLDoc(false).SelectNodes("summary | param | remarks");
-                foreach (XmlElement el in nodes)
-                {
-                    if (el != null)
-                    {
-                        string text = el.InnerText.Trim();
-                        if (text.Length == 0 || !char.IsUpper(text[0]) || !text.EndsWith("."))
-                        {
-                            highlightings.Add(
-                                new FixCommentSuggestion(decl,
-                                                         "Comment should start with captial letter and end with a period."));
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }*/
-
         private bool checkPublicMembersHaveComments(IClassMemberDeclaration declaration,
                                                     List<SuggestionBase> highlightings)
         {
@@ -194,8 +180,7 @@ namespace AgentSmith.Comments
 
                 if (match != null)
                 {
-                    FixCommentSuggestion suggestion =
-                        new FixCommentSuggestion(declaration, match + "should have XML comment.");
+                    FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
                     highlightings.Add(suggestion);
                     return true;
                 }
