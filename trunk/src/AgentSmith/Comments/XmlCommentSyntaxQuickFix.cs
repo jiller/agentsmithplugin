@@ -36,14 +36,17 @@ namespace AgentSmith.Comments
 
                 if (spellChecker != null)
                 {
-                    foreach (string newWord in spellChecker.Suggest(_suggestion.Word, MAX_SUGGESTION_COUNT))
+                    foreach (string suggestText in spellChecker.Suggest(_suggestion.MisspelledWord, MAX_SUGGESTION_COUNT))
                     {
+                        string wordWithMisspelledWordDeleted = _suggestion.Word.Remove(_suggestion.Token.Start,
+                           _suggestion.Token.Length);
+                        string newWord = wordWithMisspelledWordDeleted.Insert(_suggestion.Token.Start, suggestText);
                         items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newWord));
                     }
                 }
 
                 items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
-                items.Add(new AddToDictionaryBulbItem(_suggestion.Word, _suggestion.Settings, _suggestion.Range));
+                items.Add(new AddToDictionaryBulbItem(_suggestion.Token.Value, _suggestion.Settings, _suggestion.Range));
                 return items.ToArray();
             }
         }

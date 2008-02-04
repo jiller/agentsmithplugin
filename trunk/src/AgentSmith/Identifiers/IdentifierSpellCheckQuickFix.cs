@@ -50,7 +50,7 @@ namespace AgentSmith.Identifiers
                     }
                 }
                 items.Add(new RenameBulbItem(_suggestion.Declaration));
-                items.Add(new AddToDictionaryBulbItem(_suggestion.Word, _suggestion.Settings, _suggestion.Range));
+                items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, _suggestion.Settings, _suggestion.Range));
                 return items.ToArray();
             }
         }

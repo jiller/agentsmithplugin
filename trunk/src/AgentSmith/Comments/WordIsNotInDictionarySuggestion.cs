@@ -11,11 +11,25 @@ namespace AgentSmith.Comments
     public class WordIsNotInDictionarySuggestion : SpellCheckSuggestionBase
     {
         public const string NAME = "WordIsNotInDictionary";
+        private readonly string _word;
+        private readonly LexerToken _token;
 
-        public WordIsNotInDictionarySuggestion(string word, DocumentRange range, ISolution solution,
-                                               CommentsSettings settings)
-            : base(NAME, range, word, solution, settings)
+        public WordIsNotInDictionarySuggestion(string word, DocumentRange range,
+                                               LexerToken misspelledToken, ISolution solution, CommentsSettings settings)
+            : base(NAME, range, misspelledToken.Value, solution, settings)
         {
+            _word = word;
+            _token = misspelledToken;
+        }
+
+        public string Word
+        {
+            get { return _word; }
+        }
+
+        public LexerToken Token
+        {
+            get { return _token; }
         }
 
         public static bool Enabled
@@ -25,6 +39,6 @@ namespace AgentSmith.Comments
                 return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME) !=
                        Severity.DO_NOT_SHOW;
             }
-        }        
+        }
     }
 }

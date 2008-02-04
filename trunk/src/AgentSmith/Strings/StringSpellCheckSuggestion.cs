@@ -4,19 +4,40 @@ using AgentSmith.SpellCheck;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
+using JetBrains.Util;
 
 namespace AgentSmith.Strings
 {
+    /// <summary>
+    /// anIdentfier
+    /// </summary>
     [ConfigurableSeverityHighlighting(NAME)]
     public class StringSpellCheckSuggestion : SpellCheckSuggestionBase
     {
         public const string NAME = "StringLiteralsWordIsNotInDictionary";
 
-        public StringSpellCheckSuggestion(DocumentRange range, string word, ISolution solution, CommentsSettings settings)
-            : base(NAME, range, word, solution, settings)
+        private readonly string _word;        
+        private readonly TextRange _misspelledRange;
+
+        public StringSpellCheckSuggestion(string word, DocumentRange range, string misspelledWord,
+                                          TextRange misspelledRange, ISolution solution,
+                                          CommentsSettings settings)
+            : base(NAME, range, misspelledWord, solution, settings)
         {
+            _word = word;            
+            _misspelledRange = misspelledRange;
         }
 
+        public string Word
+        {
+            get { return _word; }
+        }
+
+        public TextRange MisspelledRange
+        {
+            get { return _misspelledRange; }
+        }
+        
         public override Severity Severity
         {
             get
@@ -28,10 +49,7 @@ namespace AgentSmith.Strings
 
         public override string AttributeId
         {
-            get
-            {
-                return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION);                
-            }
+            get { return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION); }
         }
 
         public static bool Enabled
