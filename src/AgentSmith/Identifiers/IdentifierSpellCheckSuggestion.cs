@@ -3,6 +3,7 @@ using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Identifiers
@@ -12,14 +13,12 @@ namespace AgentSmith.Identifiers
     {
         public const string NAME = "IdentifierWordIsNotInDictionary";
 
-        private readonly LexerToken _lexerToken;
         private readonly IDeclaration _declaration;
+        private readonly LexerToken _lexerToken;
 
-        public IdentifierSpellCheckSuggestion(IDeclaration declaration,
-                                              LexerToken token,
+        public IdentifierSpellCheckSuggestion(IDeclaration declaration, LexerToken token,
                                               ISolution solution, CommentsSettings settings)
-            : base(declaration is INamespaceDeclaration ? ((INamespaceDeclaration)declaration).GetDeclaredNameDocumentRange() : 
-                        declaration.GetNameDocumentRange(), token.Value, solution, settings)
+            : base(NAME, getRange(declaration), token.Value, solution, settings)
         {
             _lexerToken = token;
             _declaration = declaration;
@@ -35,11 +34,6 @@ namespace AgentSmith.Identifiers
             get { return _lexerToken; }
         }
 
-        public override Severity Severity
-        {
-            get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
-        }
-
         public override string AttributeId
         {
             get { return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION); }
@@ -51,6 +45,18 @@ namespace AgentSmith.Identifiers
             {
                 return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME) !=
                        Severity.DO_NOT_SHOW;
+            }
+        }
+
+        private static DocumentRange getRange(IDeclaration declaration)
+        {
+            if (declaration is INamespaceDeclaration)
+            {
+                return ((INamespaceDeclaration) declaration).GetDeclaredNameDocumentRange();
+            }
+            else
+            {
+                return declaration.GetNameDocumentRange();
             }
         }
     }

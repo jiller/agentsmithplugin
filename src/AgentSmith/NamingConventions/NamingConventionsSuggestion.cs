@@ -14,25 +14,10 @@ namespace AgentSmith.NamingConventions
         private readonly NamingConventionRule _rule;
 
         public NamingConventionsSuggestion(IDeclaration declaration, NamingConventionRule rule, IList<string> exclusions)
-            : base(declaration, rule.Description)
+            : base(NAME, declaration, getDeclarationRange(declaration), rule.Description)
         {
             _rule = rule;
             _exclusions = exclusions;
-        }
-
-        public override DocumentRange Range
-        {
-            get
-            {
-                if (Element is INamespaceDeclaration)
-                {
-                    return (((INamespaceDeclaration) Element).GetDeclaredNameDocumentRange());
-                }
-                else
-                {
-                    return base.Range;
-                }
-            }
         }
 
         public string[] NewNames
@@ -40,9 +25,16 @@ namespace AgentSmith.NamingConventions
             get { return _rule.GetCorrectedNames(Element as IDeclaration, _exclusions); }
         }
 
-        public override Severity Severity
+        private static DocumentRange getDeclarationRange(IDeclaration declaration)
         {
-            get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME); }
+            if (declaration is INamespaceDeclaration)
+            {
+                return (((INamespaceDeclaration) declaration).GetDeclaredNameDocumentRange());
+            }
+            else
+            {
+                return declaration.GetNameDocumentRange();
+            }
         }
     }
 }

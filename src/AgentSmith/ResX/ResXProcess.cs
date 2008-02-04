@@ -43,12 +43,18 @@ namespace AgentSmith.ResX
                     lexer.Start();
                     while (lexer.TokenType != null)
                     {
-                        if (SpellCheckUtil.ShouldSpellCheck(lexer.TokenText) && !checker.TestWord(lexer.TokenText, false))
+                        if (SpellCheckUtil.ShouldSpellCheck(lexer.TokenText) &&
+                            !checker.TestWord(lexer.TokenText, false))
                         {
                             DocumentRange docRange = token.GetDocumentRange();
-                            DocumentRange range = new DocumentRange(docRange.Document, new TextRange(docRange.TextRange.StartOffset + lexer.TokenStart, docRange.TextRange.StartOffset + lexer.TokenEnd));
-                            highlightings.Add(new HighlightingInfo(range,
-                                new ResXSpellHighlighting(lexer.TokenText, _file, styleSettings.CommentsSettings, range, token)));
+                            TextRange textRange = new TextRange(docRange.TextRange.StartOffset + lexer.TokenStart,
+                                                                docRange.TextRange.StartOffset + lexer.TokenEnd);
+                            DocumentRange range = new DocumentRange(docRange.Document, textRange);
+                            
+                            ResXSpellHighlighting highlighting =
+                                new ResXSpellHighlighting(lexer.TokenText, _file, styleSettings.CommentsSettings, range);
+                            
+                            highlightings.Add(new HighlightingInfo(range, highlighting));
                         }
                         lexer.Advance();
                     }

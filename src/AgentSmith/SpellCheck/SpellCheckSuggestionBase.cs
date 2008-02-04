@@ -2,7 +2,6 @@ using System;
 using AgentSmith.Options;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Editor;
-using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.SpellCheck
 {
@@ -12,16 +11,9 @@ namespace AgentSmith.SpellCheck
         private readonly ISolution _solution;
         private readonly CommentsSettings _settings;
 
-        public SpellCheckSuggestionBase(DocumentRange range, string word, ISolution solution, CommentsSettings settings)
-            : base(range, String.Format("Word '{0}' is not in dictionary.", word))
-        {
-            _word = word;
-            _solution = solution;
-            _settings = settings;
-        }
-
-        protected SpellCheckSuggestionBase(IElement element, string word, ISolution solution, CommentsSettings settings)
-            : base(element, String.Format("Word '{0}' is not in dictionary.", word))
+        public SpellCheckSuggestionBase(string suggestionName, DocumentRange range, string word,
+            ISolution solution, CommentsSettings settings)
+            : base(suggestionName, null, range, String.Format("Word '{0}' is not in dictionary.", word))
         {
             _word = word;
             _solution = solution;
