@@ -1,3 +1,8 @@
+==1.1.0 (02/05/2008) ==
+  * Identifier spell check.
+  * Splitting by camel humps while spell checking strings and XML comments.
+  * Couple defect fixes.
+
 ==1.0.9 (01/16/2008) ==
   * Implemented Smart Paste feature.
   * Added string literal spell checking.
