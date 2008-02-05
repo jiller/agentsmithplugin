@@ -34,6 +34,15 @@ namespace AgentSmith.Identifiers
             get { return _lexerToken; }
         }
 
+        public override Severity Severity
+        {
+            get
+            {
+                Severity severity = HighlightingSettingsManager.Instance.Settings.GetSeverity(NAME);
+                return severity == JetBrains.ReSharper.Daemon.Severity.DO_NOT_SHOW ? severity : Severity.INFO;
+            }
+        }
+
         public override string AttributeId
         {
             get { return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION); }
