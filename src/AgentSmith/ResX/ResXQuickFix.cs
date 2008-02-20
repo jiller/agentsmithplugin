@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.Util;
 
@@ -9,6 +10,8 @@ namespace AgentSmith.ResX
     [QuickFix]
     public class ResXQuickFix : IQuickFix
     {
+        private const int MAX_SUGGESTIONS = 5;
+
         private readonly ResXSpellHighlighting _highlighting;
 
         public ResXQuickFix(ResXSpellHighlighting highlighting)
@@ -28,11 +31,13 @@ namespace AgentSmith.ResX
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-                foreach (string suggestion in SpellCheckManager.GetSpellChecker(_highlighting.File).Suggest(_highlighting.MisspelledWord, 5))
+                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_highlighting.File, _highlighting.CustomDictionary.Name);
+                foreach (string suggestion in spellChecker.Suggest(_highlighting.MisspelledWord, MAX_SUGGESTIONS))
                 {
                     items.Add(new ReplaceWordWithBulbItem(_highlighting.Range, suggestion));
                 }
-                items.Add(new AddToDictionaryBulbItem(_highlighting.MisspelledWord, _highlighting.Settings, _highlighting.Range));
+                items.Add(new AddToDictionaryBulbItem(_highlighting.MisspelledWord,
+                                                      _highlighting.CustomDictionary, _highlighting.Range));
                 return items.ToArray();
             }
         }

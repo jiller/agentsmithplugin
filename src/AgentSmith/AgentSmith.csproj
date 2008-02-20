@@ -166,6 +166,14 @@
     <Compile Include="Identifiers\IdentifierSpellCheckAnalyzer.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckQuickFix.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckSuggestion.cs" />
+    <Compile Include="Options\SpellCheckSettingsPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Options\SpellCheckSettingsPage.Designer.cs">
+      <DependentUpon>SpellCheckSettingsPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\CustomDictionaries.cs" />
+    <Compile Include="SpellCheck\NetSpell\CustomDictionary.cs" />
     <Compile Include="SpellCheck\CamelHumpLexer.cs" />
     <Compile Include="Comments\SurroundWithMetatagsQuickFix.cs" />
     <Compile Include="NamingConventions\DataContext.cs" />
@@ -326,6 +334,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />
+    <EmbeddedResource Include="Options\SpellCheckSettingsPage.resx">
+      <DependentUpon>SpellCheckSettingsPage.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

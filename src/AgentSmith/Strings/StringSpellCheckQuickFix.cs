@@ -32,7 +32,7 @@ namespace AgentSmith.Strings
             {
                 List<IBulbItem> items = new List<IBulbItem>();
 
-                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution);
+                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution, _suggestion.CustomDictionary.Name);
 
                 if (spellChecker != null)
                 {
@@ -44,7 +44,7 @@ namespace AgentSmith.Strings
                         items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newString));
                     }
                 }                
-                items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, _suggestion.Settings, _suggestion.Range));
+                items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, _suggestion.CustomDictionary, _suggestion.Range));
                 return items.ToArray();
             }
         }

@@ -1,6 +1,6 @@
 using System;
-using AgentSmith.Options;
 using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
@@ -15,8 +15,8 @@ namespace AgentSmith.Comments
         private readonly LexerToken _token;
 
         public WordIsNotInDictionarySuggestion(string word, DocumentRange range,
-                                               LexerToken misspelledToken, ISolution solution, CommentsSettings settings)
-            : base(NAME, range, misspelledToken.Value, solution, settings)
+                                               LexerToken misspelledToken, ISolution solution, CustomDictionary customDictionary)
+            : base(NAME, range, misspelledToken.Value, solution, customDictionary)
         {
             _word = word;
             _token = misspelledToken;

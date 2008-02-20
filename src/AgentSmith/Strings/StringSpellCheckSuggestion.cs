@@ -1,16 +1,13 @@
 using System;
-using AgentSmith.Options;
 using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
 using JetBrains.Util;
 
 namespace AgentSmith.Strings
-{
-    /// <summary>
-    /// anIdentfier
-    /// </summary>
+{    
     [ConfigurableSeverityHighlighting(NAME)]
     public class StringSpellCheckSuggestion : SpellCheckSuggestionBase
     {
@@ -21,8 +18,8 @@ namespace AgentSmith.Strings
 
         public StringSpellCheckSuggestion(string word, DocumentRange range, string misspelledWord,
                                           TextRange misspelledRange, ISolution solution,
-                                          CommentsSettings settings)
-            : base(NAME, range, misspelledWord, solution, settings)
+                                          CustomDictionary customDictionary)
+            : base(NAME, range, misspelledWord, solution, customDictionary)
         {
             _word = word;            
             _misspelledRange = misspelledRange;

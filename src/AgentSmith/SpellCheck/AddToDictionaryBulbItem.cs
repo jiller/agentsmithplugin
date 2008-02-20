@@ -1,5 +1,5 @@
 using System;
-using AgentSmith.Options;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
@@ -10,13 +10,13 @@ namespace AgentSmith.SpellCheck
     public class AddToDictionaryBulbItem : IBulbItem
     {
         private readonly string _word;
-        private readonly CommentsSettings _settings;
+        private readonly CustomDictionary _customDictionary;
         private DocumentRange _documentRange;
 
-        public AddToDictionaryBulbItem(string word, CommentsSettings settings, DocumentRange range)
+        public AddToDictionaryBulbItem(string word, CustomDictionary settings, DocumentRange range)
         {
             _word = word;
-            _settings = settings;
+            _customDictionary = settings;
             _documentRange = range;
         }
 
@@ -24,19 +24,19 @@ namespace AgentSmith.SpellCheck
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            string words = _settings.UserWords.Trim();
+            string words = _customDictionary.UserWords.Trim();
             if (words.Length > 0)
             {
-                _settings.UserWords = words + "\n";
+                _customDictionary.UserWords = words + "\n";
             }
-            _settings.UserWords += _word;
+            _customDictionary.UserWords += _word;
 
             Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);
         }
 
         public string Text
         {
-            get { return String.Format("Add '{0}' to the dictionary", _word); }
+            get { return String.Format("Add '{0}' to '{1}' user dictionary", _word, _customDictionary.Name); }
         }
 
         #endregion

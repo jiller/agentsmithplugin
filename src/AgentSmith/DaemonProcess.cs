@@ -21,13 +21,14 @@ namespace AgentSmith
         private readonly IDeclarationAnalyzer[] _analyzers;
         private readonly List<HighlightingInfo> _highlightings = new List<HighlightingInfo>();
         private readonly IDaemonProcess _process;
+        private CodeStyleSettings _styleSettings;
 
         public DaemonProcess(IDaemonProcess daemonProcess)
         {
             _process = daemonProcess;
-            CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_process.Solution);
+            _styleSettings = CodeStyleSettings.GetInstance(_process.Solution);
             //TODO:This might happen if plugin is activated manually
-            if (styleSettings == null)
+            if (_styleSettings == null)
             {
                 _analyzers = new IDeclarationAnalyzer[0];
             }
@@ -35,9 +36,9 @@ namespace AgentSmith
             {
                 _analyzers = new IDeclarationAnalyzer[]
                     {
-                        new NamingConventionsAnalyzer(styleSettings.NamingConventionSettings, _process.Solution),
-                        new CommentAnalyzer(styleSettings.CommentsSettings, _process.Solution),
-                        new IdentifierSpellCheckAnalyzer(styleSettings.CommentsSettings, _process.Solution)
+                        new NamingConventionsAnalyzer(_styleSettings.NamingConventionSettings, _process.Solution),
+                        new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution),
+                        new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution)
                     };
             }
         }
@@ -62,12 +63,12 @@ namespace AgentSmith
 
         public void ProcessBeforeInterior(IElement element)
         {
-            if (StringSpellCheckSuggestion.Enabled && element is ITokenNode)
+            if (StringSpellCheckSuggestion.Enabled && element is ITokenNode && _styleSettings != null)
             {
                 ITokenNode token = (ITokenNode) element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
                 {
-                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution);
+                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, _styleSettings.StringsDictionary);
 
                     IList<SuggestionBase> suggestions =
                         StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,

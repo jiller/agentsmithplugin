@@ -45,21 +45,35 @@ namespace AgentSmith.SpellCheck.NetSpell
     /// </summary>	
     public class SpellChecker : ISpellChecker
     {
+        private readonly CustomDictionary _customDictionary;
         private readonly WordDictionary _dictionary;
 
-        //private readonly int _maxSuggestions = 5;
         private readonly Suggestion _suggestionMode = Suggestion.PhoneticNearMiss;
         private readonly HashSet<string> _userWords = new HashSet<string>();
+        private string _userWordsCache;
 
-        public SpellChecker(WordDictionary dictionary)
+        public SpellChecker(WordDictionary dictionary, CustomDictionary customDictionary)
         {
             _dictionary = dictionary;
+            _customDictionary = customDictionary;
         }
 
-        public void SetUserWords(string[] words)
+        public CustomDictionary CustomDictionary
         {
-            _userWords.Clear();
-            _userWords.AddAll(words);
+            get { return _customDictionary; }
+        }
+
+        private void ensureCustomDictionaryLoaded()
+        {
+            if (!ReferenceEquals(_userWordsCache, _customDictionary.UserWords))
+            {
+                _userWordsCache = _customDictionary.UserWords;
+                _userWords.Clear();
+                if (_customDictionary.UserWords != null)
+                {
+                    _userWords.AddAll(_customDictionary.UserWords.Split('\n'));
+                }
+            }
         }
 
         #region ISpell Near Miss Suggetion methods
@@ -235,6 +249,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </returns>
         public bool TestWord(string word, bool matchCase)
         {
+            ensureCustomDictionaryLoaded();
             return testWord(word, matchCase).Contains;
         }
 
@@ -245,6 +260,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         /// </param>        
         public IList<string> Suggest(string word, uint maxSuggestions)
         {
+            ensureCustomDictionaryLoaded();
             ContainsResult result = testWord(word, false);
             if (!result.Contains)
             {
@@ -272,7 +288,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         private int editDistance(string source, string target, bool positionPriority)
         {
             // i.e. 2-D array
-            Array matrix = Array.CreateInstance(typeof(int), source.Length + 1, target.Length + 1);
+            Array matrix = Array.CreateInstance(typeof (int), source.Length + 1, target.Length + 1);
 
             // boundary conditions
             matrix.SetValue(0, 0, 0);
@@ -280,7 +296,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             for (int j = 1; j <= target.Length; j++)
             {
                 // boundary conditions
-                int val = (int)matrix.GetValue(0, j - 1);
+                int val = (int) matrix.GetValue(0, j - 1);
                 matrix.SetValue(val + 1, 0, j);
             }
 
@@ -288,27 +304,27 @@ namespace AgentSmith.SpellCheck.NetSpell
             for (int i = 1; i <= source.Length; i++)
             {
                 // boundary conditions
-                int val = (int)matrix.GetValue(i - 1, 0);
+                int val = (int) matrix.GetValue(i - 1, 0);
                 matrix.SetValue(val + 1, i, 0);
 
                 // inner loop
                 for (int j = 1; j <= target.Length; j++)
                 {
-                    int diag = (int)matrix.GetValue(i - 1, j - 1);
+                    int diag = (int) matrix.GetValue(i - 1, j - 1);
 
                     if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
                     {
                         diag++;
                     }
 
-                    int deletion = (int)matrix.GetValue(i - 1, j);
-                    int insertion = (int)matrix.GetValue(i, j - 1);
+                    int deletion = (int) matrix.GetValue(i - 1, j);
+                    int insertion = (int) matrix.GetValue(i, j - 1);
                     int match = Math.Min(deletion + 1, insertion + 1);
                     matrix.SetValue(Math.Min(diag, match), i, j);
                 } //for j
             } //for i
 
-            int dist = (int)matrix.GetValue(source.Length, target.Length);
+            int dist = (int) matrix.GetValue(source.Length, target.Length);
 
             // extra edit on first and last chars
             if (positionPriority)
