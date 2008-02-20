@@ -62,7 +62,9 @@ namespace AgentSmith.Strings
                     if (containingElement == null ||
                         !IdentifierResolver.IsIdentifier(containingElement, solution, wordLexer.TokenText))
                     {
-                        foreach (LexerToken humpToken in new CamelHumpLexer(buffer, wordLexer.TokenStart, wordLexer.TokenEnd))
+                        foreach (
+                            LexerToken humpToken in new CamelHumpLexer(buffer, wordLexer.TokenStart, wordLexer.TokenEnd)
+                            )
                         {
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                                 !spellChecker.TestWord(humpToken.Value, false))
@@ -72,10 +74,15 @@ namespace AgentSmith.Strings
 
                                 TextRange range = new TextRange(start, end);
                                 DocumentRange documentRange = new DocumentRange(document, range);
+                                TextRange textRange = new TextRange(humpToken.Start - wordLexer.TokenStart,
+                                                                    humpToken.End - wordLexer.TokenStart);
+
+                                CustomDictionary customDictionary =
+                                    settings.CustomDictionaries.GetOrCreateCustomDictionary(settings.StringsDictionary);
 
                                 suggestions.Add(new StringSpellCheckSuggestion(document.GetText(range), documentRange,
-                                    humpToken.Value, new TextRange(humpToken.Start - wordLexer.TokenStart, humpToken.End - wordLexer.TokenStart),
-                                    solution, settings.CommentsSettings));
+                                                                               humpToken.Value, textRange,
+                                                                               solution, customDictionary));
                                 break;
                             }
                         }

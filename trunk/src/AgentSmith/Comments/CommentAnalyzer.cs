@@ -25,7 +25,7 @@ namespace AgentSmith.Comments
         {
             _settings = settings;
             _solution = solution;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution);
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName);
 
             if (_settings.CommentMatch != null)
             {
@@ -106,9 +106,9 @@ namespace AgentSmith.Comments
                             {
                                 
                                 DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
-
+                                
                                 highlightings.Add(
-                                    new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange, humpToken, _solution, _settings));
+                                    new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange, humpToken, _solution, _spellChecker.CustomDictionary));
                                 break;
                             }
                         }

@@ -1,26 +1,23 @@
 using System;
-using AgentSmith.Options;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Editor;
 
 namespace AgentSmith.SpellCheck
-{    
-    /// <summary>
-    /// anIdentifier
-    /// </summary>
+{        
     public abstract class SpellCheckSuggestionBase : SuggestionBase
     {
         private readonly string _word;
         private readonly ISolution _solution;
-        private readonly CommentsSettings _settings;
+        private readonly CustomDictionary _customDictionary;
 
         public SpellCheckSuggestionBase(string suggestionName, DocumentRange range, string misspelledWord,
-            ISolution solution, CommentsSettings settings)
+            ISolution solution, CustomDictionary customDictionary)
             : base(suggestionName, null, range, String.Format("Word '{0}' is not in dictionary.", misspelledWord))
         {
             _word = misspelledWord;
             _solution = solution;
-            _settings = settings;
+            _customDictionary = customDictionary;
         }
 
         public string MisspelledWord
@@ -33,9 +30,9 @@ namespace AgentSmith.SpellCheck
             get { return _solution; }
         }
 
-        public CommentsSettings Settings
+        public CustomDictionary CustomDictionary
         {
-            get { return _settings; }
+            get { return _customDictionary; }
         }
     }
 }

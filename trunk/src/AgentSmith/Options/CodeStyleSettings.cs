@@ -16,12 +16,42 @@ namespace AgentSmith.Options
     {
         private NamingConventionSettings _namingConventionSettings = new NamingConventionSettings();
         private CommentsSettings _commentsSettings = new CommentsSettings();
+        
+        private CustomDictionaries _customDictionaries = new CustomDictionaries();
+        private string _stringsDictionary = "en-US";        
+        private string _identifierDictionary = "en-US";
+        private string _defaultResXDictionary = "en-US";
 
         public CodeStyleSettings()
         {
             _namingConventionSettings.LoadDefaults();
             _commentsSettings = new CommentsSettings();
             _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
+        }
+
+
+        public CustomDictionaries CustomDictionaries
+        {
+            get { return _customDictionaries; }
+            set { _customDictionaries = value; }
+        }
+
+        public string StringsDictionary
+        {
+            get { return _stringsDictionary; }
+            set { _stringsDictionary = value; }
+        }
+
+        public string IdentifierDictionary
+        {
+            get { return _identifierDictionary; }
+            set { _identifierDictionary = value; }
+        }
+
+        public string DefaultResXDictionary
+        {
+            get { return _defaultResXDictionary; }
+            set { _defaultResXDictionary = value; }
         }
 
         public CommentsSettings CommentsSettings
@@ -71,7 +101,11 @@ namespace AgentSmith.Options
                     XmlReader reader = XmlReader.Create(new StringReader(element.InnerXml));
                     CodeStyleSettings settings = (CodeStyleSettings)serializer.Deserialize(reader);
                     _namingConventionSettings = settings.NamingConventionSettings;
-                    _commentsSettings = settings.CommentsSettings;                    
+                    _commentsSettings = settings.CommentsSettings;
+                    _customDictionaries = settings._customDictionaries;
+                    _stringsDictionary = settings._stringsDictionary;
+                    _defaultResXDictionary = settings._defaultResXDictionary;
+                    _identifierDictionary = settings._identifierDictionary;                    
                 }
                 catch (Exception ex)
                 {

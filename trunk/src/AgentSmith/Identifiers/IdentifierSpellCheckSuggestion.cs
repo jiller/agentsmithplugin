@@ -1,6 +1,6 @@
 using System;
-using AgentSmith.Options;
 using AgentSmith.SpellCheck;
+using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Editor;
@@ -17,8 +17,8 @@ namespace AgentSmith.Identifiers
         private readonly LexerToken _lexerToken;
 
         public IdentifierSpellCheckSuggestion(IDeclaration declaration, LexerToken token,
-                                              ISolution solution, CommentsSettings settings)
-            : base(NAME, getRange(declaration), token.Value, solution, settings)
+                                              ISolution solution, CustomDictionary customDictionary)
+            : base(NAME, getRange(declaration), token.Value, solution, customDictionary)
         {
             _lexerToken = token;
             _declaration = declaration;

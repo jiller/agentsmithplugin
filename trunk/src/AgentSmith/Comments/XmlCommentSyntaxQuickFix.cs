@@ -32,7 +32,7 @@ namespace AgentSmith.Comments
             {
                 List<IBulbItem> items = new List<IBulbItem>();
 
-                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution);
+                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution, _suggestion.CustomDictionary.Name);
 
                 if (spellChecker != null)
                 {
@@ -46,7 +46,7 @@ namespace AgentSmith.Comments
                 }
 
                 items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
-                items.Add(new AddToDictionaryBulbItem(_suggestion.Token.Value, _suggestion.Settings, _suggestion.Range));
+                items.Add(new AddToDictionaryBulbItem(_suggestion.Token.Value, _suggestion.CustomDictionary, _suggestion.Range));
                 return items.ToArray();
             }
         }

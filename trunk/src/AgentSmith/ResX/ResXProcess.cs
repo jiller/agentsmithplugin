@@ -34,7 +34,7 @@ namespace AgentSmith.ResX
             }
 
             List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
-            ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file);
+            ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file, styleSettings.DefaultResXDictionary);
             if (checker != null)
             {
                 foreach (IXmlTokenNode token in getStringsToCheck())
@@ -52,7 +52,7 @@ namespace AgentSmith.ResX
                             DocumentRange range = new DocumentRange(docRange.Document, textRange);
                             
                             ResXSpellHighlighting highlighting =
-                                new ResXSpellHighlighting(lexer.TokenText, _file, styleSettings.CommentsSettings, range);
+                                new ResXSpellHighlighting(lexer.TokenText, _file, checker.CustomDictionary, range);
                             
                             highlightings.Add(new HighlightingInfo(range, highlighting));
                         }

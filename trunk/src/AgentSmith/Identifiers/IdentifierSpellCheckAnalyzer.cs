@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ProjectModel;
@@ -13,17 +12,15 @@ namespace AgentSmith.Identifiers
 {
     public class IdentifierSpellCheckAnalyzer : IDeclarationAnalyzer
     {
-        private readonly ISolution _solution;
-        private readonly CommentsSettings _settings;
+        private readonly ISolution _solution;        
         private readonly ISpellChecker _spellChecker;
 
         private const int MAX_LENGTH_TO_SKIP = 3;
 
-        public IdentifierSpellCheckAnalyzer(CommentsSettings settings, ISolution solution)
+        public IdentifierSpellCheckAnalyzer(string dictionaryName, ISolution solution)
         {
-            _solution = solution;
-            _settings = settings;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution);
+            _solution = solution;            
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution, dictionaryName);
         }
 
         public SuggestionBase[] Analyze(IDeclaration declaration)
@@ -68,7 +65,7 @@ namespace AgentSmith.Identifiers
                     }
                     if (!found)
                     {
-                        suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _settings));
+                        suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _spellChecker.CustomDictionary));
                     }
                 }
             }
