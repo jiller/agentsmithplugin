@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
 using JetBrains.UI.Options;
@@ -61,6 +62,8 @@ namespace AgentSmith.Options
             Settings.StringsDictionary = _cbStrings.SelectedItem.ToString();
             Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();
             Settings.DefaultResXDictionary = _cbResX.SelectedItem.ToString();
+
+            SpellCheckManager.Reset();
             return true;
         }
 
@@ -160,9 +163,5 @@ namespace AgentSmith.Options
                 _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
             }
         }
-
-        private void _cbDictionary_SelectedValueChanged(object sender, EventArgs e)
-        {
-            }
-    }
+     }
 }

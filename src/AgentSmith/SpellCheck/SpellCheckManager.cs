@@ -69,6 +69,12 @@ namespace AgentSmith.SpellCheck
             return _dictionaryCache[dictionaryName];
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        public static void Reset()
+        {
+            _dictionaryCache.Clear();
+        }
+
         private static SpellChecker loadSpellChecker(string name, ISolution solution)
         {
             CodeStyleSettings settings = CodeStyleSettings.GetInstance(solution);
@@ -103,7 +109,7 @@ namespace AgentSmith.SpellCheck
         private static string getDictPath(string dictionaryName)
         {
             return Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
-                                String.Format("dic\\{0}.dic", dictionaryName));
-        } 
+                String.Format("dic\\{0}.dic", dictionaryName));
+        }
     }
 }
