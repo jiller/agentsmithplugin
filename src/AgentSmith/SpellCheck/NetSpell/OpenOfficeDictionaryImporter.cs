@@ -37,7 +37,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         private void loadAffix(string fileName)
         {
             _encoding = Encoding.UTF7;
-            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open)))
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open, FileAccess.Read)))
             {
                 string tempLine = sr.ReadLine();
                 while (tempLine != null)
@@ -56,7 +56,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                 }
             }
 
-            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open, FileAccess.Read), _encoding))
             {
                 sr.ReadLine();
 
@@ -97,7 +97,7 @@ namespace AgentSmith.SpellCheck.NetSpell
 
         private void loadWords(string fileName)
         {
-            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open), _encoding))
+            using (StreamReader sr = new StreamReader(new FileStream(fileName, FileMode.Open, FileAccess.Read), _encoding))
             {
                 sr.ReadLine();
                 // read line by line
