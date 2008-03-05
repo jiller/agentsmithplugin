@@ -22,7 +22,7 @@
         </Property>
 
         <Upgrade Id="$(var.DynUpgradeCode)">
-           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" Minimum="1.0.9" Maximum="1.1.0" />
+           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" Minimum="1.0.9" Maximum="$(var.DynProductVersion)" />
         </Upgrade>
 
                                        
