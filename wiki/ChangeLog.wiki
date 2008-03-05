@@ -1,3 +1,8 @@
+==1.1.1 (03/05/2008) ==
+  * Support for different spell checking languages.
+    NOTE: custom dictionary words will be lost after installing this version.
+  * Fixed a couple of minor defects
+
 ==1.1.0 (02/05/2008) ==
   * Identifier spell check.
   * Splitting by camel humps while spell checking strings and XML comments.
