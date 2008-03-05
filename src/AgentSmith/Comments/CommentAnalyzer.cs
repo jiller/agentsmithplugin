@@ -43,13 +43,12 @@ namespace AgentSmith.Comments
             }
         }
 
-        
-        private  IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
+        private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
         {
-            if (decl is IMultipleDeclarationMemberNode)
+            IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
+            if (node != null)
             {
-                return SharedImplUtil.GetDocCommentBlockNode(
-                    ((IMultipleDeclarationMemberNode) decl).MultipleDeclaration);
+                return SharedImplUtil.GetDocCommentBlockNode(node.MultipleDeclaration);
             }
             else
             {
@@ -66,13 +65,12 @@ namespace AgentSmith.Comments
             {
                 return new SuggestionBase[0];
             }
-            List<SuggestionBase> highlightings = new List<SuggestionBase>();
-            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings);
 
-            if (checkPublicMembersHaveComments((IClassMemberDeclaration) declaration, highlightings))
-            {
-                return highlightings.ToArray();
-            }
+            List<SuggestionBase> highlightings = new List<SuggestionBase>();
+
+            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings);
+            checkMembersHaveComments((IClassMemberDeclaration)declaration, highlightings);
+
             return highlightings.ToArray();
         }
 
@@ -88,31 +86,40 @@ namespace AgentSmith.Comments
 
             foreach (Range wordRange in getWordsFromXmlComment(getDocBlock(decl)))
             {
-                if (SpellCheckUtil.ShouldSpellCheck(wordRange.Word) &&
-                    !_spellChecker.TestWord(wordRange.Word, false))
+                if (!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
+                    _spellChecker.TestWord(wordRange.Word, false))
                 {
-                    DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
-                    if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
-                    {
-                        highlightings.Add(
-                            new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word, range, decl, _solution));
-                    }
-                    else
-                    {
-                        foreach (LexerToken humpToken in new CamelHumpLexer(wordRange.Word, 0, wordRange.Word.Length))
-                        {
-                            if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
-                                !_spellChecker.TestWord(humpToken.Value, false))
-                            {
-                                
-                                DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
-                                
-                                highlightings.Add(
-                                    new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange, humpToken, _solution, _spellChecker.CustomDictionary));
-                                break;
-                            }
-                        }
-                    }
+                    continue;
+                }
+
+                DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
+                if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                {
+                    highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
+                        range, decl, _solution));
+                }
+                else
+                {
+                    checkWordSpelling(decl, wordRange, highlightings, range);
+                }
+            }
+        }
+
+        private void checkWordSpelling(IClassMemberDeclaration decl, Range wordRange,
+                                       ICollection<SuggestionBase> highlightings, DocumentRange range)
+        {
+            CamelHumpLexer camelHumpLexer = new CamelHumpLexer(wordRange.Word, 0, wordRange.Word.Length);
+            foreach (LexerToken humpToken in camelHumpLexer)
+            {
+                if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
+                    !_spellChecker.TestWord(humpToken.Value, false))
+                {
+                    DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
+
+                    highlightings.Add(new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange,
+                        humpToken, _solution, _spellChecker.CustomDictionary));
+
+                    break;
                 }
             }
         }
@@ -167,13 +174,20 @@ namespace AgentSmith.Comments
             }
         }
 
-        private bool checkPublicMembersHaveComments(IClassMemberDeclaration declaration,
-                                                    List<SuggestionBase> highlightings)
+        private bool checkMembersHaveComments(IClassMemberDeclaration declaration,
+                                              List<SuggestionBase> highlightings)
         {
+            if (declaration is IConstructorDeclaration && declaration.IsStatic)
+            {
+                //TODO: probably need to put this somewhere in settings.
+                //Static constructors have no visibility so not clear how to check them.
+                return false;
+            }
+
             if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
-                Match match =
-                    ComplexMatchEvaluator.IsMatch(declaration, _settings.CommentMatch, _settings.CommentNotMatch, true);
+                Match match = ComplexMatchEvaluator.IsMatch(declaration,
+                    _settings.CommentMatch, _settings.CommentNotMatch, true);
 
                 if (match != null)
                 {
@@ -184,8 +198,6 @@ namespace AgentSmith.Comments
             }
             return false;
         }
-
-        #region Nested type: Range
 
         private struct Range
         {
@@ -198,7 +210,5 @@ namespace AgentSmith.Comments
                 TextRange = range;
             }
         }
-
-        #endregion
     }
 }
