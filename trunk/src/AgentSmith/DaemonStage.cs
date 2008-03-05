@@ -14,7 +14,9 @@ namespace AgentSmith
     {
         public override IDaemonStageProcess CreateProcess(IDaemonProcess process)
         {
-            if (!IsSupported(process.ProjectFile))
+            //TODO: implement aspx file checking later.
+            if (!IsSupported(process.ProjectFile) ||
+                process.ProjectFile.Name.ToLower().EndsWith(".aspx"))
             {
                 return null;
             }

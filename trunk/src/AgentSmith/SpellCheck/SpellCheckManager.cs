@@ -19,31 +19,31 @@ namespace AgentSmith.SpellCheck
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static ISpellChecker GetSpellChecker(IProjectFile resxFile, string defaultResXDictionary)
         {
-            if (resxFile.Name.ToLower().EndsWith(".resx"))
+            if (!resxFile.Name.ToLower().EndsWith(".resx"))
             {
-                string[] parts = resxFile.Name.Split('.');
-                if (parts.Length > 2)
-                {
-                    string dictName = parts[parts.Length - 2];
-                    try
-                    {
-                        CultureInfo.GetCultureInfo(dictName);
-                    }
-                    catch (ArgumentException)
-                    {
-                        return null;
-                    }
-                    if (_dictionaryCache.ContainsKey(dictName))
-                    {
-                        return _dictionaryCache[dictName];
-                    }
-                    return loadSpellChecker(dictName, resxFile.GetSolution());
-                }
-
-                return GetSpellChecker(resxFile.GetSolution(), defaultResXDictionary);
+                throw new ArgumentException("Should be a resx file", "resxFile");
             }
 
-            throw new ArgumentException("Should be a resx file", "resxFile");
+            string[] parts = resxFile.Name.Split('.');
+            if (parts.Length > 2)
+            {
+                string dictName = parts[parts.Length - 2];
+                try
+                {
+                    CultureInfo.GetCultureInfo(dictName);
+                }
+                catch (ArgumentException)
+                {
+                    return null;
+                }
+                if (_dictionaryCache.ContainsKey(dictName))
+                {
+                    return _dictionaryCache[dictName];
+                }
+                return loadSpellChecker(dictName, resxFile.GetSolution());
+            }
+
+            return GetSpellChecker(resxFile.GetSolution(), defaultResXDictionary);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
