@@ -23,7 +23,10 @@
 
         <Upgrade Id="$(var.DynUpgradeCode)">
            <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" Minimum="1.0.9" Maximum="$(var.DynProductVersion)" />
+           <UpgradeVersion Minimum="$(var.DynProductVersion)" Maximum="127.0.0" Property="CANNOTUPGRADENEWER" OnlyDetect="yes" IncludeMaximum="yes" />
         </Upgrade>
+
+        <Condition Message="Setup has detected that a newer version of [ProductName] is already installed on your system. The installer can only upgrade from older versions. You should manually uninstall the conflicting product and then run the installation again.">NOT CANNOTUPGRADENEWER OR NOT NOUPGRADE</Condition>
 
                                        
         <!-- Directory structure for the plugin. -->
@@ -96,8 +99,8 @@
         <CustomAction Id="WixSetInstallFolder.ResharperInstalled" Property="RESHARPERROOT" Value="[RESHARPERINSTALLDIR]" Execute="immediate" />
 
         <InstallExecuteSequence>
-            <FindRelatedProducts Sequence="1" />
-	    <RemoveExistingProducts After="InstallInitialize" />            
+            <FindRelatedProducts Sequence="1">Not NOUPGRADE</FindRelatedProducts>
+	    <RemoveExistingProducts After="InstallInitialize">Not NOUPGRADE</RemoveExistingProducts>
             <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="3">Not RESHARPERINSTALLDIR</Custom>
             <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="4">RESHARPERINSTALLDIR</Custom>			            
         </InstallExecuteSequence>

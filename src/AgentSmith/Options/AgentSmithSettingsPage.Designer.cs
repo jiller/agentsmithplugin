@@ -38,6 +38,7 @@ namespace AgentSmith.Options
             this._lbPPS = new System.Windows.Forms.Label();
             this._lbPS = new System.Windows.Forms.Label();
             this._cbLookAtBase = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // _lbMustHaveComments
@@ -92,7 +93,7 @@ namespace AgentSmith.Options
             this._lbPPS.Size = new System.Drawing.Size(409, 13);
             this._lbPPS.TabIndex = 64;
             this._lbPPS.Text = "* To enable/disable XML comment validation please go to the Inspection Severity t" +
-                "ab";            
+                "ab";
             // 
             // _lbPS
             // 
@@ -113,8 +114,19 @@ namespace AgentSmith.Options
             this._cbLookAtBase.Text = "Do not show warning if base member has comment.";
             this._cbLookAtBase.UseVisualStyleBackColor = true;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 215);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(473, 13);
+            this.label1.TabIndex = 67;
+            this.label1.Text = "* These settings\' sharing as well as import/export are managed with ReSharper Cod" +
+                "e Style Sharing.";
+            // 
             // AgentSmithSettingsPage
             // 
+            this.Controls.Add(this.label1);
             this.Controls.Add(this._cbLookAtBase);
             this.Controls.Add(this._lbPS);
             this.Controls.Add(this._lbPPS);
@@ -124,7 +136,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._lbMustHaveCommentsExcept);
             this.Controls.Add(this._lbMustHaveComments);
             this.Name = "AgentSmithSettingsPage";
-            this.Size = new System.Drawing.Size(552, 519);            
+            this.Size = new System.Drawing.Size(552, 519);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -140,5 +152,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label _lbPPS;
         private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.CheckBox _cbLookAtBase;
+        private System.Windows.Forms.Label label1;
     }
 }

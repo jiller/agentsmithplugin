@@ -11,9 +11,6 @@
 		<!-- Name of the plugin product and of the plugin folder in the R# plugins store, as well. -->
 		<ProductName>Agent Smith</ProductName>
 		
-		<!-- Version of the plugin, to be specified in the installer. -->
-		<ProductVersion>1.1.1.0</ProductVersion>
-
 		<!-- Version of R# (two components only) that the plugin is targeting. -->
 		<ReSharperVersion2>3.1</ReSharperVersion2>
 		
