@@ -16,7 +16,7 @@ namespace AgentSmith
         {
             //TODO: implement aspx file checking later.
             if (!IsSupported(process.ProjectFile) ||
-                process.ProjectFile.Name.ToLower().EndsWith(".aspx"))
+                !process.ProjectFile.Name.ToLower().EndsWith(".cs"))
             {
                 return null;
             }
