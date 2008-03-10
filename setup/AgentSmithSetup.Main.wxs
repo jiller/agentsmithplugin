@@ -22,11 +22,9 @@
         </Property>
 
         <Upgrade Id="$(var.DynUpgradeCode)">
-           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" Minimum="1.0.9" Maximum="$(var.DynProductVersion)" />
-           <UpgradeVersion Minimum="$(var.DynProductVersion)" Maximum="127.0.0" Property="CANNOTUPGRADENEWER" OnlyDetect="yes" IncludeMaximum="yes" />
+           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" IncludeMaximum='no' Minimum="1.0.9" Maximum="$(var.DynProductVersion)" />
+           <UpgradeVersion Property="CANNOTUPGRADENEWER" IncludeMaximum="yes" Minimum="$(var.DynProductVersion)" Maximum="127.0.0" OnlyDetect='yes' />
         </Upgrade>
-
-        <Condition Message="Setup has detected that a newer version of [ProductName] is already installed on your system. The installer can only upgrade from older versions. You should manually uninstall the conflicting product and then run the installation again.">NOT CANNOTUPGRADENEWER OR NOT NOUPGRADE</Condition>
 
                                        
         <!-- Directory structure for the plugin. -->
@@ -97,12 +95,14 @@
         <!-- Assign the installation folder for the all users / current user scenarios. -->
         <CustomAction Id="WixSetInstallFolder.NoResharperInstalled" Property="RESHARPERROOT" Value="[ProgramFilesFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Bin" Execute="immediate" />
         <CustomAction Id="WixSetInstallFolder.ResharperInstalled" Property="RESHARPERROOT" Value="[RESHARPERINSTALLDIR]" Execute="immediate" />
+        <CustomAction Id='CANNOTUPGRADENEWERACTION' Error='Setup has detected that a newer version of [ProductName] is already installed on your system. The installer can only upgrade from older versions. You should manually uninstall the conflicting product and then run the installation again.' />
 
         <InstallExecuteSequence>
-            <FindRelatedProducts Sequence="1">Not NOUPGRADE</FindRelatedProducts>
+            <FindRelatedProducts Sequence="1"/>
+            <Custom Action='CANNOTUPGRADENEWERACTION' After='FindRelatedProducts'>CANNOTUPGRADENEWER AND NOT NOUPGRADE</Custom>
 	    <RemoveExistingProducts After="InstallInitialize">Not NOUPGRADE</RemoveExistingProducts>
-            <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="3">Not RESHARPERINSTALLDIR</Custom>
-            <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="4">RESHARPERINSTALLDIR</Custom>			            
+            <Custom Action="WixSetInstallFolder.NoResharperInstalled" Sequence="4">Not RESHARPERINSTALLDIR</Custom>
+            <Custom Action="WixSetInstallFolder.ResharperInstalled" Sequence="5">RESHARPERINSTALLDIR</Custom>			            
         </InstallExecuteSequence>
         <InstallUISequence>
             <FindRelatedProducts Sequence="1" />
