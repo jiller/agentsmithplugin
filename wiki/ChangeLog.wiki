@@ -1,3 +1,6 @@
+==1.1.2 (03/10/2008) ==
+  * A couple of bug fixes 
+
 ==1.1.1 (03/05/2008) ==
   * Support for different spell checking languages. NOTE: custom dictionary words will be lost after installing this version.
   * Fixed a couple of minor defects
