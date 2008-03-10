@@ -20,7 +20,7 @@ namespace AgentSmith.Comments
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
         private readonly ISpellChecker _spellChecker;
-
+        
         public CommentAnalyzer(CommentsSettings settings, ISolution solution)
         {
             _settings = settings;
@@ -42,7 +42,7 @@ namespace AgentSmith.Comments
                 }
             }
         }
-
+        
         private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
         {
             IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
@@ -93,7 +93,8 @@ namespace AgentSmith.Comments
                 }
 
                 DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
-                if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                if (decl.DeclaredName != wordRange.Word &&
+                    IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
                 {
                     highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
                         range, decl, _solution));
@@ -174,14 +175,14 @@ namespace AgentSmith.Comments
             }
         }
 
-        private bool checkMembersHaveComments(IClassMemberDeclaration declaration,
+        private void checkMembersHaveComments(IClassMemberDeclaration declaration,
                                               List<SuggestionBase> highlightings)
         {
             if (declaration is IConstructorDeclaration && declaration.IsStatic)
             {
                 //TODO: probably need to put this somewhere in settings.
                 //Static constructors have no visibility so not clear how to check them.
-                return false;
+                return;
             }
 
             if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
@@ -193,14 +194,13 @@ namespace AgentSmith.Comments
                 {
                     FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
                     highlightings.Add(suggestion);
-                    return true;
+                    return;
                 }
-            }
-            return false;
+            }            
         }
 
         private struct Range
-        {
+        {            
             public readonly TextRange TextRange;
             public readonly string Word;
 
