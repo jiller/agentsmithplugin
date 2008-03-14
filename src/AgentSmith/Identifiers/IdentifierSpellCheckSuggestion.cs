@@ -1,9 +1,9 @@
 using System;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Identifiers
@@ -45,7 +45,7 @@ namespace AgentSmith.Identifiers
 
         public override string AttributeId
         {
-            get { return HighlightingAttributeIds.GetDefaultAttribute(Severity.SUGGESTION); }
+            get { return HighlightingAttributeIds.SUGGESTION_ATTRIBUTE; }
         }
 
         public static bool Enabled

@@ -1,7 +1,7 @@
 using System;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Editor;
 
 namespace AgentSmith.SpellCheck
 {        
