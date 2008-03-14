@@ -43,7 +43,7 @@ namespace AgentSmith.Options
         private void initializeUI()
         {
             bindView();
-            _sceExclusions.Strings = Settings.NamingConventionSettings.Exclusions;
+            _sceExclusions.Items = Settings.NamingConventionSettings.Exclusions;
         }
 
         private void bindView()
@@ -69,7 +69,7 @@ namespace AgentSmith.Options
 
         public bool OnOk()
         {
-            Settings.NamingConventionSettings.Exclusions = _sceExclusions.Strings;
+            Settings.NamingConventionSettings.Exclusions = _sceExclusions.Items;
             return true;
         }
 

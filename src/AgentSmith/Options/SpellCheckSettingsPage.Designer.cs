@@ -53,11 +53,13 @@ namespace AgentSmith.Options
             // _tbUserDictionary
             // 
             this._tbUserDictionary.AcceptsReturn = true;
+            this._tbUserDictionary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
             this._tbUserDictionary.Location = new System.Drawing.Point(15, 272);
             this._tbUserDictionary.Multiline = true;
             this._tbUserDictionary.Name = "_tbUserDictionary";
             this._tbUserDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._tbUserDictionary.Size = new System.Drawing.Size(310, 201);
+            this._tbUserDictionary.Size = new System.Drawing.Size(310, 233);
             this._tbUserDictionary.TabIndex = 6;
             this._tbUserDictionary.WordWrap = false;
             // 

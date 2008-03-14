@@ -1,9 +1,9 @@
 using System;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 
 namespace AgentSmith.Comments
 {

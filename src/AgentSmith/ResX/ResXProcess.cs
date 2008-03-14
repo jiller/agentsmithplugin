@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.Util;
@@ -77,7 +77,7 @@ namespace AgentSmith.ResX
 
                 if (root != null)
                 {
-                    IList<IXmlTag> datas = root.GetTags(delegate(IXmlTag tag) { return tag.TagName == "data"; });
+                    IEnumerable<IXmlTag> datas = root.GetTags<IXmlTag>(delegate(IXmlTag tag) { return tag.TagName == "data"; });
                     foreach (IXmlTag data in datas)
                     {
                         if (data.GetAttribute("type") == null)
