@@ -1,5 +1,6 @@
 ==1.1.2 (03/10/2008) ==
-  * A couple of bug fixes 
+  * A couple of bug fixes  
+  * Vladimir Smolyaninov ported Agent Smith for ReSharper 4.0 and performed some spell checking engine optimizations.
 
 ==1.1.1 (03/05/2008) ==
   * Support for different spell checking languages. NOTE: custom dictionary words will be lost after installing this version.
