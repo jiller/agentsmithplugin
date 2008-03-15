@@ -9,15 +9,15 @@ namespace AgentSmith.SpellCheck
     {
         private readonly string _word;
         private readonly ISolution _solution;
-        private readonly CustomDictionary _customDictionary;
+        private readonly ISpellChecker _spellChecker;
 
         public SpellCheckSuggestionBase(string suggestionName, DocumentRange range, string misspelledWord,
-            ISolution solution, CustomDictionary customDictionary)
+            ISolution solution, ISpellChecker spellChecker)
             : base(suggestionName, null, range, String.Format("Word '{0}' is not in dictionary.", misspelledWord))
         {
             _word = misspelledWord;
             _solution = solution;
-            _customDictionary = customDictionary;
+            _spellChecker = spellChecker;
         }
 
         public string MisspelledWord
@@ -30,9 +30,9 @@ namespace AgentSmith.SpellCheck
             get { return _solution; }
         }
 
-        public CustomDictionary CustomDictionary
+        public ISpellChecker SpellChecker
         {
-            get { return _customDictionary; }
+            get { return _spellChecker; }
         }
     }
 }

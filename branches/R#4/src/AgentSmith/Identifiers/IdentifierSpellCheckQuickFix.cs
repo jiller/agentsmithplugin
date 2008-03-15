@@ -31,7 +31,7 @@ namespace AgentSmith.Identifiers
             {
                 List<IBulbItem> items = new List<IBulbItem>();
 
-                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution, _suggestion.CustomDictionary.Name);
+                ISpellChecker spellChecker = _suggestion.SpellChecker;
 
                 if (spellChecker != null)
                 {
@@ -50,7 +50,14 @@ namespace AgentSmith.Identifiers
                     }
                 }
                 items.Add(new RenameBulbItem(_suggestion.Declaration));
-                items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, _suggestion.CustomDictionary, _suggestion.Range));
+
+                if (spellChecker != null)
+                {
+                    foreach (CustomDictionary dict in spellChecker.CustomDictionaries)
+                    {
+                        items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, dict, _suggestion.Range));
+                    }
+                }
                 return items.ToArray();
             }
         }

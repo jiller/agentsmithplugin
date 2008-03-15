@@ -20,12 +20,12 @@ namespace AgentSmith.Comments
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
         private readonly ISpellChecker _spellChecker;
-        
+
         public CommentAnalyzer(CommentsSettings settings, ISolution solution)
         {
             _settings = settings;
             _solution = solution;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName);
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
 
             if (_settings.CommentMatch != null)
             {
@@ -42,19 +42,6 @@ namespace AgentSmith.Comments
                 }
             }
         }
-        
-        private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
-        {
-            IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
-            if (node != null)
-            {
-                return SharedImplUtil.GetDocCommentBlockNode(node.MultipleDeclaration);
-            }
-            else
-            {
-                return SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
-            }
-        }
 
         #region IDeclarationAnalyzer Members
 
@@ -68,13 +55,26 @@ namespace AgentSmith.Comments
 
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
 
-            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings);
-            checkMembersHaveComments((IClassMemberDeclaration)declaration, highlightings);
+            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings);
+            checkMembersHaveComments((IClassMemberDeclaration) declaration, highlightings);
 
             return highlightings.ToArray();
         }
 
         #endregion
+
+        private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
+        {
+            IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
+            if (node != null)
+            {
+                return SharedImplUtil.GetDocCommentBlockNode(node.MultipleDeclaration);
+            }
+            else
+            {
+                return SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
+            }
+        }
 
         private void checkCommentSpelling(IClassMemberDeclaration decl,
                                           ICollection<SuggestionBase> highlightings)
@@ -97,7 +97,7 @@ namespace AgentSmith.Comments
                     IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
                 {
                     highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
-                        range, decl, _solution));
+                                                                                range, decl, _solution));
                 }
                 else
                 {
@@ -118,7 +118,7 @@ namespace AgentSmith.Comments
                     DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
 
                     highlightings.Add(new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange,
-                        humpToken, _solution, _spellChecker.CustomDictionary));
+                                                                          humpToken, _solution, _spellChecker));
 
                     break;
                 }
@@ -188,7 +188,7 @@ namespace AgentSmith.Comments
             if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
                 Match match = ComplexMatchEvaluator.IsMatch(declaration,
-                    _settings.CommentMatch, _settings.CommentNotMatch, true);
+                                                            _settings.CommentMatch, _settings.CommentNotMatch, true);
 
                 if (match != null)
                 {
@@ -196,11 +196,13 @@ namespace AgentSmith.Comments
                     highlightings.Add(suggestion);
                     return;
                 }
-            }            
+            }
         }
 
+        #region Nested type: Range
+
         private struct Range
-        {            
+        {
             public readonly TextRange TextRange;
             public readonly string Word;
 
@@ -210,5 +212,7 @@ namespace AgentSmith.Comments
                 TextRange = range;
             }
         }
+
+        #endregion
     }
 }

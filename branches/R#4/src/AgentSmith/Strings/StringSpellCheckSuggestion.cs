@@ -18,8 +18,8 @@ namespace AgentSmith.Strings
 
         public StringSpellCheckSuggestion(string word, DocumentRange range, string misspelledWord,
                                           TextRange misspelledRange, ISolution solution,
-                                          CustomDictionary customDictionary)
-            : base(NAME, range, misspelledWord, solution, customDictionary)
+                                          ISpellChecker spellChecker)
+            : base(NAME, range, misspelledWord, solution, spellChecker)
         {
             _word = word;            
             _misspelledRange = misspelledRange;

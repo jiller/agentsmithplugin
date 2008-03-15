@@ -31,13 +31,15 @@ namespace AgentSmith.ResX
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_highlighting.File, _highlighting.CustomDictionary.Name);
+                ISpellChecker spellChecker = _highlighting.SpellChecker;
                 foreach (string suggestion in spellChecker.Suggest(_highlighting.MisspelledWord, MAX_SUGGESTIONS))
                 {
                     items.Add(new ReplaceWordWithBulbItem(_highlighting.Range, suggestion));
                 }
-                items.Add(new AddToDictionaryBulbItem(_highlighting.MisspelledWord,
-                                                      _highlighting.CustomDictionary, _highlighting.Range));
+                foreach (CustomDictionary dict in _highlighting.SpellChecker.CustomDictionaries)
+                {
+                    items.Add(new AddToDictionaryBulbItem(_highlighting.MisspelledWord, dict, _highlighting.Range));
+                }
                 return items.ToArray();
             }
         }

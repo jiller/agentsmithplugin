@@ -129,7 +129,11 @@ namespace AgentSmith
 
         private void addHighlighting(SuggestionBase highlighting)
         {
-            _highlightings.Add(new HighlightingInfo(highlighting.Range, highlighting));
+            //TODO: Is it a hack?
+            if (highlighting.Range.IsValid)
+            {
+                _highlightings.Add(new HighlightingInfo(highlighting.Range, highlighting));
+            }
         }
     }
 }

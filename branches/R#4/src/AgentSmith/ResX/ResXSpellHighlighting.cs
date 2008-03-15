@@ -13,8 +13,8 @@ namespace AgentSmith.ResX
         public const string NAME = "ResxSpellCheckSuggestion";
         private readonly IProjectFile _file;
 
-        public ResXSpellHighlighting(string word, IProjectFile file, CustomDictionary customDictionary, DocumentRange range)
-            : base(NAME, range, word, file.GetSolution(), customDictionary)
+        public ResXSpellHighlighting(string word, IProjectFile file, ISpellChecker spellChecker, DocumentRange range)
+            : base(NAME, range, word, file.GetSolution(), spellChecker)
         {
             _file = file;
         }
