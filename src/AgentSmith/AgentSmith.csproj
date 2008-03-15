@@ -150,6 +150,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing">
       <Name>system.drawing</Name>
     </Reference>
@@ -170,6 +171,18 @@
     <Compile Include="Identifiers\IdentifierSpellCheckAnalyzer.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckQuickFix.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckSuggestion.cs" />
+    <Compile Include="Options\LanguageSelectionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Options\LanguageSelectionDialog.Designer.cs">
+      <DependentUpon>LanguageSelectionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Options\LanguageSelector.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Options\LanguageSelector.Designer.cs">
+      <DependentUpon>LanguageSelector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Options\SpellCheckSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -196,6 +209,7 @@
     <Compile Include="NamingConventions\RenameBulbItem.cs" />
     <Compile Include="SmartPaste\SmartPasteAction.cs" />
     <Compile Include="SpellCheck\LexerToken.cs" />
+    <Compile Include="SpellCheck\NetSpell\MultilingualSpellchecker.cs" />
     <Compile Include="SpellCheck\SpellCheckManager.cs" />
     <Compile Include="SpellCheck\SpellCheckUtil.cs" />
     <Compile Include="Options\ImportOpenOfficeDictionary.cs">
@@ -350,6 +364,14 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Actions.xml" />
+    <EmbeddedResource Include="Options\LanguageSelectionDialog.resx">
+      <DependentUpon>LanguageSelectionDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Options\LanguageSelector.resx">
+      <DependentUpon>LanguageSelector.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Options\SpellCheckSettingsPage.resx">
       <DependentUpon>SpellCheckSettingsPage.cs</DependentUpon>
       <SubType>Designer</SubType>

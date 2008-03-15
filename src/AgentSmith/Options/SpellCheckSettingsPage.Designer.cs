@@ -39,15 +39,16 @@ namespace AgentSmith.Options
             this._lbPS = new System.Windows.Forms.Label();
             this._btnImport = new System.Windows.Forms.Button();
             this._lbIdentifiers = new System.Windows.Forms.Label();
-            this._cbIdentifiers = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this._cbStrings = new System.Windows.Forms.ComboBox();
             this._lbComments = new System.Windows.Forms.Label();
-            this._cbCommentsDict = new System.Windows.Forms.ComboBox();
             this._lbResx = new System.Windows.Forms.Label();
             this._cbResX = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
+            this._cbCaseSensitive = new System.Windows.Forms.CheckBox();
+            this._lsComments = new AgentSmith.Options.LanguageSelector();
+            this._cbIdentifiers = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // _tbUserDictionary
@@ -55,7 +56,7 @@ namespace AgentSmith.Options
             this._tbUserDictionary.AcceptsReturn = true;
             this._tbUserDictionary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this._tbUserDictionary.Location = new System.Drawing.Point(15, 272);
+            this._tbUserDictionary.Location = new System.Drawing.Point(15, 262);
             this._tbUserDictionary.Multiline = true;
             this._tbUserDictionary.Name = "_tbUserDictionary";
             this._tbUserDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -66,7 +67,7 @@ namespace AgentSmith.Options
             // _userWords
             // 
             this._userWords.AutoSize = true;
-            this._userWords.Location = new System.Drawing.Point(12, 245);
+            this._userWords.Location = new System.Drawing.Point(12, 246);
             this._userWords.Name = "_userWords";
             this._userWords.Size = new System.Drawing.Size(108, 13);
             this._userWords.TabIndex = 6;
@@ -80,7 +81,7 @@ namespace AgentSmith.Options
             this._cbDictionary.Name = "_cbDictionary";
             this._cbDictionary.Size = new System.Drawing.Size(121, 21);
             this._cbDictionary.TabIndex = 4;
-            this._cbDictionary.SelectedIndexChanged += new System.EventHandler(this.cbDictionary_SelectedIndexChanged);            
+            this._cbDictionary.SelectedIndexChanged += new System.EventHandler(this.cbDictionary_SelectedIndexChanged);
             // 
             // _lbDictionary
             // 
@@ -138,15 +139,6 @@ namespace AgentSmith.Options
             this._lbIdentifiers.TabIndex = 68;
             this._lbIdentifiers.Text = "Identifiers";
             // 
-            // _cbIdentifiers
-            // 
-            this._cbIdentifiers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbIdentifiers.FormattingEnabled = true;
-            this._cbIdentifiers.Location = new System.Drawing.Point(70, 37);
-            this._cbIdentifiers.Name = "_cbIdentifiers";
-            this._cbIdentifiers.Size = new System.Drawing.Size(121, 21);
-            this._cbIdentifiers.TabIndex = 0;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -173,15 +165,6 @@ namespace AgentSmith.Options
             this._lbComments.Size = new System.Drawing.Size(81, 13);
             this._lbComments.TabIndex = 72;
             this._lbComments.Text = "XML Comments";
-            // 
-            // _cbCommentsDict
-            // 
-            this._cbCommentsDict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbCommentsDict.FormattingEnabled = true;
-            this._cbCommentsDict.Location = new System.Drawing.Point(318, 37);
-            this._cbCommentsDict.Name = "_cbCommentsDict";
-            this._cbCommentsDict.Size = new System.Drawing.Size(121, 21);
-            this._cbCommentsDict.TabIndex = 1;
             // 
             // _lbResx
             // 
@@ -219,15 +202,46 @@ namespace AgentSmith.Options
             this.label3.TabIndex = 63;
             this.label3.Text = "Spell Checking";
             // 
+            // _cbCaseSensitive
+            // 
+            this._cbCaseSensitive.AutoSize = true;
+            this._cbCaseSensitive.Location = new System.Drawing.Point(172, 245);
+            this._cbCaseSensitive.Name = "_cbCaseSensitive";
+            this._cbCaseSensitive.Size = new System.Drawing.Size(153, 17);
+            this._cbCaseSensitive.TabIndex = 75;
+            this._cbCaseSensitive.Text = "Dictionary is case sensitive";
+            this._cbCaseSensitive.UseVisualStyleBackColor = true;
+            // 
+            // _lsComments
+            // 
+            this._lsComments.Dictionaries = null;
+            this._lsComments.Location = new System.Drawing.Point(318, 30);
+            this._lsComments.Name = "_lsComments";
+            this._lsComments.SelectedDictionaries = new string[] {
+        ""};
+            this._lsComments.SelectedDictionariesString = "";
+            this._lsComments.Size = new System.Drawing.Size(152, 28);
+            this._lsComments.TabIndex = 77;
+            // 
+            // _cbIdentifiers
+            // 
+            this._cbIdentifiers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this._cbIdentifiers.FormattingEnabled = true;
+            this._cbIdentifiers.Location = new System.Drawing.Point(70, 37);
+            this._cbIdentifiers.Name = "_cbIdentifiers";
+            this._cbIdentifiers.Size = new System.Drawing.Size(121, 21);
+            this._cbIdentifiers.TabIndex = 78;
+            // 
             // SpellCheckSettingsPage
             // 
+            this.Controls.Add(this._cbIdentifiers);
+            this.Controls.Add(this._lsComments);
+            this.Controls.Add(this._cbCaseSensitive);
             this.Controls.Add(this._cbResX);
             this.Controls.Add(this._lbResx);
-            this.Controls.Add(this._cbCommentsDict);
             this.Controls.Add(this._lbComments);
             this.Controls.Add(this._cbStrings);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this._cbIdentifiers);
             this.Controls.Add(this._lbIdentifiers);
             this.Controls.Add(this._btnImport);
             this.Controls.Add(this._lbPS);
@@ -257,14 +271,15 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.Button _btnImport;
         private System.Windows.Forms.Label _lbIdentifiers;
-        private System.Windows.Forms.ComboBox _cbIdentifiers;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox _cbStrings;
         private System.Windows.Forms.Label _lbComments;
-        private System.Windows.Forms.ComboBox _cbCommentsDict;
         private System.Windows.Forms.Label _lbResx;
         private System.Windows.Forms.ComboBox _cbResX;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox _cbCaseSensitive;
+        private LanguageSelector _lsComments;
+        private System.Windows.Forms.ComboBox _cbIdentifiers;
     }
 }

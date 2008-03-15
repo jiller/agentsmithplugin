@@ -32,21 +32,27 @@ namespace AgentSmith.Strings
             {
                 List<IBulbItem> items = new List<IBulbItem>();
 
-                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_suggestion.Solution, _suggestion.CustomDictionary.Name);
+                ISpellChecker spellChecker = _suggestion.SpellChecker;
 
                 if (spellChecker != null)
                 {
                     foreach (string newWord in spellChecker.Suggest(_suggestion.MisspelledWord, MAX_SUGGESTION_COUNT))
                     {
-                        string wordWithMisspelledWordDeleted = _suggestion.Word.Remove(_suggestion.MisspelledRange.StartOffset,
-                            _suggestion.MisspelledRange.Length);
+                        string wordWithMisspelledWordDeleted =
+                            _suggestion.Word.Remove(_suggestion.MisspelledRange.StartOffset,
+                                                    _suggestion.MisspelledRange.Length);
 
-                        string newString = wordWithMisspelledWordDeleted.Insert(_suggestion.MisspelledRange.StartOffset, newWord);
+                        string newString = wordWithMisspelledWordDeleted.Insert(
+                            _suggestion.MisspelledRange.StartOffset, newWord);
 
                         items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newString));
                     }
+
+                    foreach (CustomDictionary dict in spellChecker.CustomDictionaries)
+                    {
+                        items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, dict, _suggestion.Range));
+                    }
                 }
-                items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, _suggestion.CustomDictionary, _suggestion.Range));
                 return items.ToArray();
             }
         }

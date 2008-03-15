@@ -8,7 +8,7 @@ namespace AgentSmith.SpellCheck.NetSpell
     /// </summary>
     public interface ISpellChecker
     {
-        CustomDictionary CustomDictionary { get; }
+        CustomDictionary[] CustomDictionaries { get; }
 
         /// <summary>
         /// Generates suggestions for a misspelled word.
