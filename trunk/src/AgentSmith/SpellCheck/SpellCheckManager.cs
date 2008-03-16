@@ -69,6 +69,30 @@ namespace AgentSmith.SpellCheck
             return _dictionaryCache[dictionaryName];
         }
 
+        public static ISpellChecker GetSpellChecker(ISolution solution, string[] dictionaryNames)
+        {
+            if (dictionaryNames == null || dictionaryNames.Length == 0)
+            {
+                return null;
+            }
+
+            if (dictionaryNames.Length == 1)
+            {
+                return GetSpellChecker(solution, dictionaryNames[0]);
+            }
+
+            List<ISpellChecker> checkers = new List<ISpellChecker>();
+            foreach (string dictionaryName in dictionaryNames)
+            {
+                ISpellChecker checker = GetSpellChecker(solution, dictionaryName);
+                if (checker != null)
+                {
+                    checkers.Add(checker);
+                }
+            }
+            return new MultilingualSpellchecker(checkers.ToArray());
+        }
+
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Reset()
         {

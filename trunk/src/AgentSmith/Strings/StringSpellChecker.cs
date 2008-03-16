@@ -76,12 +76,9 @@ namespace AgentSmith.Strings
                                 TextRange textRange = new TextRange(humpToken.Start - wordLexer.TokenStart,
                                     humpToken.End - wordLexer.TokenStart);
 
-                                CustomDictionary customDictionary =
-                                    settings.CustomDictionaries.GetOrCreateCustomDictionary(settings.StringsDictionary);
-
                                 suggestions.Add(new StringSpellCheckSuggestion(document.GetText(range), documentRange,
                                     humpToken.Value, textRange,
-                                    solution, customDictionary));
+                                    solution, spellChecker));
                                 break;
                             }
                         }

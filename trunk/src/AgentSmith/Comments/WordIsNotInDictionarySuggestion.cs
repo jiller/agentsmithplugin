@@ -15,8 +15,8 @@ namespace AgentSmith.Comments
         private readonly LexerToken _token;
 
         public WordIsNotInDictionarySuggestion(string word, DocumentRange range,
-                                               LexerToken misspelledToken, ISolution solution, CustomDictionary customDictionary)
-            : base(NAME, range, misspelledToken.Value, solution, customDictionary)
+                                               LexerToken misspelledToken, ISolution solution, ISpellChecker spellChecker)
+            : base(NAME, range, misspelledToken.Value, solution, spellChecker)
         {
             _word = word;
             _token = misspelledToken;
