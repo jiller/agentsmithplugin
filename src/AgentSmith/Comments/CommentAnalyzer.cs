@@ -25,7 +25,7 @@ namespace AgentSmith.Comments
         {
             _settings = settings;
             _solution = solution;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName);
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
 
             if (_settings.CommentMatch != null)
             {
@@ -43,19 +43,6 @@ namespace AgentSmith.Comments
             }
         }
         
-        private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
-        {
-            IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
-            if (node != null)
-            {
-                return SharedImplUtil.GetDocCommentBlockNode(node.MultipleDeclaration);
-            }
-            else
-            {
-                return SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
-            }
-        }
-
         #region IDeclarationAnalyzer Members
 
         public SuggestionBase[] Analyze(IDeclaration declaration)
@@ -75,6 +62,19 @@ namespace AgentSmith.Comments
         }
 
         #endregion
+
+        private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
+        {
+            IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
+            if (node != null)
+            {
+                return SharedImplUtil.GetDocCommentBlockNode(node.MultipleDeclaration);
+            }
+            else
+            {
+                return SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
+            }
+        }
 
         private void checkCommentSpelling(IClassMemberDeclaration decl,
                                           ICollection<SuggestionBase> highlightings)
@@ -118,7 +118,7 @@ namespace AgentSmith.Comments
                     DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
 
                     highlightings.Add(new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange,
-                        humpToken, _solution, _spellChecker.CustomDictionary));
+                                                                          humpToken, _solution, _spellChecker));
 
                     break;
                 }
@@ -199,6 +199,8 @@ namespace AgentSmith.Comments
             }            
         }
 
+        #region Nested type: Range
+
         private struct Range
         {            
             public readonly TextRange TextRange;
@@ -210,5 +212,7 @@ namespace AgentSmith.Comments
                 TextRange = range;
             }
         }
+
+        #endregion
     }
 }

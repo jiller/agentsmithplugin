@@ -50,7 +50,7 @@ namespace AgentSmith.SpellCheck.NetSpell
 
         private readonly Suggestion _suggestionMode = Suggestion.PhoneticNearMiss;
         private readonly HashSet<string> _userWords = new HashSet<string>();
-        private string _userWordsCache;
+        private int _customDictionaryVersion;
 
         public SpellChecker(WordDictionary dictionary, CustomDictionary customDictionary)
         {
@@ -58,20 +58,28 @@ namespace AgentSmith.SpellCheck.NetSpell
             _customDictionary = customDictionary;
         }
 
-        public CustomDictionary CustomDictionary
+        #region ISpellChecker Members
+
+        public CustomDictionary[] CustomDictionaries
         {
-            get { return _customDictionary; }
+            get { return new CustomDictionary[] {_customDictionary}; }
         }
+
+        #endregion
 
         private void ensureCustomDictionaryLoaded()
         {
-            if (!ReferenceEquals(_userWordsCache, _customDictionary.UserWords))
+            if (_customDictionaryVersion != _customDictionary.Version)
             {
-                _userWordsCache = _customDictionary.UserWords;
+                _customDictionaryVersion = _customDictionary.Version;
                 _userWords.Clear();
                 if (_customDictionary.UserWords != null)
                 {
-                    _userWords.AddAll(_customDictionary.UserWords.Split('\n'));
+                    string[] words = _customDictionary.CaseSensitive
+                                         ? _customDictionary.UserWords.Split('\n')
+                                         :
+                                             _customDictionary.UserWords.ToLower().Split('\n');
+                    _userWords.AddAll(words);
                 }
             }
         }
@@ -250,7 +258,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         public bool TestWord(string word, bool matchCase)
         {
             ensureCustomDictionaryLoaded();
-            return testWord(word, matchCase).Contains;
+            return testWord(word).Contains;
         }
 
         /// <summary>
@@ -261,7 +269,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         public IList<string> Suggest(string word, uint maxSuggestions)
         {
             ensureCustomDictionaryLoaded();
-            ContainsResult result = testWord(word, false);
+            ContainsResult result = testWord(word);
             if (!result.Contains)
             {
                 return suggest(word, result.PossibleBaseWords, maxSuggestions);
@@ -453,15 +461,15 @@ namespace AgentSmith.SpellCheck.NetSpell
             return suggestions;
         }
 
-        private ContainsResult testWord(string word, bool matchCase)
+        private ContainsResult testWord(string word)
         {
-            if (_userWords.Contains(word))
+            if (_userWords.Contains(_customDictionary.CaseSensitive ? word : word.ToLower()))
             {
                 return new ContainsResult(true, null);
             }
 
             ContainsResult result = _dictionary.Contains(word);
-            if ( /*matchCase ||*/ result.Contains || word.Length == 0)
+            if (result.Contains || word.Length == 0)
             {
                 return result;
             }

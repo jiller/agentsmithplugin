@@ -52,7 +52,7 @@ namespace AgentSmith.ResX
                             DocumentRange range = new DocumentRange(docRange.Document, textRange);
                             
                             ResXSpellHighlighting highlighting =
-                                new ResXSpellHighlighting(lexer.TokenText, _file, checker.CustomDictionary, range);
+                                new ResXSpellHighlighting(lexer.TokenText, _file, checker, range);
                             
                             highlightings.Add(new HighlightingInfo(range, highlighting));
                         }

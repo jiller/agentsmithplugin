@@ -58,7 +58,7 @@ namespace AgentSmith.Options
         public bool OnOk()
         {
             saveCustomDictionary();
-            Settings.CommentsSettings.DictionaryName = _cbCommentsDict.SelectedItem.ToString();
+            Settings.CommentsSettings.DictionaryName = _lsComments.SelectedDictionariesString;
             Settings.StringsDictionary = _cbStrings.SelectedItem.ToString();
             Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();
             Settings.DefaultResXDictionary = _cbResX.SelectedItem.ToString();
@@ -89,6 +89,7 @@ namespace AgentSmith.Options
             if (_currentCustomDictionary != null)
             {
                 _currentCustomDictionary.UserWords = sb.ToString();
+                _currentCustomDictionary.CaseSensitive = _cbCaseSensitive.Checked;
             }
         }
 
@@ -100,7 +101,7 @@ namespace AgentSmith.Options
             {
                 _cbDictionary.SelectedItem = _cbDictionary.Items[0];
             }
-            _cbCommentsDict.SelectedItem = Settings.CommentsSettings.DictionaryName;
+            _lsComments.SelectedDictionariesString = Settings.CommentsSettings.DictionaryName;
             _cbStrings.SelectedItem = Settings.StringsDictionary;
             _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;
             _cbResX.SelectedItem = Settings.DefaultResXDictionary;
@@ -112,7 +113,6 @@ namespace AgentSmith.Options
                 {
                     _cbResX,
                     _cbIdentifiers,
-                    _cbCommentsDict,
                     _cbStrings,
                     _cbDictionary
                 };
@@ -124,6 +124,8 @@ namespace AgentSmith.Options
                 cbDict.Items.AddRange(dicts.ToArray());                
                 cbDict.SelectedItem = selected;
             }
+            
+            _lsComments.Dictionaries = dicts.ToArray();
         }
 
         private List<string> loadDictionaries()
@@ -161,6 +163,7 @@ namespace AgentSmith.Options
                 string dictName = _cbDictionary.SelectedItem.ToString();
                 _currentCustomDictionary = Settings.CustomDictionaries.GetOrCreateCustomDictionary(dictName);
                 _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
+                _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
         }
      }

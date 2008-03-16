@@ -17,8 +17,8 @@ namespace AgentSmith.Identifiers
         private readonly LexerToken _lexerToken;
 
         public IdentifierSpellCheckSuggestion(IDeclaration declaration, LexerToken token,
-                                              ISolution solution, CustomDictionary customDictionary)
-            : base(NAME, getRange(declaration), token.Value, solution, customDictionary)
+                                              ISolution solution, ISpellChecker spellChecker)
+            : base(NAME, getRange(declaration), token.Value, solution, spellChecker)
         {
             _lexerToken = token;
             _declaration = declaration;

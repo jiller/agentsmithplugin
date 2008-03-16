@@ -65,7 +65,7 @@ namespace AgentSmith.Identifiers
                     }
                     if (!found)
                     {
-                        suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _spellChecker.CustomDictionary));
+                        suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _spellChecker));
                     }
                 }
             }
