@@ -32,6 +32,12 @@ namespace AgentSmith.SpellCheck
             get { throw new NotImplementedException(); }
         }
 
+        public override bool IsIdentifier
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+
         public override LeafElement Create(IBuffer buffer, int startOffset, int endOffset)
         {
             throw new NotImplementedException();

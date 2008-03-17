@@ -40,7 +40,7 @@ namespace AgentSmith.Strings
                     {
                         string wordWithMisspelledWordDeleted =
                             _suggestion.Word.Remove(_suggestion.MisspelledRange.StartOffset,
-                            _suggestion.MisspelledRange.Length);
+                                                    _suggestion.MisspelledRange.Length);
 
                         string newString = wordWithMisspelledWordDeleted.Insert(
                             _suggestion.MisspelledRange.StartOffset, newWord);

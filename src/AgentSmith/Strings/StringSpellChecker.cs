@@ -4,8 +4,8 @@ using AgentSmith.Comments;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
@@ -75,7 +75,7 @@ namespace AgentSmith.Strings
                                 DocumentRange documentRange = new DocumentRange(document, range);
                                 TextRange textRange = new TextRange(humpToken.Start - wordLexer.TokenStart,
                                     humpToken.End - wordLexer.TokenStart);
-
+                                
                                 suggestions.Add(new StringSpellCheckSuggestion(document.GetText(range), documentRange,
                                     humpToken.Value, textRange,
                                     solution, spellChecker));

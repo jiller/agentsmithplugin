@@ -49,7 +49,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         private readonly WordDictionary _dictionary;
 
         private readonly Suggestion _suggestionMode = Suggestion.PhoneticNearMiss;
-        private readonly HashSet<string> _userWords = new HashSet<string>();
+        private readonly OrderedHashSet<string> _userWords = new OrderedHashSet<string>();
         private int _customDictionaryVersion;
 
         public SpellChecker(WordDictionary dictionary, CustomDictionary customDictionary)
@@ -399,7 +399,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                     // search root words for phonetic codes
                     foreach (Word word in _dictionary.BaseWords)
                     {
-                        if (codes.ContainsKey(word.PhoneticCode))
+                        if (codes.ContainsKey(_dictionary.SharedStrings.GetWord(word.PhoneticCode)))
                         {
                             IList<string> words = _dictionary.ExpandWord(word);
                             // add expanded words

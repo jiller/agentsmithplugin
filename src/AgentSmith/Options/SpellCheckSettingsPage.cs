@@ -111,7 +111,7 @@ namespace AgentSmith.Options
         {
             ComboBox[] cbs = new ComboBox[]
                 {
-                    _cbResX,
+                    _cbResX,                                        
                     _cbIdentifiers,
                     _cbStrings,
                     _cbDictionary

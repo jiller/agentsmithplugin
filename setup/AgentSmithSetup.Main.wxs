@@ -34,19 +34,19 @@
                     <Directory Id="APPLICATIONFOLDER" Name="$(var.DynProductName)">
 
                         <Directory Id="Dic" Name="dic">
-                            <Component Id="C.enUS.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694565C}" Location="local">
+                            <Component Id="C.enUS.dic" Guid="{6F78F088-3B85-4DFF-A325-F46B0B00CF71}" Location="local">
                                 <File Id="F.enUSdic" Checksum="yes" DiskId="1" Name="en-US.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-US.dic" Vital="yes" KeyPath="yes"/>
                             </Component>
-                            <Component Id="C.enCA.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694565E}" Location="local">
+                            <Component Id="C.enCA.dic" Guid="{BEEA4F1A-C485-4605-ABB0-71E90097E69A}" Location="local">
                                 <File Id="F.enCAdic" Checksum="yes" DiskId="1" Name="en-CA.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-CA.dic" Vital="yes" KeyPath="yes"/>
                             </Component>
-                            <Component Id="C.enGB.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694565F}" Location="local">
+                            <Component Id="C.enGB.dic" Guid="{17108097-B803-47DE-A7DA-C37D8DE6B272}" Location="local">
                                 <File Id="F.enGBdic" Checksum="yes" DiskId="1" Name="en-GB.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-GB.dic" Vital="yes" KeyPath="yes"/>
                             </Component>
-                            <Component Id="C.enAU.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694566C}" Location="local">
+                            <Component Id="C.enAU.dic" Guid="{4A72792C-F29B-43CB-84F3-10D8DF3FAA61}" Location="local">
                                 <File Id="F.enAUdic" Checksum="yes" DiskId="1" Name="en-AU.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/en-AU.dic" Vital="yes" KeyPath="yes"/>
                             </Component>
-                            <Component Id="C.deDE.dic" Guid="{7B112E39-1735-42fc-95D4-A25D4694567C}" Location="local">
+                            <Component Id="C.deDE.dic" Guid="{D0D4B9E4-F54F-4097-8ADB-F9DB51FE2CD5}" Location="local">
                                 <File Id="F.deDEdic" Checksum="yes" DiskId="1" Name="de-DE.dic" ReadOnly="yes" Source="$(var.DynDicDirectory)/de-DE.dic" Vital="yes" KeyPath="yes"/>
                             </Component>
                         </Directory>
@@ -54,7 +54,7 @@
                         <Component Id="C.ProductAssembly" Guid="$(var.DynMsiComponentGuid00)" Location="local">
                             <File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="AgentSmith.dll" ReadOnly="yes" Source="$(var.DynAssemblyFile)" Vital="yes"/>
                         </Component>
-                        <Component Id="C.ProductAssemblyPdb" Guid="{7B112E39-1735-42fc-95D4-A25D4694565D}" Location="local">
+                        <Component Id="C.ProductAssemblyPdb" Guid="{6A7B636D-4337-46BC-B863-57013C352BD7}" Location="local">
                             <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" Name="AgentSmith.pdb" ReadOnly="yes" Source="$(var.DynPdbFile)" Vital="yes" KeyPath="yes"/>
                         </Component>
 

@@ -41,7 +41,7 @@ namespace AgentSmith.Options
             this._lbIdentifiers = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this._cbStrings = new System.Windows.Forms.ComboBox();
-            this._lbComments = new System.Windows.Forms.Label();           
+            this._lbComments = new System.Windows.Forms.Label();
             this._lbResx = new System.Windows.Forms.Label();
             this._cbResX = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -54,18 +54,20 @@ namespace AgentSmith.Options
             // _tbUserDictionary
             // 
             this._tbUserDictionary.AcceptsReturn = true;
-            this._tbUserDictionary.Location = new System.Drawing.Point(15, 272);
+            this._tbUserDictionary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this._tbUserDictionary.Location = new System.Drawing.Point(15, 262);
             this._tbUserDictionary.Multiline = true;
             this._tbUserDictionary.Name = "_tbUserDictionary";
             this._tbUserDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._tbUserDictionary.Size = new System.Drawing.Size(310, 201);
+            this._tbUserDictionary.Size = new System.Drawing.Size(310, 233);
             this._tbUserDictionary.TabIndex = 6;
             this._tbUserDictionary.WordWrap = false;
             // 
             // _userWords
             // 
             this._userWords.AutoSize = true;
-            this._userWords.Location = new System.Drawing.Point(12, 245);
+            this._userWords.Location = new System.Drawing.Point(12, 246);
             this._userWords.Name = "_userWords";
             this._userWords.Size = new System.Drawing.Size(108, 13);
             this._userWords.TabIndex = 6;
@@ -79,7 +81,7 @@ namespace AgentSmith.Options
             this._cbDictionary.Name = "_cbDictionary";
             this._cbDictionary.Size = new System.Drawing.Size(121, 21);
             this._cbDictionary.TabIndex = 4;
-            this._cbDictionary.SelectedIndexChanged += new System.EventHandler(this.cbDictionary_SelectedIndexChanged);            
+            this._cbDictionary.SelectedIndexChanged += new System.EventHandler(this.cbDictionary_SelectedIndexChanged);
             // 
             // _lbDictionary
             // 
@@ -135,7 +137,7 @@ namespace AgentSmith.Options
             this._lbIdentifiers.Name = "_lbIdentifiers";
             this._lbIdentifiers.Size = new System.Drawing.Size(52, 13);
             this._lbIdentifiers.TabIndex = 68;
-            this._lbIdentifiers.Text = "Identifiers";            
+            this._lbIdentifiers.Text = "Identifiers";
             // 
             // label1
             // 

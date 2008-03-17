@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.NamingConventions
