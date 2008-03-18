@@ -540,7 +540,7 @@
                     <Declaration>Interface</Declaration>
                 </Match>
             </Matches>
-            <Description>Interfaces should be in Camel and start with I.</Description>
+            <Description>Interfaces should be in Pascal and start with I.</Description>
             <MustHavePrefixes>
                 <string>I</string>
             </MustHavePrefixes>
