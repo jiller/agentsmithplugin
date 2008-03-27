@@ -87,7 +87,7 @@ namespace AgentSmith.Comments
             foreach (Range wordRange in getWordsFromXmlComment(getDocBlock(decl)))
             {
                 if (!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
-                    _spellChecker.TestWord(wordRange.Word, false))
+                    _spellChecker.TestWord(wordRange.Word, true))
                 {
                     continue;
                 }
@@ -113,7 +113,7 @@ namespace AgentSmith.Comments
             foreach (LexerToken humpToken in camelHumpLexer)
             {
                 if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
-                    !_spellChecker.TestWord(humpToken.Value, false))
+                    !_spellChecker.TestWord(humpToken.Value, true))
                 {
                     DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
 

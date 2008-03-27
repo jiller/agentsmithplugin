@@ -41,6 +41,10 @@ namespace AgentSmith.Options
 
             _lbMember.SelectedItem = DeclarationDescription.DeclDescriptions[_match.Declaration];
             _tbInheritedFrom.Text = _match.InheritedFrom;
+            if (string.IsNullOrEmpty(_tbInheritedFrom.Text))
+            {
+                _tbInheritedFrom.Text = _match.IsOfType;
+            }
             _tbMarkedWithAttribute.Text = _match.MarkedWithAttribute;
             _cbReadonly.CheckState = convertBool(_match.IsReadOnly);
             _cbStatic.CheckState = convertBool(_match.IsStatic);
@@ -80,6 +84,7 @@ namespace AgentSmith.Options
             _match.Declaration = decl.Declaration;
             _match.MarkedWithAttribute = null;
             _match.InheritedFrom = null;
+            _match.IsOfType = null;
             _match.IsReadOnly = FuzzyBool.Maybe;
             _match.IsStatic = FuzzyBool.Maybe;
 
@@ -95,6 +100,11 @@ namespace AgentSmith.Options
             if (decl.CanInherit)
             {
                 _match.InheritedFrom = _tbInheritedFrom.Text.Trim();
+            }
+
+            if (decl.OwnsType)
+            {
+                _match.IsOfType = _tbInheritedFrom.Text.Trim();
             }
             
             if (decl.CanBeMarkedWithAttribute)
@@ -117,7 +127,7 @@ namespace AgentSmith.Options
         {
             DeclarationDescription description = (DeclarationDescription) _lbMember.SelectedItem;
             _cbVisibility.Enabled = description.HasAccessLevel;
-            _tbInheritedFrom.Enabled = description.CanInherit;
+            _tbInheritedFrom.Enabled = description.CanInherit || description.OwnsType;
             _tbMarkedWithAttribute.Enabled = description.CanBeMarkedWithAttribute;
             _cbReadonly.Enabled = description.CanBeReadonly;
             _cbStatic.Enabled = description.CanBeStatic;

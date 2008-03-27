@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Windows.Forms;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -20,12 +21,14 @@ namespace AgentSmith.MemberMatch
         private AccessLevels _accessLevel = AccessLevels.Any;
         private Declaration _declaration = Declaration.Any;
         private string _inheritedFrom;
+        private string _isOfType;
         private string _markedWithAttribute;
         private FuzzyBool _readOnly = FuzzyBool.Maybe;
         private FuzzyBool _static = FuzzyBool.Maybe;
 
         private ITypeElement _markedWithAttributeType;
         private ITypeElement _inheritedFromType;
+        private ITypeElement _isOfTypeType;
 
         static Match()
         {
@@ -69,19 +72,21 @@ namespace AgentSmith.MemberMatch
             _declaration = declaration;
         }
 
-        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom)
+        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom, string isOfType)
         {
             _accessLevel = accessLevel;
             _declaration = declaration;
             _inheritedFrom = inheritedFrom;
+            _isOfType = isOfType;
         }
 
-        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom, string markedWithAttribute)
+        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom, string isOfType, string markedWithAttribute)
         {
             _accessLevel = accessLevel;
             _declaration = declaration;
             _inheritedFrom = inheritedFrom;
             _markedWithAttribute = markedWithAttribute;
+            _isOfType = isOfType;
         }
 
         public AccessLevels AccessLevel
@@ -120,10 +125,17 @@ namespace AgentSmith.MemberMatch
             set { _static = value; }
         }
 
+        public string IsOfType
+        {
+            get { return _isOfType; }
+            set { _isOfType = value; }
+        }
+
         public void Prepare(ISolution solution, PsiManager manager)
         {
             _markedWithAttributeType = null;
             _inheritedFromType = null;
+            _isOfTypeType = null;
             DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
             IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
             if (!string.IsNullOrEmpty(_markedWithAttribute))
@@ -134,6 +146,11 @@ namespace AgentSmith.MemberMatch
             if (!string.IsNullOrEmpty(_inheritedFrom))
             {
                 _inheritedFromType = cache[_inheritedFrom] as ITypeElement;
+            }
+
+            if (!string.IsNullOrEmpty(_isOfType))
+            {
+                _isOfTypeType = cache[_isOfType] as ITypeElement;
             }
         }
 
@@ -153,6 +170,7 @@ namespace AgentSmith.MemberMatch
                        isRightsMatch(declaration, useEffectiveRights) &&
                        markedWithAttributeMatch(declaration) &&
                        inheritsMatch(declaration) &&
+                       ownsTypeMatch(declaration) &&
                        isReadOnlyMatch(declaration) &&
                        isStaticMatch(declaration);
             }
@@ -178,6 +196,10 @@ namespace AgentSmith.MemberMatch
             if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
             {
                 sb.AppendFormat("inherited from '{0}' ", _inheritedFrom);
+            }
+            if (description.OwnsType && !string.IsNullOrEmpty(_inheritedFrom))
+            {
+                sb.AppendFormat("with type '{0}' ", _inheritedFrom);
             }
             if (description.CanBeMarkedWithAttribute && !string.IsNullOrEmpty(_markedWithAttribute))
             {
@@ -208,13 +230,45 @@ namespace AgentSmith.MemberMatch
                                     IsStatic == FuzzyBool.False && !decl.IsStatic);
         }
 
+        private bool ownsTypeMatch(IDeclaration declaration)
+        {
+            if (string.IsNullOrEmpty(_isOfType))
+            {
+                return true;
+            }
+
+            if (_isOfTypeType == null)
+            {                
+                return false;
+            }
+            
+            if (declaration is ITypeOwner)
+            {                
+                IDeclaredType declaredType = ((ITypeOwner)declaration).Type as IDeclaredType;
+                if (declaredType == null)
+                {
+                    return false;
+                }
+                ITypeElement typeElement = declaredType.GetTypeElement();
+                if (typeElement == null)
+                {
+                    return false;
+                }                
+                return typeElement.IsDescendantOf(_isOfTypeType);
+            } 
+            else
+            {                
+                return false;
+            }      
+        }
+
         private bool inheritsMatch(IDeclaration declaration)
         {
             if (string.IsNullOrEmpty(_inheritedFrom))
             {
                 return true;
             }
-
+            
             if (_inheritedFromType == null)
             {
                 return false;
@@ -223,7 +277,7 @@ namespace AgentSmith.MemberMatch
             ITypeElement typeElement = declaration.DeclaredElement as ITypeElement;
             if (typeElement == null)
             {
-                return false;
+                return false;                
             }
             return typeElement.IsDescendantOf(_inheritedFromType);
         }

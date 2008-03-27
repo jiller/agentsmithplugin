@@ -16,7 +16,7 @@ namespace AgentSmith.Options
         )]
     public partial class NamingConventionsSettingsPage : UserControl, IOptionsPage
     {
-        private readonly IOptionsDialog _optionsDialog;
+        private readonly IOptionsDialog _optionsDialog;        
 
         public NamingConventionsSettingsPage(IOptionsDialog optionsDialog)
         {

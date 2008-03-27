@@ -55,7 +55,7 @@ namespace AgentSmith.Strings
             while (wordLexer.TokenType != null)
             {
                 if (SpellCheckUtil.ShouldSpellCheck(wordLexer.TokenText) &&
-                    !spellChecker.TestWord(wordLexer.TokenText, false))
+                    !spellChecker.TestWord(wordLexer.TokenText, true))
                 {
                     IClassMemberDeclaration containingElement =
                         token.GetContainingElement<IClassMemberDeclaration>(false);
@@ -66,7 +66,7 @@ namespace AgentSmith.Strings
                         foreach (LexerToken humpToken in camelHumpLexer)
                         {
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
-                                !spellChecker.TestWord(humpToken.Value, false))
+                                !spellChecker.TestWord(humpToken.Value, true))
                             {
                                 int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
                                 int end = start + wordLexer.TokenText.Length;

@@ -258,7 +258,11 @@ namespace AgentSmith.SpellCheck.NetSpell
         public bool TestWord(string word, bool matchCase)
         {
             ensureCustomDictionaryLoaded();
-            return testWord(word).Contains;
+            if (!matchCase && word.Length>1)
+            {
+                word = char.ToUpper(word[0]) + word.Substring(1);
+            }
+            return testWord(word).Contains;            
         }
 
         /// <summary>
