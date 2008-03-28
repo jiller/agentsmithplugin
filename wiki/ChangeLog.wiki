@@ -1,10 +1,15 @@
+==1.1.4 (03/28/2008) ==
+  * Case insensitive identifier spell checking.
+  * Field/variable's type can now be specified in naming convention rules.
+  * A couple of UI enhancements.
+
 ==1.1.3 (03/17/2008) ==
-  * Case insensitive custom dictionary support  
+  * Case insensitive custom dictionary support.  
   * Spell checking of comments with words in different languages.
 
 ==1.1.2 (03/10/2008) ==
-  * A couple of bug fixes  
-  * Vladimir Smolyaninov ported Agent Smith for ReSharper 4.0 and performed some spell checking engine optimizations.
+  * A couple of bug fixes.  
+  * Vladimir Smolyaninov ported Agent Smith for ReSharper 4.0 and performed some spell. checking engine optimizations.
 
 ==1.1.1 (03/05/2008) ==
   * Support for different spell checking languages. NOTE: custom dictionary words will be lost after installing this version.
