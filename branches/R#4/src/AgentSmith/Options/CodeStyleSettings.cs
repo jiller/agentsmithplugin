@@ -21,6 +21,7 @@ namespace AgentSmith.Options
         private string _stringsDictionary = "en-US";        
         private string _identifierDictionary = "en-US";
         private string _defaultResXDictionary = "en-US";
+        private string _lastSelectedCustomDictionary = "en-US";
 
         public CodeStyleSettings()
         {
@@ -46,6 +47,12 @@ namespace AgentSmith.Options
         {
             get { return _identifierDictionary; }
             set { _identifierDictionary = value; }
+        }
+
+        public string LastSelectedCustomDictionary
+        {
+            get { return _lastSelectedCustomDictionary; }
+            set { _lastSelectedCustomDictionary = value; }
         }
 
         public string DefaultResXDictionary
@@ -106,6 +113,7 @@ namespace AgentSmith.Options
                     _stringsDictionary = settings._stringsDictionary;
                     _defaultResXDictionary = settings._defaultResXDictionary;
                     _identifierDictionary = settings._identifierDictionary;                    
+                    _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                 }
                 catch (Exception ex)
                 {
