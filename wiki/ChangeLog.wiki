@@ -1,6 +1,8 @@
 ==1.1.4 (03/28/2008) ==
   * Case insensitive identifier spell checking.
   * Field/variable's type can now be specified in naming convention rules.
+  * This allows validation of control fields, like _rightLabel or _nameTextBox. 
+  * Updated installation for R#4 build 755 
   * A couple of UI enhancements.
 
 ==1.1.3 (03/17/2008) ==
