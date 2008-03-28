@@ -52,11 +52,11 @@ namespace AgentSmith.Options
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 146);
+            this.label7.Location = new System.Drawing.Point(12, 143);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(71, 13);
+            this.label7.Size = new System.Drawing.Size(119, 13);
             this.label7.TabIndex = 21;
-            this.label7.Text = "Inherited from";
+            this.label7.Text = "Inherited from/Is of type";
             // 
             // _tbMarkedWithAttribute
             // 
@@ -127,6 +127,7 @@ namespace AgentSmith.Options
             // 
             // _cbVisibility
             // 
+            this._cbVisibility.CheckOnClick = true;
             this._cbVisibility.FormattingEnabled = true;
             this._cbVisibility.Location = new System.Drawing.Point(155, 17);
             this._cbVisibility.Name = "_cbVisibility";

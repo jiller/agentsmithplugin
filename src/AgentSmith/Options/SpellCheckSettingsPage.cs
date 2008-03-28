@@ -62,6 +62,7 @@ namespace AgentSmith.Options
             Settings.StringsDictionary = _cbStrings.SelectedItem.ToString();
             Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();
             Settings.DefaultResXDictionary = _cbResX.SelectedItem.ToString();
+            Settings.LastSelectedCustomDictionary = _cbDictionary.SelectedItem.ToString();
 
             SpellCheckManager.Reset();
             return true;
@@ -97,14 +98,15 @@ namespace AgentSmith.Options
         {
             bindDictionaries(loadDictionaries());
 
-            if (_cbDictionary.Items.Count > 0)
-            {
-                _cbDictionary.SelectedItem = _cbDictionary.Items[0];
-            }
+            //if (_cbDictionary.Items.Count > 0)
+            //{
+             //   _cbDictionary.SelectedItem = _cbDictionary.Items[0];
+            //}
             _lsComments.SelectedDictionariesString = Settings.CommentsSettings.DictionaryName;
             _cbStrings.SelectedItem = Settings.StringsDictionary;
             _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;
             _cbResX.SelectedItem = Settings.DefaultResXDictionary;
+            _cbDictionary.SelectedItem = Settings.LastSelectedCustomDictionary;
         }
 
         private void bindDictionaries(List<string> dicts)

@@ -93,7 +93,7 @@
         <WixVariable Id="WixUIDialogBmp" Value="$(var.DynSetupFilesDir)/AgentSmithSetup.Dialog.bmp"/>
 
         <!-- Assign the installation folder for the all users / current user scenarios. -->
-        <CustomAction Id="WixSetInstallFolder.NoResharperInstalled" Property="RESHARPERROOT" Value="[ProgramFilesFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Bin" Execute="immediate" />
+        <CustomAction Id="WixSetInstallFolder.NoResharperInstalled" Property="RESHARPERROOT" Value="[ProgramFilesFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\v.Everything\Bin" Execute="immediate" />
         <CustomAction Id="WixSetInstallFolder.ResharperInstalled" Property="RESHARPERROOT" Value="[RESHARPERINSTALLDIR]" Execute="immediate" />
         <CustomAction Id='CANNOTUPGRADENEWERACTION' Error='Setup has detected that a newer version of [ProductName] is already installed on your system. The installer can only upgrade from older versions. You should manually uninstall the conflicting product and then run the installation again.' />
 

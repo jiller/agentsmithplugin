@@ -32,6 +32,10 @@ namespace AgentSmith.Options
                 lvi.Tag = match;
                 _lvMatches.Items.Add(lvi);
             }
+            if (_lvMatches.Items.Count > 0)
+            {
+                _lvMatches.Items[0].Selected = true;
+            }
         }
 
         private void lvMatches_DoubleClick(object sender, EventArgs e)
