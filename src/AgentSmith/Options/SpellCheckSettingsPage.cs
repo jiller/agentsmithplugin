@@ -168,5 +168,15 @@ namespace AgentSmith.Options
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
         }
+
+        private void _userWords_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void _tbUserDictionary_TextChanged(object sender, EventArgs e)
+        {
+
+        }
      }
 }
