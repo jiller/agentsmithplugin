@@ -196,9 +196,9 @@ namespace AgentSmith.MemberMatch
             {
                 sb.AppendFormat("inherited from '{0}' ", _inheritedFrom);
             }
-            if (description.OwnsType && !string.IsNullOrEmpty(_inheritedFrom))
+            if (description.OwnsType && !string.IsNullOrEmpty(_isOfType))
             {
-                sb.AppendFormat("with type '{0}' ", _inheritedFrom);
+                sb.AppendFormat("with type '{0}' ", _isOfType);
             }
             if (description.CanBeMarkedWithAttribute && !string.IsNullOrEmpty(_markedWithAttribute))
             {
