@@ -93,16 +93,18 @@ namespace AgentSmith.Comments
                 }
 
                 DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
-                if (decl.DeclaredName != wordRange.Word &&
-                    IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                if (decl.DeclaredName != wordRange.Word)
                 {
-                    highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
+                    if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                    {
+                        highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
                                                                                 range, decl, _solution));
-                }
-                else
-                {
-                    checkWordSpelling(decl, wordRange, highlightings, range);
-                }
+                    }
+                    else
+                    {
+                        checkWordSpelling(decl, wordRange, highlightings, range);
+                    }
+               }
             }
         }
 
