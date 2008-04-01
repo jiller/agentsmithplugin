@@ -52,7 +52,7 @@ namespace AgentSmith.Options
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 143);
+            this.label7.Location = new System.Drawing.Point(12, 146);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(119, 13);
             this.label7.TabIndex = 21;
