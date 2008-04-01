@@ -113,7 +113,7 @@ namespace AgentSmith.Options
         {
             ComboBox[] cbs = new ComboBox[]
                 {
-                    _cbResX,
+                    _cbResX,                                        
                     _cbIdentifiers,
                     _cbStrings,
                     _cbDictionary
@@ -167,16 +167,6 @@ namespace AgentSmith.Options
                 _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
-        }
-
-        private void _userWords_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void _tbUserDictionary_TextChanged(object sender, EventArgs e)
-        {
-
         }
      }
 }

@@ -30,8 +30,6 @@ namespace AgentSmith.Options
         /// </summary>
         private void InitializeComponent()
         {
-            this._sceExclusions = new JetBrains.CommonControls.StringCollectionEdit();
-            this._lbExclusions = new System.Windows.Forms.Label();
             this._lvRules = new System.Windows.Forms.ListView();
             this._chDescription = new System.Windows.Forms.ColumnHeader();
             this._btnAdd = new System.Windows.Forms.Button();
@@ -42,27 +40,13 @@ namespace AgentSmith.Options
             this._btnDelete = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this._sceExclusions = new AgentSmith.Options.StringListEdit();
             this.SuspendLayout();
-            // 
-            // _sceExclusions
-            // 
-            this._sceExclusions.Location = new System.Drawing.Point(13, 343);
-            this._sceExclusions.Name = "_sceExclusions";
-            this._sceExclusions.Size = new System.Drawing.Size(438, 96);
-            this._sceExclusions.Strings = new string[0];
-            this._sceExclusions.TabIndex = 30;
-            // 
-            // _lbExclusions
-            // 
-            this._lbExclusions.AutoSize = true;
-            this._lbExclusions.Location = new System.Drawing.Point(10, 327);
-            this._lbExclusions.Name = "_lbExclusions";
-            this._lbExclusions.Size = new System.Drawing.Size(217, 13);
-            this._lbExclusions.TabIndex = 31;
-            this._lbExclusions.Text = "Exclusions (these name will not be validated)";
             // 
             // _lvRules
             // 
+            this._lvRules.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._lvRules.CheckBoxes = true;
             this._lvRules.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this._chDescription});
@@ -70,21 +54,22 @@ namespace AgentSmith.Options
             this._lvRules.HideSelection = false;
             this._lvRules.Location = new System.Drawing.Point(13, 19);
             this._lvRules.Name = "_lvRules";
-            this._lvRules.Size = new System.Drawing.Size(411, 281);
+            this._lvRules.Size = new System.Drawing.Size(474, 281);
             this._lvRules.TabIndex = 32;
             this._lvRules.UseCompatibleStateImageBehavior = false;
             this._lvRules.View = System.Windows.Forms.View.Details;
             this._lvRules.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.lvRules_ItemChecked);
             this._lvRules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvRules_KeyDown);
             // 
-            // Description
+            // _chDescription
             // 
             this._chDescription.Text = "Description";
             this._chDescription.Width = 370;
             // 
             // _btnAdd
             // 
-            this._btnAdd.Location = new System.Drawing.Point(430, 19);
+            this._btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnAdd.Location = new System.Drawing.Point(493, 19);
             this._btnAdd.Name = "_btnAdd";
             this._btnAdd.Size = new System.Drawing.Size(75, 23);
             this._btnAdd.TabIndex = 33;
@@ -103,7 +88,8 @@ namespace AgentSmith.Options
             // 
             // _btnUp
             // 
-            this._btnUp.Location = new System.Drawing.Point(430, 49);
+            this._btnUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnUp.Location = new System.Drawing.Point(493, 49);
             this._btnUp.Name = "_btnUp";
             this._btnUp.Size = new System.Drawing.Size(75, 23);
             this._btnUp.TabIndex = 35;
@@ -113,7 +99,8 @@ namespace AgentSmith.Options
             // 
             // _btnDown
             // 
-            this._btnDown.Location = new System.Drawing.Point(431, 79);
+            this._btnDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnDown.Location = new System.Drawing.Point(494, 79);
             this._btnDown.Name = "_btnDown";
             this._btnDown.Size = new System.Drawing.Size(75, 23);
             this._btnDown.TabIndex = 36;
@@ -123,7 +110,8 @@ namespace AgentSmith.Options
             // 
             // _btnEdit
             // 
-            this._btnEdit.Location = new System.Drawing.Point(431, 109);
+            this._btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnEdit.Location = new System.Drawing.Point(494, 109);
             this._btnEdit.Name = "_btnEdit";
             this._btnEdit.Size = new System.Drawing.Size(75, 23);
             this._btnEdit.TabIndex = 37;
@@ -133,7 +121,8 @@ namespace AgentSmith.Options
             // 
             // _btnDelete
             // 
-            this._btnDelete.Location = new System.Drawing.Point(430, 138);
+            this._btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnDelete.Location = new System.Drawing.Point(493, 138);
             this._btnDelete.Name = "_btnDelete";
             this._btnDelete.Size = new System.Drawing.Size(75, 23);
             this._btnDelete.TabIndex = 38;
@@ -143,8 +132,9 @@ namespace AgentSmith.Options
             // 
             // label5
             // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 479);
+            this.label5.Location = new System.Drawing.Point(16, 554);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(289, 13);
             this.label5.TabIndex = 67;
@@ -152,16 +142,30 @@ namespace AgentSmith.Options
             // 
             // label4
             // 
+            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 462);
+            this.label4.Location = new System.Drawing.Point(13, 537);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(431, 13);
             this.label4.TabIndex = 66;
             this.label4.Text = "* To enable/disable naming convention validation please go to the Inspection Seve" +
                 "rity tab";
             // 
+            // _sceExclusions
+            // 
+            this._sceExclusions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._sceExclusions.Caption = "Exclusions (these name will not be validated)";
+            this._sceExclusions.Items = new string[0];
+            this._sceExclusions.Location = new System.Drawing.Point(13, 306);
+            this._sceExclusions.Name = "_sceExclusions";
+            this._sceExclusions.Size = new System.Drawing.Size(555, 228);
+            this._sceExclusions.TabIndex = 68;
+            // 
             // NamingConventionsSettingsPage
             // 
+            this.Controls.Add(this._sceExclusions);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this._btnDelete);
@@ -171,8 +175,6 @@ namespace AgentSmith.Options
             this.Controls.Add(this.label2);
             this.Controls.Add(this._btnAdd);
             this.Controls.Add(this._lvRules);
-            this.Controls.Add(this._lbExclusions);
-            this.Controls.Add(this._sceExclusions);
             this.Name = "NamingConventionsSettingsPage";
             this.Size = new System.Drawing.Size(586, 583);
             this.ResumeLayout(false);
@@ -182,8 +184,6 @@ namespace AgentSmith.Options
 
         #endregion
 
-        private StringCollectionEdit _sceExclusions;
-        private System.Windows.Forms.Label _lbExclusions;
         private System.Windows.Forms.ListView _lvRules;
         private System.Windows.Forms.ColumnHeader _chDescription;
         private System.Windows.Forms.Button _btnAdd;
@@ -194,5 +194,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Button _btnDelete;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private StringListEdit _sceExclusions;
     }
 }

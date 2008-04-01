@@ -63,7 +63,7 @@ namespace AgentSmith.Options
             // _btnAdd
             // 
             this._btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnAdd.Location = new System.Drawing.Point(152, 0);
+            this._btnAdd.Location = new System.Drawing.Point(156, 0);
             this._btnAdd.Name = "_btnAdd";
             this._btnAdd.Size = new System.Drawing.Size(38, 23);
             this._btnAdd.TabIndex = 57;
@@ -74,7 +74,7 @@ namespace AgentSmith.Options
             // _btnEdit
             // 
             this._btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnEdit.Location = new System.Drawing.Point(152, 25);
+            this._btnEdit.Location = new System.Drawing.Point(156, 25);
             this._btnEdit.Name = "_btnEdit";
             this._btnEdit.Size = new System.Drawing.Size(38, 23);
             this._btnEdit.TabIndex = 58;
@@ -85,7 +85,7 @@ namespace AgentSmith.Options
             // _btnDelete
             // 
             this._btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnDelete.Location = new System.Drawing.Point(152, 50);
+            this._btnDelete.Location = new System.Drawing.Point(156, 50);
             this._btnDelete.Name = "_btnDelete";
             this._btnDelete.Size = new System.Drawing.Size(38, 23);
             this._btnDelete.TabIndex = 59;

@@ -23,7 +23,7 @@
 		<ProductVersion>1.1.5</ProductVersion>
 		<ProjectGuid>{9564249A-37F6-45fb-8B32-5D708AA64A4E}</ProjectGuid>
 		<SchemaVersion>2.0</SchemaVersion>
-		<OutputName>$(ProductName) $(ProductVersion) Setup (R# $(ReSharperVersion2) vs$(VsVersion))</OutputName>
+		<OutputName>$(ProductName) $(ProductVersion) Setup (R# $(ReSharperVersion2))</OutputName>
 		<OutputType>Package</OutputType>
 		<DefineConstants Condition=" '$(Configuration)' == 'Debug' ">Debug</DefineConstants>
 		<Cultures>en-us</Cultures>
