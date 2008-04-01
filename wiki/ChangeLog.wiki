@@ -1,3 +1,6 @@
+==1.1.5 (04/01/2008) ==
+  * A couple of minor defect fixes.
+
 ==1.1.4 (03/28/2008) ==
   * Case insensitive identifier spell checking.
   * Field/variable's type can now be specified in naming convention rules.
