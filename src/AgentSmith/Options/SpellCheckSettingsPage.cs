@@ -4,10 +4,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
 using JetBrains.UI.Options;
+using JetBrains.Util;
 
 namespace AgentSmith.Options
 {
@@ -167,16 +169,124 @@ namespace AgentSmith.Options
                 _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
-        }
+        }        
 
-        private void _userWords_Click(object sender, EventArgs e)
+        private void btnImportFxCop_Click(object sender, EventArgs e)
         {
-
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.CheckFileExists = true;
+            openDialog.AddExtension = true;
+            openDialog.DefaultExt = ".xml";
+            openDialog.FileName = "CustomDictionary.xml";
+            openDialog.Filter = "FxCop Dictionary File (*.xml) | *.xml";
+            openDialog.Title = "Select FxCop dictionary file to import";
+            if (openDialog.ShowDialog() == DialogResult.OK)
+            {
+                importFxCop(openDialog.FileName);
+            }
         }
 
-        private void _tbUserDictionary_TextChanged(object sender, EventArgs e)
+        private void importFxCop(string name)
         {
-
+            try
+            {
+                HashSet<string> set = new HashSet<string>(_tbUserDictionary.Lines);
+                StringBuilder newWords = new StringBuilder();
+                XmlDocument doc = new XmlDocument();
+                doc.Load(name);
+                foreach (XmlElement word in doc.SelectNodes("Dictionary/Words/Recognized/Word"))
+                {
+                    string wordText = word.InnerText.Trim();
+                    if (String.IsNullOrEmpty(wordText))
+                    {
+                        continue;
+                    }                                        
+                    if (!set.Contains(word.InnerText))
+                    {
+                        newWords.AppendLine(wordText);
+                    }
+                }
+                _tbUserDictionary.Text += "\r\n" + newWords;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Import failed: " + ex.Message);
+            }
         }
-     }
+
+        private void btnExportFxCop_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.CheckFileExists = false;
+            saveDialog.AddExtension = true;
+            saveDialog.FileName = "CustomDictionary.xml";
+            saveDialog.Filter = "FxCop Dictionary File (*.xml) | *.xml";
+            saveDialog.Title = "Select new or existing FxCop file to merge dictionary into";
+            if (saveDialog.ShowDialog() == DialogResult.OK)
+            {
+                exportFxCop(saveDialog.FileName);
+            }            
+        }
+
+        private void exportFxCop(string name)
+        {
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+
+                if (File.Exists(name))
+                {
+                    doc.Load(name);
+                }
+
+                XmlElement dictionary = (XmlElement) doc.SelectSingleNode("Dictionary");
+                if (dictionary == null)
+                {
+                    dictionary = (XmlElement) doc.AppendChild(doc.CreateElement("Dictionary"));
+                }
+
+                XmlElement words = (XmlElement) dictionary.SelectSingleNode("Words");
+                if (words == null)
+                {
+                    words = (XmlElement) dictionary.AppendChild(doc.CreateElement("Words"));
+                }
+
+                XmlElement recognized = (XmlElement) words.SelectSingleNode("Recognized");
+                if (recognized == null)
+                {
+                    recognized = (XmlElement) words.AppendChild(doc.CreateElement("Recognized"));
+                }
+
+                HashSet<string> existingWords = new HashSet<string>();
+                foreach (XmlElement word in recognized.SelectNodes("Word"))
+                {
+                    string wordText = word.InnerText.Trim();
+                    if (!string.IsNullOrEmpty(wordText))
+                    {
+                        existingWords.Add(wordText);
+                    }
+                }
+
+                foreach (string word in _tbUserDictionary.Lines)
+                {
+                    if (!existingWords.Contains(word))
+                    {
+                        XmlElement wordElement = (XmlElement) recognized.AppendChild(doc.CreateElement("Word"));
+                        wordElement.InnerText = word;
+                    }
+                }
+
+
+                using (XmlTextWriter writer = new XmlTextWriter(name, Encoding.UTF8))
+                {
+                    writer.Formatting = Formatting.Indented;
+                    doc.Save(writer);
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Export failed: " + ex.Message);
+            }
+        }
+    }
 }
