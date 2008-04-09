@@ -1,3 +1,7 @@
+==1.1.6 (04/08/2008) ==
+  * FxCop dictionary import/export.
+  * A couple of minor defect fixes.
+
 ==1.1.5 (04/01/2008) ==
   * A couple of minor defect fixes.
 
