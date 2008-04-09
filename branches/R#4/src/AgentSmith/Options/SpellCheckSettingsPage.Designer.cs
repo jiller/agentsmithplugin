@@ -52,6 +52,9 @@ namespace AgentSmith.Options
             this.label4 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
+            this._btnImportFxCop = new System.Windows.Forms.Button();
+            this._btnExportFxCop = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // _tbUserDictionary
@@ -262,8 +265,40 @@ namespace AgentSmith.Options
             this.label5.TabIndex = 80;
             this.label5.Text = "User Dictionaries";
             // 
+            // _btnImportFxCop
+            // 
+            this._btnImportFxCop.Location = new System.Drawing.Point(331, 341);
+            this._btnImportFxCop.Name = "_btnImportFxCop";
+            this._btnImportFxCop.Size = new System.Drawing.Size(74, 23);
+            this._btnImportFxCop.TabIndex = 82;
+            this._btnImportFxCop.Text = "Import...";
+            this._btnImportFxCop.UseVisualStyleBackColor = true;
+            this._btnImportFxCop.Click += new System.EventHandler(this.btnImportFxCop_Click);
+            // 
+            // _btnExportFxCop
+            // 
+            this._btnExportFxCop.Location = new System.Drawing.Point(331, 370);
+            this._btnExportFxCop.Name = "_btnExportFxCop";
+            this._btnExportFxCop.Size = new System.Drawing.Size(74, 23);
+            this._btnExportFxCop.TabIndex = 83;
+            this._btnExportFxCop.Text = "Export...";
+            this._btnExportFxCop.UseVisualStyleBackColor = true;
+            this._btnExportFxCop.Click += new System.EventHandler(this.btnExportFxCop_Click);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(332, 325);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(102, 13);
+            this.label6.TabIndex = 84;
+            this.label6.Text = "FxCop import/export";
+            // 
             // SpellCheckSettingsPage
             // 
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this._btnExportFxCop);
+            this.Controls.Add(this._btnImportFxCop);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.label4);
@@ -317,5 +352,8 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button _btnImportFxCop;
+        private System.Windows.Forms.Button _btnExportFxCop;
+        private System.Windows.Forms.Label label6;
     }
 }
