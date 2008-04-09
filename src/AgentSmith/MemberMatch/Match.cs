@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -72,7 +71,7 @@ namespace AgentSmith.MemberMatch
             _declaration = declaration;
         }
 
-        public Match(Declaration declaration, AccessLevels accessLevel, string inheritedFrom, string isOfType)
+        public Match(Declaration declaration, AccessLevels accessLevel, string isOfType, string inheritedFrom)
         {
             _accessLevel = accessLevel;
             _declaration = declaration;
@@ -268,7 +267,7 @@ namespace AgentSmith.MemberMatch
             {
                 return true;
             }
-            
+
             if (_inheritedFromType == null)
             {
                 return false;
@@ -277,7 +276,7 @@ namespace AgentSmith.MemberMatch
             ITypeElement typeElement = declaration.DeclaredElement as ITypeElement;
             if (typeElement == null)
             {
-                return false;                
+                return false;
             }
             return typeElement.IsDescendantOf(_inheritedFromType);
         }

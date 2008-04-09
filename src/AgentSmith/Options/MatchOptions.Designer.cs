@@ -44,7 +44,7 @@ namespace AgentSmith.Options
             // 
             // _tbInheritedFrom
             // 
-            this._tbInheritedFrom.Location = new System.Drawing.Point(155, 129);
+            this._tbInheritedFrom.Location = new System.Drawing.Point(155, 143);
             this._tbInheritedFrom.Name = "_tbInheritedFrom";
             this._tbInheritedFrom.Size = new System.Drawing.Size(217, 20);
             this._tbInheritedFrom.TabIndex = 22;
@@ -52,7 +52,7 @@ namespace AgentSmith.Options
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 132);
+            this.label7.Location = new System.Drawing.Point(12, 146);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(119, 13);
             this.label7.TabIndex = 21;
@@ -60,7 +60,7 @@ namespace AgentSmith.Options
             // 
             // _tbMarkedWithAttribute
             // 
-            this._tbMarkedWithAttribute.Location = new System.Drawing.Point(155, 154);
+            this._tbMarkedWithAttribute.Location = new System.Drawing.Point(155, 168);
             this._tbMarkedWithAttribute.Name = "_tbMarkedWithAttribute";
             this._tbMarkedWithAttribute.Size = new System.Drawing.Size(217, 20);
             this._tbMarkedWithAttribute.TabIndex = 20;
@@ -68,7 +68,7 @@ namespace AgentSmith.Options
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 157);
+            this.label6.Location = new System.Drawing.Point(12, 171);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(106, 13);
             this.label6.TabIndex = 19;
@@ -77,7 +77,7 @@ namespace AgentSmith.Options
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 105);
+            this.label2.Location = new System.Drawing.Point(12, 119);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(45, 13);
             this.label2.TabIndex = 18;
@@ -87,7 +87,7 @@ namespace AgentSmith.Options
             // 
             this._lbMember.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._lbMember.FormattingEnabled = true;
-            this._lbMember.Location = new System.Drawing.Point(155, 102);
+            this._lbMember.Location = new System.Drawing.Point(155, 116);
             this._lbMember.Name = "_lbMember";
             this._lbMember.Size = new System.Drawing.Size(217, 21);
             this._lbMember.TabIndex = 17;
@@ -104,8 +104,9 @@ namespace AgentSmith.Options
             // 
             // _btnOK
             // 
+            this._btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this._btnOK.Location = new System.Drawing.Point(216, 211);
+            this._btnOK.Location = new System.Drawing.Point(216, 219);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 23;
@@ -115,8 +116,9 @@ namespace AgentSmith.Options
             // 
             // _btnCancel
             // 
+            this._btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._btnCancel.Location = new System.Drawing.Point(297, 211);
+            this._btnCancel.Location = new System.Drawing.Point(297, 219);
             this._btnCancel.Name = "_btnCancel";
             this._btnCancel.Size = new System.Drawing.Size(75, 23);
             this._btnCancel.TabIndex = 24;
@@ -127,7 +129,7 @@ namespace AgentSmith.Options
             // 
             this._cbVisibility.CheckOnClick = true;
             this._cbVisibility.FormattingEnabled = true;
-            this._cbVisibility.Location = new System.Drawing.Point(155, 2);
+            this._cbVisibility.Location = new System.Drawing.Point(155, 17);
             this._cbVisibility.Name = "_cbVisibility";
             this._cbVisibility.Size = new System.Drawing.Size(217, 94);
             this._cbVisibility.TabIndex = 25;
@@ -135,7 +137,7 @@ namespace AgentSmith.Options
             // _cbStatic
             // 
             this._cbStatic.AutoSize = true;
-            this._cbStatic.Location = new System.Drawing.Point(155, 180);
+            this._cbStatic.Location = new System.Drawing.Point(155, 194);
             this._cbStatic.Name = "_cbStatic";
             this._cbStatic.Size = new System.Drawing.Size(51, 17);
             this._cbStatic.TabIndex = 26;
@@ -146,7 +148,7 @@ namespace AgentSmith.Options
             // _cbReadonly
             // 
             this._cbReadonly.AutoSize = true;
-            this._cbReadonly.Location = new System.Drawing.Point(242, 180);
+            this._cbReadonly.Location = new System.Drawing.Point(242, 194);
             this._cbReadonly.Name = "_cbReadonly";
             this._cbReadonly.Size = new System.Drawing.Size(66, 17);
             this._cbReadonly.TabIndex = 27;
@@ -160,7 +162,7 @@ namespace AgentSmith.Options
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._btnCancel;
-            this.ClientSize = new System.Drawing.Size(383, 246);
+            this.ClientSize = new System.Drawing.Size(383, 254);
             this.Controls.Add(this._cbReadonly);
             this.Controls.Add(this._cbStatic);
             this.Controls.Add(this._cbVisibility);

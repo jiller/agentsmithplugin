@@ -60,18 +60,20 @@ namespace AgentSmith.Options
             // _tbUserDictionary
             // 
             this._tbUserDictionary.AcceptsReturn = true;
-            this._tbUserDictionary.Location = new System.Drawing.Point(17, 352);
+            this._tbUserDictionary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)));
+            this._tbUserDictionary.Location = new System.Drawing.Point(15, 325);
             this._tbUserDictionary.Multiline = true;
             this._tbUserDictionary.Name = "_tbUserDictionary";
             this._tbUserDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._tbUserDictionary.Size = new System.Drawing.Size(310, 201);
+            this._tbUserDictionary.Size = new System.Drawing.Size(310, 247);
             this._tbUserDictionary.TabIndex = 6;
             this._tbUserDictionary.WordWrap = false;
             // 
             // _userWords
             // 
             this._userWords.AutoSize = true;
-            this._userWords.Location = new System.Drawing.Point(14, 336);
+            this._userWords.Location = new System.Drawing.Point(15, 304);
             this._userWords.Name = "_userWords";
             this._userWords.Size = new System.Drawing.Size(108, 13);
             this._userWords.TabIndex = 6;
@@ -81,7 +83,7 @@ namespace AgentSmith.Options
             // 
             this._cbDictionary.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this._cbDictionary.FormattingEnabled = true;
-            this._cbDictionary.Location = new System.Drawing.Point(85, 280);
+            this._cbDictionary.Location = new System.Drawing.Point(86, 271);
             this._cbDictionary.Name = "_cbDictionary";
             this._cbDictionary.Size = new System.Drawing.Size(121, 21);
             this._cbDictionary.TabIndex = 4;
@@ -90,7 +92,7 @@ namespace AgentSmith.Options
             // _lbDictionary
             // 
             this._lbDictionary.AutoSize = true;
-            this._lbDictionary.Location = new System.Drawing.Point(14, 283);
+            this._lbDictionary.Location = new System.Drawing.Point(15, 274);
             this._lbDictionary.Name = "_lbDictionary";
             this._lbDictionary.Size = new System.Drawing.Size(55, 13);
             this._lbDictionary.TabIndex = 8;
@@ -100,11 +102,11 @@ namespace AgentSmith.Options
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(14, 250);
+            this.label2.Location = new System.Drawing.Point(12, 177);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(104, 13);
+            this.label2.Size = new System.Drawing.Size(123, 13);
             this.label2.TabIndex = 62;
-            this.label2.Text = "User Dictionaries";
+            this.label2.Text = "Manage Dictionaries";
             // 
             // _lbPPS
             // 
@@ -126,7 +128,7 @@ namespace AgentSmith.Options
             // 
             // _btnImport
             // 
-            this._btnImport.Location = new System.Drawing.Point(166, 207);
+            this._btnImport.Location = new System.Drawing.Point(175, 196);
             this._btnImport.Name = "_btnImport";
             this._btnImport.Size = new System.Drawing.Size(75, 23);
             this._btnImport.TabIndex = 5;
@@ -209,7 +211,7 @@ namespace AgentSmith.Options
             // _cbCaseSensitive
             // 
             this._cbCaseSensitive.AutoSize = true;
-            this._cbCaseSensitive.Location = new System.Drawing.Point(17, 307);
+            this._cbCaseSensitive.Location = new System.Drawing.Point(175, 303);
             this._cbCaseSensitive.Name = "_cbCaseSensitive";
             this._cbCaseSensitive.Size = new System.Drawing.Size(153, 17);
             this._cbCaseSensitive.TabIndex = 75;
@@ -239,34 +241,33 @@ namespace AgentSmith.Options
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(14, 176);
+            this.label4.Location = new System.Drawing.Point(15, 201);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(123, 13);
+            this.label4.Size = new System.Drawing.Size(146, 13);
             this.label4.TabIndex = 79;
-            this.label4.Text = "Manage Dictionaries";
+            this.label4.Text = "Import Open Office Dictionary";
             // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Location = new System.Drawing.Point(15, 236);
+            this.panel2.Location = new System.Drawing.Point(15, 225);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(515, 2);
-            this.panel2.TabIndex = 80;
+            this.panel2.TabIndex = 62;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(14, 212);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label5.Location = new System.Drawing.Point(15, 240);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(146, 13);
-            this.label5.TabIndex = 81;
-            this.label5.Text = "Import Open Office Dictionary";
+            this.label5.Size = new System.Drawing.Size(104, 13);
+            this.label5.TabIndex = 80;
+            this.label5.Text = "User Dictionaries";
             // 
             // _btnImportFxCop
             // 
-            this._btnImportFxCop.Location = new System.Drawing.Point(333, 368);
+            this._btnImportFxCop.Location = new System.Drawing.Point(331, 341);
             this._btnImportFxCop.Name = "_btnImportFxCop";
             this._btnImportFxCop.Size = new System.Drawing.Size(74, 23);
             this._btnImportFxCop.TabIndex = 82;
@@ -276,7 +277,7 @@ namespace AgentSmith.Options
             // 
             // _btnExportFxCop
             // 
-            this._btnExportFxCop.Location = new System.Drawing.Point(333, 397);
+            this._btnExportFxCop.Location = new System.Drawing.Point(331, 370);
             this._btnExportFxCop.Name = "_btnExportFxCop";
             this._btnExportFxCop.Size = new System.Drawing.Size(74, 23);
             this._btnExportFxCop.TabIndex = 83;
@@ -287,7 +288,7 @@ namespace AgentSmith.Options
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(334, 352);
+            this.label6.Location = new System.Drawing.Point(332, 325);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(102, 13);
             this.label6.TabIndex = 84;
@@ -321,7 +322,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._userWords);
             this.Controls.Add(this._tbUserDictionary);
             this.Name = "SpellCheckSettingsPage";
-            this.Size = new System.Drawing.Size(552, 594);
+            this.Size = new System.Drawing.Size(552, 596);
             this.ResumeLayout(false);
             this.PerformLayout();
 
