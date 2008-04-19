@@ -61,18 +61,22 @@ namespace AgentSmith.Options
             // 
             // _mceNotMatches
             // 
+            this._mceNotMatches.AutoSize = true;
             this._mceNotMatches.Location = new System.Drawing.Point(289, 41);
             this._mceNotMatches.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceNotMatches.MinimumSize = new System.Drawing.Size(100, 0);
             this._mceNotMatches.Name = "_mceNotMatches";
-            this._mceNotMatches.Size = new System.Drawing.Size(251, 83);
+            this._mceNotMatches.Size = new System.Drawing.Size(251, 113);
             this._mceNotMatches.TabIndex = 60;
             // 
             // _mceMatches
             // 
+            this._mceMatches.AutoSize = true;
             this._mceMatches.Location = new System.Drawing.Point(15, 41);
             this._mceMatches.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceMatches.MinimumSize = new System.Drawing.Size(100, 0);
             this._mceMatches.Name = "_mceMatches";
-            this._mceMatches.Size = new System.Drawing.Size(251, 83);
+            this._mceMatches.Size = new System.Drawing.Size(251, 113);
             this._mceMatches.TabIndex = 59;
             // 
             // label3
@@ -88,7 +92,7 @@ namespace AgentSmith.Options
             // _lbPPS
             // 
             this._lbPPS.AutoSize = true;
-            this._lbPPS.Location = new System.Drawing.Point(12, 169);
+            this._lbPPS.Location = new System.Drawing.Point(12, 199);
             this._lbPPS.Name = "_lbPPS";
             this._lbPPS.Size = new System.Drawing.Size(409, 13);
             this._lbPPS.TabIndex = 64;
@@ -98,7 +102,7 @@ namespace AgentSmith.Options
             // _lbPS
             // 
             this._lbPS.AutoSize = true;
-            this._lbPS.Location = new System.Drawing.Point(15, 186);
+            this._lbPS.Location = new System.Drawing.Point(15, 216);
             this._lbPS.Name = "_lbPS";
             this._lbPS.Size = new System.Drawing.Size(289, 13);
             this._lbPS.TabIndex = 65;
@@ -107,7 +111,7 @@ namespace AgentSmith.Options
             // _cbLookAtBase
             // 
             this._cbLookAtBase.AutoSize = true;
-            this._cbLookAtBase.Location = new System.Drawing.Point(15, 130);
+            this._cbLookAtBase.Location = new System.Drawing.Point(15, 160);
             this._cbLookAtBase.Name = "_cbLookAtBase";
             this._cbLookAtBase.Size = new System.Drawing.Size(269, 17);
             this._cbLookAtBase.TabIndex = 66;
@@ -117,7 +121,7 @@ namespace AgentSmith.Options
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 215);
+            this.label1.Location = new System.Drawing.Point(12, 245);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(473, 13);
             this.label1.TabIndex = 67;
@@ -136,7 +140,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._lbMustHaveCommentsExcept);
             this.Controls.Add(this._lbMustHaveComments);
             this.Name = "AgentSmithSettingsPage";
-            this.Size = new System.Drawing.Size(552, 519);
+            this.Size = new System.Drawing.Size(552, 519);            
             this.ResumeLayout(false);
             this.PerformLayout();
 

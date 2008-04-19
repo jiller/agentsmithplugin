@@ -98,5 +98,21 @@ namespace AgentSmith.Options
         {
             delete();
         }
+     
+        private void matchCollectionEdit_Layout(object sender, LayoutEventArgs e)
+        {            
+            _btnAdd.Left =
+            _btnEdit.Left =
+            _btnDelete.Left = this.Width - _btnAdd.Width;
+
+            _lvMatches.Width = _btnAdd.Left - 3;
+            _lvMatches.Height = this.Height;
+            _lvMatches.Left = 0;
+            _lvMatches.Top = 0;
+
+            _btnAdd.Top = 0;
+            _btnEdit.Top = _btnAdd.Bottom + 3;
+            _btnDelete.Top = _btnEdit.Bottom + 3;
+        }
     }
 }
