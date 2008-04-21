@@ -53,13 +53,13 @@ namespace AgentSmith
                 Severity.WARNING);
 
             manager.RegisterConfigurableSeverity(StringSpellCheckSuggestion.NAME, group,
-                "Word found in c# literal doesn't exist in dictionary.",
-                "Spell checking of a string in c# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
+                "Word found in C# literal doesn't exist in dictionary.",
+                "Spell checking of a string in C# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
                 Severity.SUGGESTION);
 
             manager.RegisterConfigurableSeverity(IdentifierSpellCheckSuggestion.NAME, group,
-                "Word found in c# declaration doesn't exist in dictionary.",
-                "Spell checking of c# declaration found a word that doesn't exist in default or user dictionary and is probably misspelled.",
+                "Word found in C# declaration doesn't exist in dictionary.",
+                "Spell checking of C# declaration found a word that doesn't exist in default or user dictionary and is probably misspelled.",
                 Severity.SUGGESTION);
         }
 
