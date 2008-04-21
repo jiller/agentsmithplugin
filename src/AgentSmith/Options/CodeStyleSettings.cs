@@ -112,7 +112,7 @@ namespace AgentSmith.Options
                     _customDictionaries = settings._customDictionaries;
                     _stringsDictionary = settings._stringsDictionary;
                     _defaultResXDictionary = settings._defaultResXDictionary;
-                    _identifierDictionary = settings._identifierDictionary;
+                    _identifierDictionary = settings._identifierDictionary;                    
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                 }
                 catch (Exception ex)

@@ -6,8 +6,8 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.TextControl;
 using JetBrains.Shell;
+using JetBrains.TextControl;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
@@ -51,7 +51,7 @@ namespace AgentSmith.Comments
         public void Execute(ISolution solution, ITextControl textControl)
         {
             PsiManager psiManager = PsiManager.GetInstance(solution);
-            if (psiManager.WaitForCaches())
+            if (psiManager.WaitForCaches("Agent Smith", "Cancel"))
             {
                 using (CommandCookie.Create("QuickFix: " + Text))
                 {
@@ -83,7 +83,7 @@ namespace AgentSmith.Comments
                 Logger.LogMessage("Set comment.");
 
                 ICSharpTypeMemberDeclaration declaration =
-                    CSharpElementFactory.GetInstance(solution).CreateTypeMemberDeclaration(text, new object[0]);
+                    CSharpElementFactory.GetInstance(solution.SolutionProject).CreateTypeMemberDeclaration(text, new object[0]);
                 ICSharpTypeMemberDeclarationNode node = declaration.ToTreeNode();
                 docCommentBlockOwnerNode.SetDocCommentBlockNode(
                     ((IDocCommentBlockOwnerNode)node).GetDocCommentBlockNode());
