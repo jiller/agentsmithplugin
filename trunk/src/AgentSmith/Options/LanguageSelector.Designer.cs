@@ -34,20 +34,20 @@
             // 
             // _tbDicts
             // 
-            this._tbDicts.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._tbDicts.Location = new System.Drawing.Point(-1, 3);
+            this._tbDicts.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._tbDicts.Location = new System.Drawing.Point(0, 2);
             this._tbDicts.Name = "_tbDicts";
             this._tbDicts.ReadOnly = true;
-            this._tbDicts.Size = new System.Drawing.Size(111, 20);
+            this._tbDicts.Size = new System.Drawing.Size(59, 20);
             this._tbDicts.TabIndex = 0;
             // 
             // _btnSelect
             // 
-            this._btnSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnSelect.Anchor = System.Windows.Forms.AnchorStyles.None;
             this._btnSelect.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            this._btnSelect.Location = new System.Drawing.Point(116, 1);
+            this._btnSelect.Location = new System.Drawing.Point(60, 1);
             this._btnSelect.Name = "_btnSelect";
-            this._btnSelect.Size = new System.Drawing.Size(27, 22);
+            this._btnSelect.Size = new System.Drawing.Size(27, 21);
             this._btnSelect.TabIndex = 1;
             this._btnSelect.Text = "...";
             this._btnSelect.UseVisualStyleBackColor = true;
@@ -59,8 +59,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this._btnSelect);
             this.Controls.Add(this._tbDicts);
+            this.MinimumSize = new System.Drawing.Size(0, 22);
             this.Name = "LanguageSelector";
-            this.Size = new System.Drawing.Size(151, 28);
+            this.Size = new System.Drawing.Size(87, 22);
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.languageSelector_Layout);            
             this.ResumeLayout(false);
             this.PerformLayout();
 

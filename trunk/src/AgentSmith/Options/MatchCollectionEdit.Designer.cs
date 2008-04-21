@@ -37,18 +37,17 @@ namespace AgentSmith.Options
             // 
             // _lvMatches
             // 
-            this._lvMatches.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._lvMatches.Anchor = System.Windows.Forms.AnchorStyles.None;
             this._lvMatches.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this._lvMatches.FullRowSelect = true;
             this._lvMatches.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             this._lvMatches.HideSelection = false;
-            this._lvMatches.Location = new System.Drawing.Point(0, 0);
+            this._lvMatches.Location = new System.Drawing.Point(0, 2);
+            this._lvMatches.Margin = new System.Windows.Forms.Padding(0);
             this._lvMatches.Name = "_lvMatches";
             this._lvMatches.ShowItemToolTips = true;
-            this._lvMatches.Size = new System.Drawing.Size(152, 93);
+            this._lvMatches.Size = new System.Drawing.Size(152, 150);
             this._lvMatches.TabIndex = 56;
             this._lvMatches.UseCompatibleStateImageBehavior = false;
             this._lvMatches.View = System.Windows.Forms.View.Details;
@@ -62,8 +61,9 @@ namespace AgentSmith.Options
             // 
             // _btnAdd
             // 
-            this._btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnAdd.Location = new System.Drawing.Point(152, 0);
+            this._btnAdd.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._btnAdd.AutoSize = true;
+            this._btnAdd.Location = new System.Drawing.Point(156, 0);
             this._btnAdd.Name = "_btnAdd";
             this._btnAdd.Size = new System.Drawing.Size(38, 23);
             this._btnAdd.TabIndex = 57;
@@ -73,8 +73,9 @@ namespace AgentSmith.Options
             // 
             // _btnEdit
             // 
-            this._btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnEdit.Location = new System.Drawing.Point(152, 25);
+            this._btnEdit.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._btnEdit.AutoSize = true;
+            this._btnEdit.Location = new System.Drawing.Point(156, 25);
             this._btnEdit.Name = "_btnEdit";
             this._btnEdit.Size = new System.Drawing.Size(38, 23);
             this._btnEdit.TabIndex = 58;
@@ -84,8 +85,9 @@ namespace AgentSmith.Options
             // 
             // _btnDelete
             // 
-            this._btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnDelete.Location = new System.Drawing.Point(152, 50);
+            this._btnDelete.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._btnDelete.AutoSize = true;
+            this._btnDelete.Location = new System.Drawing.Point(156, 50);
             this._btnDelete.Name = "_btnDelete";
             this._btnDelete.Size = new System.Drawing.Size(38, 23);
             this._btnDelete.TabIndex = 59;
@@ -97,13 +99,17 @@ namespace AgentSmith.Options
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSize = true;
             this.Controls.Add(this._btnDelete);
             this.Controls.Add(this._btnEdit);
             this.Controls.Add(this._btnAdd);
             this.Controls.Add(this._lvMatches);
+            this.MinimumSize = new System.Drawing.Size(100, 0);
             this.Name = "MatchCollectionEdit";
-            this.Size = new System.Drawing.Size(199, 93);
+            this.Size = new System.Drawing.Size(199, 155);
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.matchCollectionEdit_Layout);            
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
