@@ -40,5 +40,16 @@ namespace AgentSmith.Options
                 SelectedDictionaries = dialog.SelectedDictionaries;
             }
         }
+
+        private void languageSelector_Layout(object sender, LayoutEventArgs e)
+        {
+            _btnSelect.Left = this.Width - _btnSelect.Width;
+
+            _tbDicts.Width = _btnSelect.Left - 1;
+            _tbDicts.Left = 0;
+            _tbDicts.Top = 0;
+            _tbDicts.Height = 21;
+            _btnSelect.Height = 21;
+        }
     }
 }
