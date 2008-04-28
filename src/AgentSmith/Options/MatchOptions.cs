@@ -101,7 +101,7 @@ namespace AgentSmith.Options
             {
                 _match.InheritedFrom = _tbInheritedFrom.Text.Trim();
             }
-
+            
             if (decl.OwnsType)
             {
                 _match.IsOfType = _tbInheritedFrom.Text.Trim();
