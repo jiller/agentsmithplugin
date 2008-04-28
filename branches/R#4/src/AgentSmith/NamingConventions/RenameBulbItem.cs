@@ -27,7 +27,7 @@ namespace AgentSmith.NamingConventions
             RefactoringWorkflow refactoringWorkflow = getRefactoringWorkflow(solution, _declaration.DeclaredElement);
             if (refactoringWorkflow.Initialize(new DataContext(null, _declaration.DeclaredElement, textControl)))
             {
-                new WorkflowProcessor(refactoringWorkflow, solution).Execute();
+                new WorkflowProcessor(refactoringWorkflow, solution).ExecuteAction();
             }
         }
 

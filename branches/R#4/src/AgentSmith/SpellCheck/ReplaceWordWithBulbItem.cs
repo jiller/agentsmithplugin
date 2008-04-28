@@ -1,8 +1,8 @@
 using System;
+using JetBrains.Application;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
