@@ -3,9 +3,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using AgentSmith.MemberMatch;
+using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CodeStyle;
-using JetBrains.Shell;
 using JetBrains.Util;
 
 namespace AgentSmith.Options

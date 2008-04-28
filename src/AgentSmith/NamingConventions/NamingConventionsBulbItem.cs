@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using JetBrains.Application;
+using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -7,8 +9,6 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Refactorings.Rename;
 using JetBrains.ReSharper.Refactorings.RenameNamespace;
 using JetBrains.ReSharper.Refactorings.Workflow;
-using JetBrains.Shell;
-using JetBrains.Shell.Progress;
 using JetBrains.TextControl;
 using JetBrains.Util;
 

@@ -3,6 +3,7 @@ using System.Web;
 using System.Windows.Forms;
 using AgentSmith.Comments;
 using JetBrains.ActionManagement;
+using JetBrains.Application;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper;
@@ -11,7 +12,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
