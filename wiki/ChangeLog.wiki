@@ -1,4 +1,8 @@
-==1.1.7 (21/08/2008) ==
+==1.1.8 (04/28/2008) ==
+  * Ported for build 783 of R# 4.
+  * Fixed defect on spell checking options page.
+
+==1.1.7 (04/21/2008) ==
   * Options layout in Vista fixed.
   * Autodetection of resharper installation directory by setup.
 
