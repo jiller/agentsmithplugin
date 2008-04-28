@@ -361,6 +361,7 @@ namespace AgentSmith.Options
             this._cbDictionary.Name = "_cbDictionary";
             this._cbDictionary.Size = new System.Drawing.Size(121, 21);
             this._cbDictionary.TabIndex = 10;
+            this._cbDictionary.SelectedIndexChanged += new System.EventHandler(this.cbDictionary_SelectedIndexChanged);
             // 
             // _lbDictionary
             // 
