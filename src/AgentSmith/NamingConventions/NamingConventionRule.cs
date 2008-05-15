@@ -97,9 +97,10 @@ namespace AgentSmith.NamingConventions
                 (declaration.DeclaredName.Contains(".") && !(declaration is INamespaceDeclaration)) ||
                 declaration is IDestructorDeclaration ||
                 declaration is IModifiersOwner && ((IModifiersOwner)declaration).IsExtern ||
-                declaration is IMethodDeclaration && declaration.DeclaredName == "Main" && ((IMethodDeclaration) declaration).IsStatic ||
-                //TODO: narrow this to "Windows Designer ..." region
-                declaration is IMethodDeclaration && declaration.DeclaredName == "InitializeComponents")
+                declaration is IMethodDeclaration && declaration.DeclaredName == "Main" && ((IMethodDeclaration) declaration).IsStatic// ||
+                ////TODO: narrow this to "Windows Designer ..." region
+                //declaration is IMethodDeclaration && declaration.DeclaredName == "InitializeComponents"
+                )
             {
                 return false;
             }
