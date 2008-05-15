@@ -9,3 +9,6 @@
     # Click on 'Import Open Office Dictionary'.
     # Choose ".dic" and ".aff" files. Click Ok.
     # On Spell Check Settings page configure which languages you want to you for spell checking.
+
+  * How do I turn off Agent Smith warnings and suggestions?
+    Corresponding warning level can be set in ReSharper->Options->Inspection severity
