@@ -49,6 +49,9 @@ namespace AgentSmith.Options
             _cbReadonly.CheckState = convertBool(_match.IsReadOnly);
             _cbStatic.CheckState = convertBool(_match.IsStatic);
 
+            _cbIn.Checked = (_match.ParamDirection & ParamDirection.In) != 0;
+            _cbOut.Checked = (_match.ParamDirection & ParamDirection.Out) != 0;
+            _cbRef.Checked = (_match.ParamDirection & ParamDirection.Ref) != 0;
         }
 
         private static CheckState convertBool(FuzzyBool val)
@@ -87,6 +90,7 @@ namespace AgentSmith.Options
             _match.IsOfType = null;
             _match.IsReadOnly = FuzzyBool.Maybe;
             _match.IsStatic = FuzzyBool.Maybe;
+            _match.ParamDirection = ParamDirection.Any;
 
             if (decl.HasAccessLevel)
             {
@@ -121,6 +125,23 @@ namespace AgentSmith.Options
             {
                 _match.IsStatic = convertToBool(_cbStatic.CheckState);
             }
+
+            if (decl.Declaration == Declaration.Parameter)
+            {
+                _match.ParamDirection = 0;
+                if (_cbIn.Checked)
+                {
+                    _match.ParamDirection |= ParamDirection.In;
+                }
+                if (_cbOut.Checked)
+                {
+                    _match.ParamDirection |= ParamDirection.Out;
+                }
+                if (_cbRef.Checked)
+                {
+                    _match.ParamDirection |= ParamDirection.Ref;
+                }
+            }
         }
 
         private void lbMember_SelectedIndexChanged(object sender, EventArgs e)
@@ -131,6 +152,8 @@ namespace AgentSmith.Options
             _tbMarkedWithAttribute.Enabled = description.CanBeMarkedWithAttribute;
             _cbReadonly.Enabled = description.CanBeReadonly;
             _cbStatic.Enabled = description.CanBeStatic;
+
+            _cbIn.Enabled = _cbOut.Enabled = _cbRef.Enabled = description.Declaration == Declaration.Parameter;
         }
     }
 }

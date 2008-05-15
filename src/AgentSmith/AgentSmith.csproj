@@ -166,6 +166,7 @@
     <Compile Include="Identifiers\IdentifierSpellCheckAnalyzer.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckQuickFix.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckSuggestion.cs" />
+    <Compile Include="MemberMatch\ParamDirection.cs" />
     <Compile Include="Options\LanguageSelectionDialog.cs">
       <SubType>Form</SubType>
     </Compile>

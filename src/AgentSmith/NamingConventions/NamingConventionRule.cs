@@ -85,22 +85,9 @@ namespace AgentSmith.NamingConventions
             get { return _regex == null ? null : _regex.ToString(); }
         }
 
-        public void Prepare(ISolution solution, PsiManager manager)
+        public void Prepare(ISolution solution)
         {
-            if (Matches != null)
-            {
-                foreach (Match match in Matches)
-                {
-                    match.Prepare(solution, manager);
-                }
-            }
-            if (NotMatches != null)
-            {
-                foreach (Match match in NotMatches)
-                {
-                    match.Prepare(solution, manager);
-                }
-            }
+            ComplexMatchEvaluator.Prepare(solution, Matches, NotMatches);            
         }
 
         public bool IsMatch(IDeclaration declaration)

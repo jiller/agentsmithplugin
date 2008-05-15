@@ -40,6 +40,9 @@ namespace AgentSmith.Options
             this._cbVisibility = new System.Windows.Forms.CheckedListBox();
             this._cbStatic = new System.Windows.Forms.CheckBox();
             this._cbReadonly = new System.Windows.Forms.CheckBox();
+            this._cbIn = new System.Windows.Forms.CheckBox();
+            this._cbOut = new System.Windows.Forms.CheckBox();
+            this._cbRef = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // _tbInheritedFrom
@@ -106,7 +109,7 @@ namespace AgentSmith.Options
             // 
             this._btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this._btnOK.Location = new System.Drawing.Point(216, 219);
+            this._btnOK.Location = new System.Drawing.Point(216, 243);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 23;
@@ -118,7 +121,7 @@ namespace AgentSmith.Options
             // 
             this._btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._btnCancel.Location = new System.Drawing.Point(297, 219);
+            this._btnCancel.Location = new System.Drawing.Point(297, 243);
             this._btnCancel.Name = "_btnCancel";
             this._btnCancel.Size = new System.Drawing.Size(75, 23);
             this._btnCancel.TabIndex = 24;
@@ -156,13 +159,46 @@ namespace AgentSmith.Options
             this._cbReadonly.ThreeState = true;
             this._cbReadonly.UseVisualStyleBackColor = true;
             // 
+            // _cbIn
+            // 
+            this._cbIn.AutoSize = true;
+            this._cbIn.Location = new System.Drawing.Point(155, 218);
+            this._cbIn.Name = "_cbIn";
+            this._cbIn.Size = new System.Drawing.Size(35, 17);
+            this._cbIn.TabIndex = 28;
+            this._cbIn.Text = "In";
+            this._cbIn.UseVisualStyleBackColor = true;
+            // 
+            // _cbOut
+            // 
+            this._cbOut.AutoSize = true;
+            this._cbOut.Location = new System.Drawing.Point(197, 218);
+            this._cbOut.Name = "_cbOut";
+            this._cbOut.Size = new System.Drawing.Size(43, 17);
+            this._cbOut.TabIndex = 29;
+            this._cbOut.Text = "Out";
+            this._cbOut.UseVisualStyleBackColor = true;
+            // 
+            // _cbRef
+            // 
+            this._cbRef.AutoSize = true;
+            this._cbRef.Location = new System.Drawing.Point(247, 218);
+            this._cbRef.Name = "_cbRef";
+            this._cbRef.Size = new System.Drawing.Size(43, 17);
+            this._cbRef.TabIndex = 30;
+            this._cbRef.Text = "Ref";
+            this._cbRef.UseVisualStyleBackColor = true;
+            // 
             // MatchOptions
             // 
             this.AcceptButton = this._btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._btnCancel;
-            this.ClientSize = new System.Drawing.Size(383, 254);
+            this.ClientSize = new System.Drawing.Size(383, 278);
+            this.Controls.Add(this._cbRef);
+            this.Controls.Add(this._cbOut);
+            this.Controls.Add(this._cbIn);
             this.Controls.Add(this._cbReadonly);
             this.Controls.Add(this._cbStatic);
             this.Controls.Add(this._cbVisibility);
@@ -200,5 +236,8 @@ namespace AgentSmith.Options
         private System.Windows.Forms.CheckedListBox _cbVisibility;
         private System.Windows.Forms.CheckBox _cbStatic;
         private System.Windows.Forms.CheckBox _cbReadonly;
+        private System.Windows.Forms.CheckBox _cbIn;
+        private System.Windows.Forms.CheckBox _cbOut;
+        private System.Windows.Forms.CheckBox _cbRef;
     }
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using AgentSmith.Options;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.NamingConventions
@@ -27,7 +26,7 @@ namespace AgentSmith.NamingConventions
             {
                 if (!rule.IsDisabled)
                 {
-                    rule.Prepare(solution, PsiManager.GetInstance(solution));
+                    rule.Prepare(solution);
                 }
             }
         }

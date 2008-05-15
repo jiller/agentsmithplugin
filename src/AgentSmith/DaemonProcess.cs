@@ -38,7 +38,7 @@ namespace AgentSmith
                     {
                         new NamingConventionsAnalyzer(_styleSettings.NamingConventionSettings, _process.Solution),
                         new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution),
-                        new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution)
+                        new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution, _styleSettings)
                     };
             }
         }

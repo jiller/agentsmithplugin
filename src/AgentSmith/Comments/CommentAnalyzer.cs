@@ -27,22 +27,9 @@ namespace AgentSmith.Comments
             _solution = solution;
             _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
 
-            if (_settings.CommentMatch != null)
-            {
-                foreach (Match match in _settings.CommentMatch)
-                {
-                    match.Prepare(solution, PsiManager.GetInstance(solution));
-                }
-            }
-            if (_settings.CommentNotMatch != null)
-            {
-                foreach (Match match in _settings.CommentNotMatch)
-                {
-                    match.Prepare(solution, PsiManager.GetInstance(solution));
-                }
-            }
-        }
-        
+            ComplexMatchEvaluator.Prepare(solution, _settings.CommentMatch, _settings.CommentNotMatch);
+        }        
+
         #region IDeclarationAnalyzer Members
 
         public SuggestionBase[] Analyze(IDeclaration declaration)
