@@ -27,7 +27,7 @@ namespace AgentSmith.Identifiers
             _settings = settings;
 
             ComplexMatchEvaluator.Prepare(solution, settings.IdentifiersToSpellCheck,
-                settings.IdentifiersToSpellCheck);
+                settings.IdentifiersNotToSpellCheck);
         }
 
         public SuggestionBase[] Analyze(IDeclaration declaration)
@@ -47,7 +47,7 @@ namespace AgentSmith.Identifiers
             }
 
             if (ComplexMatchEvaluator.IsMatch(declaration, _settings.IdentifiersToSpellCheck,
-                    _settings.IdentifiersNotToSpellCheck, true) != null)
+                    _settings.IdentifiersNotToSpellCheck, true) == null)
             {
                 return null;
             }

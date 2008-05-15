@@ -212,6 +212,10 @@ namespace AgentSmith.MemberMatch
             {
                 sb.Append(_readOnly == FuzzyBool.True ? "readonly " : "not readonly ");
             }
+            if (Declaration == Declaration.Parameter)
+            {
+                sb.AppendFormat("{0} ", ParamDirection);
+            }
             sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration " : description.Name.ToLower());
             if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
             {
