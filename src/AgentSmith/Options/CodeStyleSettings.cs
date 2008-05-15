@@ -129,6 +129,8 @@ namespace AgentSmith.Options
                     _defaultResXDictionary = settings._defaultResXDictionary;
                     _identifierDictionary = settings._identifierDictionary;
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
+                    _identifiersToSpellCheck = settings._identifiersToSpellCheck;
+                    _identifiersNotToSpellCheck = settings._identifiersNotToSpellCheck;
                 }
                 catch (Exception ex)
                 {
