@@ -13,7 +13,7 @@
   * *How do I turn off Agent Smith warnings and suggestions?*
     # Corresponding warning level can be set in ReSharper->Options->Inspection severity
 
-  * *How do I synchronize Agent Smith custom dictionary with FxCom custom dictionary*
+  * *How do I synchronize Agent Smith custom dictionary with FxCop custom dictionary*
     # Go to ReSharper->Options->C#->Agent Smith Code Style->Spell Check Settings.
     # Select custom dictionary in the User Dictionaries section
     # Click 'import' to merge new words from a FxCop dictionary file or 'export' to       merge words into a FxCop dictionary
