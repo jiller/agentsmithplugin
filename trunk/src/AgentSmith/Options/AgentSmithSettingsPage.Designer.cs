@@ -39,6 +39,10 @@ namespace AgentSmith.Options
             this._lbPS = new System.Windows.Forms.Label();
             this._cbLookAtBase = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this._mceDoNotSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this._mceToSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // _lbMustHaveComments
@@ -128,8 +132,50 @@ namespace AgentSmith.Options
             this.label1.Text = "* These settings\' sharing as well as import/export are managed with ReSharper Cod" +
                 "e Style Sharing.";
             // 
+            // _mceDoNotSpellCheck
+            // 
+            this._mceDoNotSpellCheck.AutoSize = true;
+            this._mceDoNotSpellCheck.Location = new System.Drawing.Point(289, 287);
+            this._mceDoNotSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceDoNotSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceDoNotSpellCheck.Name = "_mceDoNotSpellCheck";
+            this._mceDoNotSpellCheck.Size = new System.Drawing.Size(251, 113);
+            this._mceDoNotSpellCheck.TabIndex = 71;
+            // 
+            // _mceToSpellCheck
+            // 
+            this._mceToSpellCheck.AutoSize = true;
+            this._mceToSpellCheck.Location = new System.Drawing.Point(15, 287);
+            this._mceToSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceToSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceToSpellCheck.Name = "_mceToSpellCheck";
+            this._mceToSpellCheck.Size = new System.Drawing.Size(251, 113);
+            this._mceToSpellCheck.TabIndex = 70;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(286, 271);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(40, 13);
+            this.label2.TabIndex = 69;
+            this.label2.Text = "Except";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(12, 271);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(135, 13);
+            this.label4.TabIndex = 68;
+            this.label4.Text = "Declarations to spell check";
+            // 
             // AgentSmithSettingsPage
             // 
+            this.Controls.Add(this._mceDoNotSpellCheck);
+            this.Controls.Add(this._mceToSpellCheck);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._cbLookAtBase);
             this.Controls.Add(this._lbPS);
@@ -157,5 +203,9 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.CheckBox _cbLookAtBase;
         private System.Windows.Forms.Label label1;
+        private MatchCollectionEdit _mceDoNotSpellCheck;
+        private MatchCollectionEdit _mceToSpellCheck;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
     }
 }

@@ -53,6 +53,9 @@ namespace AgentSmith.Options
             Settings.CommentsSettings.CommentMatch = _mceMatches.Matches;
             Settings.CommentsSettings.CommentNotMatch = _mceNotMatches.Matches;
             Settings.CommentsSettings.SuppressIfBaseHasComment = _cbLookAtBase.Checked;
+
+            Settings.IdentifiersToSpellCheck = _mceToSpellCheck.Matches;
+            Settings.IdentifiersNotToSpellCheck = _mceDoNotSpellCheck.Matches;
             return true;
         }
 
@@ -67,7 +70,11 @@ namespace AgentSmith.Options
         {
             _mceMatches.Matches = Settings.CommentsSettings.CommentMatch;
             _mceNotMatches.Matches = Settings.CommentsSettings.CommentNotMatch;
+            
             _cbLookAtBase.Checked = Settings.CommentsSettings.SuppressIfBaseHasComment;
+            
+            _mceToSpellCheck.Matches = Settings.IdentifiersToSpellCheck;
+            _mceDoNotSpellCheck.Matches = Settings.IdentifiersNotToSpellCheck;
         }
     }
 }

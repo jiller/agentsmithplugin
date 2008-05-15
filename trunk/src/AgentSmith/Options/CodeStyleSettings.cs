@@ -22,12 +22,15 @@ namespace AgentSmith.Options
         private string _identifierDictionary = "en-US";
         private string _defaultResXDictionary = "en-US";
         private string _lastSelectedCustomDictionary = "en-US";
+        private Match[] _identifiersToSpellCheck;
+        private Match[] _identifiersNotToSpellCheck;
 
         public CodeStyleSettings()
         {
             _namingConventionSettings.LoadDefaults();
             _commentsSettings = new CommentsSettings();
             _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
+            _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any) };
         }
 
 
@@ -71,6 +74,18 @@ namespace AgentSmith.Options
         {
             get { return _namingConventionSettings; }
             set { _namingConventionSettings = value; }
+        }
+
+        public Match[] IdentifiersToSpellCheck
+        {
+            get { return _identifiersToSpellCheck; }
+            set { _identifiersToSpellCheck = value; }
+        }
+
+        public Match[] IdentifiersNotToSpellCheck
+        {
+            get { return _identifiersNotToSpellCheck; }
+            set { _identifiersNotToSpellCheck = value; }
         }
 
         public static CodeStyleSettings GetInstance(ISolution solution)

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -29,6 +28,7 @@ namespace AgentSmith.MemberMatch
         private ITypeElement _markedWithAttributeType;
         private ITypeElement _inheritedFromType;
         private ITypeElement _isOfTypeType;
+        private ParamDirection _paramDirection = ParamDirection.Any;
 
         static Match()
         {
@@ -131,6 +131,12 @@ namespace AgentSmith.MemberMatch
             set { _isOfType = value; }
         }
 
+        public ParamDirection ParamDirection
+        {
+            get { return _paramDirection; }
+            set { _paramDirection = value; }
+        }
+
         public void Prepare(ISolution solution, PsiManager manager)
         {
             _markedWithAttributeType = null;
@@ -172,8 +178,22 @@ namespace AgentSmith.MemberMatch
                        inheritsMatch(declaration) &&
                        ownsTypeMatch(declaration) &&
                        isReadOnlyMatch(declaration) &&
-                       isStaticMatch(declaration);
+                       isStaticMatch(declaration) && 
+                       paramDirectionMatch(declaration);
             }
+        }
+
+        private bool paramDirectionMatch(IDeclaration declaration)
+        {
+            if (_paramDirection == ParamDirection.Any)
+            {
+                return true;
+            }
+
+            IParameter param = declaration.DeclaredElement as IParameter;
+            return param != null && (param.Kind == ParameterKind.OUTPUT && (_paramDirection & ParamDirection.Out) != 0 ||
+                                     param.Kind == ParameterKind.REFERENCE && (_paramDirection & ParamDirection.Ref) != 0 ||
+                                     param.Kind == ParameterKind.VALUE && (_paramDirection & ParamDirection.In) != 0);
         }
 
         public override string ToString()
