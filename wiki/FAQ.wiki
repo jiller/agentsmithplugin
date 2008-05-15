@@ -3,7 +3,7 @@
 
   * *How do I import new dictionary?*
     # Go to http://wiki.services.openoffice.org/wiki/Dictionaries
-    # Download file named 'Spelling' that corresponds to your language
+    # Download Spelling archive that corresponds to your language
     # Extract ".dic" and ".aff" files from the package
     # Go to ReSharper->Options->C#->Agent Smith Code Style->Spell Check Settings.
     # Click on 'Import Open Office Dictionary'.
