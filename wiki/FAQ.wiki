@@ -1,10 +1,10 @@
-  *Where are Agent Smith settings?
+  * Where are Agent Smith settings?
       Agent Smith settings pages are under ReSharper->Options->C#->Agent Smith Code Style Settings
-  *How do I import new dictionary?
-  #Go to http://wiki.services.openoffice.org/wiki/Dictionaries
-  #Download file named 'Spelling' that corresponds to your language
-  #Extract ".dic" and ".aff" files from the package
-  #Go to ReSharper->Options->C#->Agent Smith Code Style->Spell Check Settings.
-  #Click on 'Import Open Office Dictionary'.
-  #Choose ".dic" and ".aff" files. Click Ok.
-  #On Spell Check Settings page configure which languages you want to you for spell checking.
+  * How do I import new dictionary?
+  # Go to http://wiki.services.openoffice.org/wiki/Dictionaries
+  # Download file named 'Spelling' that corresponds to your language
+  # Extract ".dic" and ".aff" files from the package
+  # Go to ReSharper->Options->C#->Agent Smith Code Style->Spell Check Settings.
+  # Click on 'Import Open Office Dictionary'.
+  # Choose ".dic" and ".aff" files. Click Ok.
+  # On Spell Check Settings page configure which languages you want to you for spell checking.
