@@ -9,7 +9,7 @@ namespace AgentSmith.Options
     {
         private readonly Match _match;
 
-        public MatchOptions(Match match)
+        public MatchOptions(Match match, bool effective)
         {
             _match = match;
             InitializeComponent();
@@ -27,6 +27,11 @@ namespace AgentSmith.Options
                 AccessLevelDescription.Descriptions;
             foreach (AccessLevelDescription descr in visibilityDescriptions.Values)
             {
+                if (!(descr.ShowEffective && effective || descr.ShowNotEffective && !effective))
+                {
+                    continue;
+                }
+
                 ListViewItem item = new ListViewItem(descr.Name);
                 item.ToolTipText = descr.Description;
                 item.Tag = descr;
