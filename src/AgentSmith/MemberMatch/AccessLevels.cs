@@ -12,5 +12,6 @@ namespace AgentSmith.MemberMatch
         Internal = 4,
         Protected = 8,
         ProtectedInternal = 16,
+        ProtectedAndInternal = 32
     }
 }

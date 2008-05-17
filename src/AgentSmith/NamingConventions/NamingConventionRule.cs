@@ -85,22 +85,9 @@ namespace AgentSmith.NamingConventions
             get { return _regex == null ? null : _regex.ToString(); }
         }
 
-        public void Prepare(ISolution solution, PsiManager manager)
+        public void Prepare(ISolution solution)
         {
-            if (Matches != null)
-            {
-                foreach (Match match in Matches)
-                {
-                    match.Prepare(solution, manager);
-                }
-            }
-            if (NotMatches != null)
-            {
-                foreach (Match match in NotMatches)
-                {
-                    match.Prepare(solution, manager);
-                }
-            }
+            ComplexMatchEvaluator.Prepare(solution, Matches, NotMatches);            
         }
 
         public bool IsMatch(IDeclaration declaration)
@@ -110,9 +97,10 @@ namespace AgentSmith.NamingConventions
                 (declaration.DeclaredName.Contains(".") && !(declaration is INamespaceDeclaration)) ||
                 declaration is IDestructorDeclaration ||
                 declaration is IModifiersOwner && ((IModifiersOwner)declaration).IsExtern ||
-                declaration is IMethodDeclaration && declaration.DeclaredName == "Main" && ((IMethodDeclaration) declaration).IsStatic ||
-                //TODO: narrow this to "Windows Designer ..." region
-                declaration is IMethodDeclaration && declaration.DeclaredName == "InitializeComponents")
+                declaration is IMethodDeclaration && declaration.DeclaredName == "Main" && ((IMethodDeclaration) declaration).IsStatic// ||
+                ////TODO: narrow this to "Windows Designer ..." region
+                //declaration is IMethodDeclaration && declaration.DeclaredName == "InitializeComponents"
+                )
             {
                 return false;
             }

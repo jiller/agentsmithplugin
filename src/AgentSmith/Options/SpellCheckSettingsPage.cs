@@ -65,6 +65,9 @@ namespace AgentSmith.Options
             Settings.DefaultResXDictionary = _cbResX.SelectedItem.ToString();
             Settings.LastSelectedCustomDictionary = _cbDictionary.SelectedItem.ToString();
 
+            Settings.IdentifiersToSpellCheck = _mceToSpellCheck.Matches;
+            Settings.IdentifiersNotToSpellCheck = _mceDoNotSpellCheck.Matches;
+
             SpellCheckManager.Reset();
             return true;
         }
@@ -108,6 +111,9 @@ namespace AgentSmith.Options
             _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;
             _cbResX.SelectedItem = Settings.DefaultResXDictionary;
             _cbDictionary.SelectedItem = Settings.LastSelectedCustomDictionary;
+
+            _mceToSpellCheck.Matches = Settings.IdentifiersToSpellCheck;
+            _mceDoNotSpellCheck.Matches = Settings.IdentifiersNotToSpellCheck;
         }
 
         private void bindDictionaries(List<string> dicts)

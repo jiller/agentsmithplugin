@@ -1,5 +1,7 @@
 using System;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ProjectModel;
 
 namespace AgentSmith.MemberMatch
 {
@@ -31,6 +33,26 @@ namespace AgentSmith.MemberMatch
             }
 
             return null;
+        }
+
+        public static void Prepare(ISolution solution, Match[] matches, Match[] notMatches)
+        {
+            PsiManager psiManager = PsiManager.GetInstance(solution);
+            if (matches != null)
+            {
+                foreach (Match match in matches)
+                {
+                    match.Prepare(solution, psiManager);
+                }
+            }
+
+            if (notMatches != null)
+            {
+                foreach (Match match in notMatches)
+                {
+                    match.Prepare(solution, psiManager);
+                }
+            }
         }
     }
 }

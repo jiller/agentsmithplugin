@@ -59,6 +59,10 @@ namespace AgentSmith.Options
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this._cbDictionary = new System.Windows.Forms.ComboBox();
             this._lbDictionary = new System.Windows.Forms.Label();
+            this._mceDoNotSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this._mceToSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -70,18 +74,18 @@ namespace AgentSmith.Options
             this._tbUserDictionary.AcceptsReturn = true;
             this._tbUserDictionary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)));
-            this._tbUserDictionary.Location = new System.Drawing.Point(15, 325);
+            this._tbUserDictionary.Location = new System.Drawing.Point(18, 433);
             this._tbUserDictionary.Multiline = true;
             this._tbUserDictionary.Name = "_tbUserDictionary";
             this._tbUserDictionary.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this._tbUserDictionary.Size = new System.Drawing.Size(310, 247);
+            this._tbUserDictionary.Size = new System.Drawing.Size(310, 149);
             this._tbUserDictionary.TabIndex = 6;
             this._tbUserDictionary.WordWrap = false;
             // 
             // _userWords
             // 
             this._userWords.AutoSize = true;
-            this._userWords.Location = new System.Drawing.Point(15, 304);
+            this._userWords.Location = new System.Drawing.Point(18, 412);
             this._userWords.Name = "_userWords";
             this._userWords.Size = new System.Drawing.Size(108, 13);
             this._userWords.TabIndex = 6;
@@ -91,7 +95,7 @@ namespace AgentSmith.Options
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(12, 177);
+            this.label2.Location = new System.Drawing.Point(15, 285);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(123, 13);
             this.label2.TabIndex = 62;
@@ -100,7 +104,7 @@ namespace AgentSmith.Options
             // _lbPPS
             // 
             this._lbPPS.AutoSize = true;
-            this._lbPPS.Location = new System.Drawing.Point(15, 119);
+            this._lbPPS.Location = new System.Drawing.Point(18, 227);
             this._lbPPS.Name = "_lbPPS";
             this._lbPPS.Size = new System.Drawing.Size(361, 13);
             this._lbPPS.TabIndex = 64;
@@ -109,7 +113,7 @@ namespace AgentSmith.Options
             // _lbPS
             // 
             this._lbPS.AutoSize = true;
-            this._lbPS.Location = new System.Drawing.Point(15, 132);
+            this._lbPS.Location = new System.Drawing.Point(18, 240);
             this._lbPS.Name = "_lbPS";
             this._lbPS.Size = new System.Drawing.Size(289, 13);
             this._lbPS.TabIndex = 65;
@@ -149,7 +153,7 @@ namespace AgentSmith.Options
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(15, 163);
+            this.panel1.Location = new System.Drawing.Point(18, 271);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(515, 2);
             this.panel1.TabIndex = 61;
@@ -167,7 +171,7 @@ namespace AgentSmith.Options
             // _cbCaseSensitive
             // 
             this._cbCaseSensitive.AutoSize = true;
-            this._cbCaseSensitive.Location = new System.Drawing.Point(175, 303);
+            this._cbCaseSensitive.Location = new System.Drawing.Point(178, 411);
             this._cbCaseSensitive.Name = "_cbCaseSensitive";
             this._cbCaseSensitive.Size = new System.Drawing.Size(153, 17);
             this._cbCaseSensitive.TabIndex = 75;
@@ -186,7 +190,7 @@ namespace AgentSmith.Options
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Location = new System.Drawing.Point(15, 225);
+            this.panel2.Location = new System.Drawing.Point(18, 333);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(515, 2);
             this.panel2.TabIndex = 62;
@@ -195,7 +199,7 @@ namespace AgentSmith.Options
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label5.Location = new System.Drawing.Point(15, 240);
+            this.label5.Location = new System.Drawing.Point(18, 348);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(104, 13);
             this.label5.TabIndex = 80;
@@ -203,7 +207,7 @@ namespace AgentSmith.Options
             // 
             // _btnImportFxCop
             // 
-            this._btnImportFxCop.Location = new System.Drawing.Point(331, 341);
+            this._btnImportFxCop.Location = new System.Drawing.Point(334, 449);
             this._btnImportFxCop.Name = "_btnImportFxCop";
             this._btnImportFxCop.Size = new System.Drawing.Size(74, 23);
             this._btnImportFxCop.TabIndex = 82;
@@ -213,7 +217,7 @@ namespace AgentSmith.Options
             // 
             // _btnExportFxCop
             // 
-            this._btnExportFxCop.Location = new System.Drawing.Point(331, 370);
+            this._btnExportFxCop.Location = new System.Drawing.Point(334, 478);
             this._btnExportFxCop.Name = "_btnExportFxCop";
             this._btnExportFxCop.Size = new System.Drawing.Size(74, 23);
             this._btnExportFxCop.TabIndex = 83;
@@ -224,7 +228,7 @@ namespace AgentSmith.Options
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(332, 325);
+            this.label6.Location = new System.Drawing.Point(335, 433);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(102, 13);
             this.label6.TabIndex = 84;
@@ -312,7 +316,7 @@ namespace AgentSmith.Options
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel3.Controls.Add(this._btnImport, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.label4, 0, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(15, 190);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(18, 298);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 1;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -346,7 +350,7 @@ namespace AgentSmith.Options
             this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel4.Controls.Add(this._cbDictionary, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this._lbDictionary, 0, 0);
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(18, 267);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(21, 375);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -374,8 +378,50 @@ namespace AgentSmith.Options
             this._lbDictionary.TabIndex = 9;
             this._lbDictionary.Text = "Language";
             // 
+            // _mceDoNotSpellCheck
+            // 
+            this._mceDoNotSpellCheck.AutoSize = true;
+            this._mceDoNotSpellCheck.Location = new System.Drawing.Point(292, 109);
+            this._mceDoNotSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceDoNotSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceDoNotSpellCheck.Name = "_mceDoNotSpellCheck";
+            this._mceDoNotSpellCheck.Size = new System.Drawing.Size(251, 113);
+            this._mceDoNotSpellCheck.TabIndex = 93;
+            // 
+            // _mceToSpellCheck
+            // 
+            this._mceToSpellCheck.AutoSize = true;
+            this._mceToSpellCheck.Location = new System.Drawing.Point(18, 109);
+            this._mceToSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceToSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceToSpellCheck.Name = "_mceToSpellCheck";
+            this._mceToSpellCheck.Size = new System.Drawing.Size(251, 113);
+            this._mceToSpellCheck.TabIndex = 92;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(289, 93);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(40, 13);
+            this.label7.TabIndex = 91;
+            this.label7.Text = "Except";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(15, 93);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(121, 13);
+            this.label8.TabIndex = 90;
+            this.label8.Text = "Identifiers to spell check";
+            // 
             // SpellCheckSettingsPage
             // 
+            this.Controls.Add(this._mceDoNotSpellCheck);
+            this.Controls.Add(this._mceToSpellCheck);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.tableLayoutPanel4);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
@@ -439,5 +485,9 @@ namespace AgentSmith.Options
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
         private System.Windows.Forms.ComboBox _cbDictionary;
         private System.Windows.Forms.Label _lbDictionary;
+        private MatchCollectionEdit _mceDoNotSpellCheck;
+        private MatchCollectionEdit _mceToSpellCheck;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
     }
 }

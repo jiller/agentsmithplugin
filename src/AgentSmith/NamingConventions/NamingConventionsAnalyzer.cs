@@ -27,7 +27,7 @@ namespace AgentSmith.NamingConventions
             {
                 if (!rule.IsDisabled)
                 {
-                    rule.Prepare(solution, PsiManager.GetInstance(solution));
+                    rule.Prepare(solution);
                 }
             }
         }
