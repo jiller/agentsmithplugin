@@ -4,9 +4,9 @@ using AgentSmith.Identifiers;
 using AgentSmith.NamingConventions;
 using AgentSmith.ResX;
 using AgentSmith.Strings;
+using JetBrains.Application;
 using JetBrains.ComponentModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.Shell;
 
 namespace AgentSmith
 {

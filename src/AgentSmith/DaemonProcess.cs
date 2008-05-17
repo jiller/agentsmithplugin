@@ -7,12 +7,12 @@ using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using AgentSmith.Strings;
+using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Shell.Progress;
 
 namespace AgentSmith
 {

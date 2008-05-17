@@ -52,7 +52,7 @@ namespace AgentSmith.Identifiers
                 return null;
             }
 
-            HashSet<string> localNames = getLocalNames(declaration);
+            OrderedHashSet<string> localNames = getLocalNames(declaration);
 
             CamelHumpLexer lexer =
                 new CamelHumpLexer(declaration.DeclaredName, 0, declaration.DeclaredName.Length);
@@ -86,9 +86,9 @@ namespace AgentSmith.Identifiers
             return suggestions.ToArray();
         }
 
-        private HashSet<string> getLocalNames(IDeclaration declaration)
+        private OrderedHashSet<string> getLocalNames(IDeclaration declaration)
         {
-            HashSet<string> localNames = new HashSet<string>();
+            OrderedHashSet<string> localNames = new OrderedHashSet<string>();
             ITypeOwner var = declaration as ITypeOwner;
             if (var != null)
             {

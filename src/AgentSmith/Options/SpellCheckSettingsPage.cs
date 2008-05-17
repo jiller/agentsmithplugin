@@ -9,7 +9,6 @@ using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
 using JetBrains.UI.Options;
-using JetBrains.Util;
 
 namespace AgentSmith.Options
 {
@@ -121,7 +120,7 @@ namespace AgentSmith.Options
         {
             ComboBox[] cbs = new ComboBox[]
                 {
-                    _cbResX,
+                    _cbResX,                                        
                     _cbIdentifiers,
                     _cbStrings,
                     _cbDictionary
@@ -175,7 +174,7 @@ namespace AgentSmith.Options
                 _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
-        }        
+        }
 
         private void btnImportFxCop_Click(object sender, EventArgs e)
         {
@@ -294,5 +293,5 @@ namespace AgentSmith.Options
                 MessageBox.Show("Export failed: " + ex.Message);
             }
         }
-    }
+     }
 }

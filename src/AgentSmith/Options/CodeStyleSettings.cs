@@ -3,9 +3,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using AgentSmith.MemberMatch;
+using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CodeStyle;
-using JetBrains.Shell;
 using JetBrains.Util;
 
 namespace AgentSmith.Options
@@ -128,7 +128,7 @@ namespace AgentSmith.Options
                     _customDictionaries = settings._customDictionaries;
                     _stringsDictionary = settings._stringsDictionary;
                     _defaultResXDictionary = settings._defaultResXDictionary;
-                    _identifierDictionary = settings._identifierDictionary;
+                    _identifierDictionary = settings._identifierDictionary;                    
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                     _identifiersToSpellCheck = settings._identifiersToSpellCheck;
                     _identifiersNotToSpellCheck = settings._identifiersNotToSpellCheck;

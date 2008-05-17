@@ -140,7 +140,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._lbMustHaveCommentsExcept);
             this.Controls.Add(this._lbMustHaveComments);
             this.Name = "AgentSmithSettingsPage";
-            this.Size = new System.Drawing.Size(552, 519);
+            this.Size = new System.Drawing.Size(552, 519);            
             this.ResumeLayout(false);
             this.PerformLayout();
 
