@@ -136,6 +136,7 @@ namespace AgentSmith.Options
             this._cbVisibility.Name = "_cbVisibility";
             this._cbVisibility.Size = new System.Drawing.Size(217, 94);
             this._cbVisibility.TabIndex = 25;
+            this._cbVisibility.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.cbVisibility_ItemCheck);
             // 
             // _cbStatic
             // 
