@@ -212,7 +212,7 @@ namespace AgentSmith.MemberMatch
             {
                 sb.Append(_readOnly == FuzzyBool.True ? "readonly " : "not readonly ");
             }
-            if (Declaration == Declaration.Parameter)
+            if (Declaration == Declaration.Parameter && ParamDirection != ParamDirection.Any)
             {
                 sb.AppendFormat("{0} ", ParamDirection);
             }
@@ -341,12 +341,23 @@ namespace AgentSmith.MemberMatch
                 return true;
             }
 
+            AccessRights rights;
+            if (declaration is IEnumMemberDeclaration)
+            {
+                declaration = ((IEnumMemberDeclaration) declaration).GetContainingTypeDeclaration();
+            }
+
+            if (declaration is IParameterDeclaration)
+            {
+                declaration = ((IParameterDeclaration) declaration).GetContainingTypeMemberDeclaration();
+            }
+            
             if (!(declaration is IModifiersOwner))
             {
                 return false;
             }
-
-            AccessRights rights = getRights((IModifiersOwner)declaration, useEffectiveRights);
+            rights = getRights((IModifiersOwner)declaration, useEffectiveRights);
+            
             return AccessLevelMap.Map.ContainsKey(rights) && ((AccessLevelMap.Map[rights] & _accessLevel) != 0);
         }
 

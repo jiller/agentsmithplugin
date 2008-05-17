@@ -22,6 +22,7 @@ namespace AgentSmith.Options
         private string _identifierDictionary = "en-US";
         private string _defaultResXDictionary = "en-US";
         private string _lastSelectedCustomDictionary = "en-US";
+
         private Match[] _identifiersToSpellCheck;
         private Match[] _identifiersNotToSpellCheck;
 
@@ -30,7 +31,7 @@ namespace AgentSmith.Options
             _namingConventionSettings.LoadDefaults();
             _commentsSettings = new CommentsSettings();
             _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
-            _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any) };
+            _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
         }
 
 

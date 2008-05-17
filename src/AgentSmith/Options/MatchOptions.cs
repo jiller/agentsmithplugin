@@ -155,5 +155,27 @@ namespace AgentSmith.Options
 
             _cbIn.Enabled = _cbOut.Enabled = _cbRef.Enabled = description.Declaration == Declaration.Parameter;
         }
+
+        private void cbVisibility_ItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            AccessLevelDescription descr = (AccessLevelDescription)_cbVisibility.Items[e.Index];
+            if (e.NewValue == CheckState.Checked)
+            {
+                if (descr.AccessLevel == AccessLevels.Any)
+                {
+                    for (int i = 0; i < _cbVisibility.Items.Count; i++)
+                    {
+                        if (i != e.Index)
+                        {
+                            _cbVisibility.SetItemChecked(i, false);
+                        }
+                    }
+                }
+                else
+                {
+                    _cbVisibility.SetItemChecked(0, false);
+                }
+            }
+        }
     }
 }
