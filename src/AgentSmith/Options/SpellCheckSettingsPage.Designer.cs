@@ -51,7 +51,6 @@ namespace AgentSmith.Options
             this._lbResx = new System.Windows.Forms.Label();
             this._lbComments = new System.Windows.Forms.Label();
             this._cbResX = new System.Windows.Forms.ComboBox();
-            this._lsComments = new AgentSmith.Options.LanguageSelector();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this._btnImport = new System.Windows.Forms.Button();
@@ -59,10 +58,11 @@ namespace AgentSmith.Options
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this._cbDictionary = new System.Windows.Forms.ComboBox();
             this._lbDictionary = new System.Windows.Forms.Label();
-            this._mceDoNotSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
-            this._mceToSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this._mceDoNotSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this._mceToSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this._lsComments = new AgentSmith.Options.LanguageSelector();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -280,18 +280,6 @@ namespace AgentSmith.Options
             this._cbResX.Size = new System.Drawing.Size(110, 21);
             this._cbResX.TabIndex = 82;
             // 
-            // _lsComments
-            // 
-            this._lsComments.Dictionaries = null;
-            this._lsComments.Location = new System.Drawing.Point(87, 3);
-            this._lsComments.MinimumSize = new System.Drawing.Size(0, 22);
-            this._lsComments.Name = "_lsComments";
-            this._lsComments.SelectedDictionaries = new string[] {
-        ""};
-            this._lsComments.SelectedDictionariesString = "";
-            this._lsComments.Size = new System.Drawing.Size(110, 22);
-            this._lsComments.TabIndex = 78;
-            // 
             // tableLayoutPanel2
             // 
             this.tableLayoutPanel2.ColumnCount = 2;
@@ -378,26 +366,6 @@ namespace AgentSmith.Options
             this._lbDictionary.TabIndex = 9;
             this._lbDictionary.Text = "Language";
             // 
-            // _mceDoNotSpellCheck
-            // 
-            this._mceDoNotSpellCheck.AutoSize = true;
-            this._mceDoNotSpellCheck.Location = new System.Drawing.Point(292, 109);
-            this._mceDoNotSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
-            this._mceDoNotSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
-            this._mceDoNotSpellCheck.Name = "_mceDoNotSpellCheck";
-            this._mceDoNotSpellCheck.Size = new System.Drawing.Size(251, 113);
-            this._mceDoNotSpellCheck.TabIndex = 93;
-            // 
-            // _mceToSpellCheck
-            // 
-            this._mceToSpellCheck.AutoSize = true;
-            this._mceToSpellCheck.Location = new System.Drawing.Point(18, 109);
-            this._mceToSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
-            this._mceToSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
-            this._mceToSpellCheck.Name = "_mceToSpellCheck";
-            this._mceToSpellCheck.Size = new System.Drawing.Size(251, 113);
-            this._mceToSpellCheck.TabIndex = 92;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -415,6 +383,40 @@ namespace AgentSmith.Options
             this.label8.Size = new System.Drawing.Size(121, 13);
             this.label8.TabIndex = 90;
             this.label8.Text = "Identifiers to spell check";
+            // 
+            // _mceDoNotSpellCheck
+            // 
+            this._mceDoNotSpellCheck.AutoSize = true;
+            this._mceDoNotSpellCheck.EffectiveAccess = true;
+            this._mceDoNotSpellCheck.Location = new System.Drawing.Point(292, 109);
+            this._mceDoNotSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceDoNotSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceDoNotSpellCheck.Name = "_mceDoNotSpellCheck";
+            this._mceDoNotSpellCheck.Size = new System.Drawing.Size(251, 113);
+            this._mceDoNotSpellCheck.TabIndex = 93;
+            // 
+            // _mceToSpellCheck
+            // 
+            this._mceToSpellCheck.AutoSize = true;
+            this._mceToSpellCheck.EffectiveAccess = true;
+            this._mceToSpellCheck.Location = new System.Drawing.Point(18, 109);
+            this._mceToSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceToSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceToSpellCheck.Name = "_mceToSpellCheck";
+            this._mceToSpellCheck.Size = new System.Drawing.Size(251, 113);
+            this._mceToSpellCheck.TabIndex = 92;
+            // 
+            // _lsComments
+            // 
+            this._lsComments.Dictionaries = null;
+            this._lsComments.Location = new System.Drawing.Point(87, 3);
+            this._lsComments.MinimumSize = new System.Drawing.Size(0, 22);
+            this._lsComments.Name = "_lsComments";
+            this._lsComments.SelectedDictionaries = new string[] {
+        ""};
+            this._lsComments.SelectedDictionariesString = "";
+            this._lsComments.Size = new System.Drawing.Size(110, 22);
+            this._lsComments.TabIndex = 78;
             // 
             // SpellCheckSettingsPage
             // 

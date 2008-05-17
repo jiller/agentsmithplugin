@@ -32,13 +32,13 @@ namespace AgentSmith.Options
         {
             this._lbMustHaveComments = new System.Windows.Forms.Label();
             this._lbMustHaveCommentsExcept = new System.Windows.Forms.Label();
-            this._mceNotMatches = new AgentSmith.Options.MatchCollectionEdit();
-            this._mceMatches = new AgentSmith.Options.MatchCollectionEdit();
             this.label3 = new System.Windows.Forms.Label();
             this._lbPPS = new System.Windows.Forms.Label();
             this._lbPS = new System.Windows.Forms.Label();
             this._cbLookAtBase = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this._mceNotMatches = new AgentSmith.Options.MatchCollectionEdit();
+            this._mceMatches = new AgentSmith.Options.MatchCollectionEdit();
             this.SuspendLayout();
             // 
             // _lbMustHaveComments
@@ -58,26 +58,6 @@ namespace AgentSmith.Options
             this._lbMustHaveCommentsExcept.Size = new System.Drawing.Size(40, 13);
             this._lbMustHaveCommentsExcept.TabIndex = 10;
             this._lbMustHaveCommentsExcept.Text = "Except";
-            // 
-            // _mceNotMatches
-            // 
-            this._mceNotMatches.AutoSize = true;
-            this._mceNotMatches.Location = new System.Drawing.Point(289, 41);
-            this._mceNotMatches.Matches = new AgentSmith.MemberMatch.Match[0];
-            this._mceNotMatches.MinimumSize = new System.Drawing.Size(100, 0);
-            this._mceNotMatches.Name = "_mceNotMatches";
-            this._mceNotMatches.Size = new System.Drawing.Size(251, 113);
-            this._mceNotMatches.TabIndex = 60;
-            // 
-            // _mceMatches
-            // 
-            this._mceMatches.AutoSize = true;
-            this._mceMatches.Location = new System.Drawing.Point(15, 41);
-            this._mceMatches.Matches = new AgentSmith.MemberMatch.Match[0];
-            this._mceMatches.MinimumSize = new System.Drawing.Size(100, 0);
-            this._mceMatches.Name = "_mceMatches";
-            this._mceMatches.Size = new System.Drawing.Size(251, 113);
-            this._mceMatches.TabIndex = 59;
             // 
             // label3
             // 
@@ -127,6 +107,28 @@ namespace AgentSmith.Options
             this.label1.TabIndex = 67;
             this.label1.Text = "* These settings\' sharing as well as import/export are managed with ReSharper Cod" +
                 "e Style Sharing.";
+            // 
+            // _mceNotMatches
+            // 
+            this._mceNotMatches.AutoSize = true;
+            this._mceNotMatches.EffectiveAccess = true;
+            this._mceNotMatches.Location = new System.Drawing.Point(289, 41);
+            this._mceNotMatches.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceNotMatches.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceNotMatches.Name = "_mceNotMatches";
+            this._mceNotMatches.Size = new System.Drawing.Size(251, 113);
+            this._mceNotMatches.TabIndex = 60;
+            // 
+            // _mceMatches
+            // 
+            this._mceMatches.AutoSize = true;
+            this._mceMatches.EffectiveAccess = true;
+            this._mceMatches.Location = new System.Drawing.Point(15, 41);
+            this._mceMatches.Matches = new AgentSmith.MemberMatch.Match[0];
+            this._mceMatches.MinimumSize = new System.Drawing.Size(100, 0);
+            this._mceMatches.Name = "_mceMatches";
+            this._mceMatches.Size = new System.Drawing.Size(251, 113);
+            this._mceMatches.TabIndex = 59;
             // 
             // AgentSmithSettingsPage
             // 
