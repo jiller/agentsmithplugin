@@ -1,0 +1,37 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!-- Home folder for the PowerToys build site. -->
+		<AgentSmithHomeDir>$(MSBuildProjectDirectory)/..</AgentSmithHomeDir>
+		<!-- Binaries dir; redirect the build output by setting it externally. -->
+		<AgentSmithBinariesDir Condition="'$(AgentSmithBinariesDir)'==''">$(AgentSmithHomeDir)/Bin</AgentSmithBinariesDir>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		 
+		<!-- Name of the plugin product and of the plugin folder in the R# plugins store, as well. -->
+		<ProductName>Agent Smith</ProductName>
+		
+		<!-- Version of R# (two components only) that the plugin is targeting. -->
+		<ReSharperVersion2>3.1</ReSharperVersion2>
+		
+		<!-- Plugin vendor name. -->
+		<CompanyName>Sergey Zyuzin</CompanyName>
+		
+		<!-- Upgrade code for the plugin. -->
+		<!-- Should be unique for each of the plugins, but should not change within the plugin lifetime. All of the plugin versions should feature the same Upgrade Code. -->
+		<UpgradeCode>{7D3D3F32-C3FA-4037-A7BF-56479752AFEA}</UpgradeCode>
+		
+		<!-- Version of Visual Studio we're installing for. -->
+		<!-- Can be overridden on the command line when running the installation. -->
+		<VsVersion>8.0</VsVersion>
+
+		<!-- The plugin assembly file. -->
+		<AssemblyFile>$(AgentSmithBinariesDir)/AgentSmith.dll</AssemblyFile>
+
+		<!-- The GUIDs that must be unique for each of the plugins. -->
+		<MsiComponentGuid00>{EED9C53C-52FB-46f5-AA39-64B175E3F240}</MsiComponentGuid00>
+		<MsiComponentGuid01>{18FF5BB1-106E-4933-9CF6-40D382E4C322}</MsiComponentGuid01>
+	</PropertyGroup>
+
+	<Import Project="$(AgentSmithHomeDir)/Setup/AgentSmithSetup.Targets"/>
+</Project>
