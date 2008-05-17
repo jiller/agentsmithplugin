@@ -11,9 +11,6 @@ namespace AgentSmith.MemberMatch
 {
     public class Match
     {
-        private static readonly Dictionary<AccessRights, int> _accessRightsOrder =
-            new Dictionary<AccessRights, int>();
-
         private static readonly Dictionary<DeclaredElementType, Declaration> _declMap =
             new Dictionary<DeclaredElementType, Declaration>();
 
@@ -29,6 +26,7 @@ namespace AgentSmith.MemberMatch
         private ITypeElement _inheritedFromType;
         private ITypeElement _isOfTypeType;
         private ParamDirection _paramDirection = ParamDirection.Any;
+        private static readonly Dictionary<RightsPair, AccessRights> _rightsMap;
 
         static Match()
         {
@@ -48,13 +46,67 @@ namespace AgentSmith.MemberMatch
             _declMap.Add(CLRDeclaredElementType.PROPERTY, Declaration.Property);
             _declMap.Add(CLRDeclaredElementType.STRUCT, Declaration.Struct);
 
-            _accessRightsOrder.Add(AccessRights.PRIVATE, 1);
-            _accessRightsOrder.Add(AccessRights.PROTECTED, 2);
-            _accessRightsOrder.Add(AccessRights.INTERNAL, 2);
-            _accessRightsOrder.Add(AccessRights.PROTECTED_AND_INTERNAL, 2);
-            _accessRightsOrder.Add(AccessRights.PROTECTED_OR_INTERNAL, 2);
-            _accessRightsOrder.Add(AccessRights.PUBLIC, 3);
-            _accessRightsOrder.Add(AccessRights.NONE, 3);
+            _rightsMap = createRightsMap();
+        }
+
+        private struct RightsPair
+        {
+            public AccessRights Child;
+            public AccessRights Parent;            
+
+            public RightsPair(AccessRights child, AccessRights parent)
+            {
+                Child = child;
+                Parent = parent;                
+            }
+        }
+
+        private static Dictionary<RightsPair, AccessRights> createRightsMap()
+        {
+            Dictionary<RightsPair, AccessRights> map = new Dictionary<RightsPair, AccessRights>();
+            map.Add(new RightsPair(AccessRights.PUBLIC, AccessRights.PUBLIC), AccessRights.PUBLIC);
+            map.Add(new RightsPair(AccessRights.PUBLIC, AccessRights.INTERNAL), AccessRights.INTERNAL);
+            map.Add(new RightsPair(AccessRights.PUBLIC, AccessRights.PRIVATE), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PUBLIC, AccessRights.PROTECTED), AccessRights.PROTECTED);
+            map.Add(new RightsPair(AccessRights.PUBLIC, AccessRights.PROTECTED_AND_INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PUBLIC, AccessRights.PROTECTED_OR_INTERNAL), AccessRights.PROTECTED_OR_INTERNAL);
+
+            map.Add(new RightsPair(AccessRights.INTERNAL, AccessRights.PUBLIC), AccessRights.INTERNAL);
+            map.Add(new RightsPair(AccessRights.INTERNAL, AccessRights.INTERNAL), AccessRights.INTERNAL);
+            map.Add(new RightsPair(AccessRights.INTERNAL, AccessRights.PRIVATE), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.INTERNAL, AccessRights.PROTECTED), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.INTERNAL, AccessRights.PROTECTED_AND_INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.INTERNAL, AccessRights.PROTECTED_OR_INTERNAL), AccessRights.INTERNAL);
+
+            map.Add(new RightsPair(AccessRights.PRIVATE, AccessRights.PUBLIC), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PRIVATE, AccessRights.INTERNAL), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PRIVATE, AccessRights.PRIVATE), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PRIVATE, AccessRights.PROTECTED), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PRIVATE, AccessRights.PROTECTED_AND_INTERNAL), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PRIVATE, AccessRights.PROTECTED_OR_INTERNAL), AccessRights.PRIVATE);
+
+            map.Add(new RightsPair(AccessRights.PROTECTED, AccessRights.PUBLIC), AccessRights.PROTECTED);
+            map.Add(new RightsPair(AccessRights.PROTECTED, AccessRights.INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED, AccessRights.PRIVATE), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PROTECTED, AccessRights.PROTECTED), AccessRights.PROTECTED);
+            map.Add(new RightsPair(AccessRights.PROTECTED, AccessRights.PROTECTED_AND_INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED, AccessRights.PROTECTED_OR_INTERNAL), AccessRights.PROTECTED);
+
+            map.Add(new RightsPair(AccessRights.PROTECTED_AND_INTERNAL, AccessRights.PUBLIC), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_AND_INTERNAL, AccessRights.INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_AND_INTERNAL, AccessRights.PRIVATE), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PROTECTED_AND_INTERNAL, AccessRights.PROTECTED), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_AND_INTERNAL, AccessRights.PROTECTED_AND_INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_AND_INTERNAL, AccessRights.PROTECTED_OR_INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+
+            map.Add(new RightsPair(AccessRights.PROTECTED_OR_INTERNAL, AccessRights.PUBLIC), AccessRights.PROTECTED_OR_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_OR_INTERNAL, AccessRights.INTERNAL), AccessRights.PROTECTED_OR_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_OR_INTERNAL, AccessRights.PRIVATE), AccessRights.PRIVATE);
+            map.Add(new RightsPair(AccessRights.PROTECTED_OR_INTERNAL, AccessRights.PROTECTED), AccessRights.PROTECTED);
+            map.Add(new RightsPair(AccessRights.PROTECTED_OR_INTERNAL, AccessRights.PROTECTED_AND_INTERNAL), AccessRights.PROTECTED_AND_INTERNAL);
+            map.Add(new RightsPair(AccessRights.PROTECTED_OR_INTERNAL, AccessRights.PROTECTED_OR_INTERNAL), AccessRights.PROTECTED_OR_INTERNAL);
+
+            return map;
         }
 
         public Match()
@@ -373,12 +425,12 @@ namespace AgentSmith.MemberMatch
             while (owner != null)
             {
                 AccessRights ownerRights = owner.GetAccessRights();
-                if (_accessRightsOrder.ContainsKey(ownerRights) &&
-                    _accessRightsOrder.ContainsKey(effectiveRights) &&
-                    _accessRightsOrder[ownerRights] < _accessRightsOrder[effectiveRights])
+                AccessRights newEffectiveRights;
+                if (_rightsMap.TryGetValue(new RightsPair(effectiveRights, ownerRights), out newEffectiveRights))
                 {
-                    effectiveRights = ownerRights;
+                    effectiveRights = newEffectiveRights;
                 }
+                
                 owner = ((IClassMemberDeclaration)owner).GetContainingTypeDeclaration();
             }
 
