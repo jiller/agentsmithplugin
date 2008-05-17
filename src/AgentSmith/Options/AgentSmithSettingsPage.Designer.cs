@@ -62,6 +62,7 @@ namespace AgentSmith.Options
             // _mceNotMatches
             // 
             this._mceNotMatches.AutoSize = true;
+            this._mceNotMatches.EffectiveAccess = true;
             this._mceNotMatches.Location = new System.Drawing.Point(289, 41);
             this._mceNotMatches.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceNotMatches.MinimumSize = new System.Drawing.Size(100, 0);
@@ -72,6 +73,7 @@ namespace AgentSmith.Options
             // _mceMatches
             // 
             this._mceMatches.AutoSize = true;
+            this._mceMatches.EffectiveAccess = true;
             this._mceMatches.Location = new System.Drawing.Point(15, 41);
             this._mceMatches.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceMatches.MinimumSize = new System.Drawing.Size(100, 0);

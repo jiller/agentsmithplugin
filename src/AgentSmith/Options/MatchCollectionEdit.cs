@@ -8,6 +8,7 @@ namespace AgentSmith.Options
     public partial class MatchCollectionEdit : UserControl
     {
         private List<Match> _matches = new List<Match>();
+        private bool _effectiveAccess;
 
         public MatchCollectionEdit()
         {
@@ -48,18 +49,24 @@ namespace AgentSmith.Options
             if (_lvMatches.SelectedItems.Count == 1)
             {
                 Match match = (Match) _lvMatches.SelectedItems[0].Tag;
-                if (new MatchOptions(match).ShowDialog() == DialogResult.OK)
+                if (new MatchOptions(match, EffectiveAccess).ShowDialog() == DialogResult.OK)
                 {
                     _lvMatches.SelectedItems[0].Text = match.ToString();
                 }
             }
         }
 
+        public bool EffectiveAccess
+        {
+            get { return _effectiveAccess; }
+            set { _effectiveAccess = value;}
+        }
+
         private void btnAdd_Click(object sender, EventArgs e)
         {
             Match newMatch = new Match();
 
-            if (new MatchOptions(newMatch).ShowDialog() == DialogResult.OK)
+            if (new MatchOptions(newMatch, EffectiveAccess).ShowDialog() == DialogResult.OK)
             {
                 _matches.Add(newMatch);
 
