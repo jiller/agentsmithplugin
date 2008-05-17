@@ -381,6 +381,7 @@ namespace AgentSmith.Options
             // _mceDoNotSpellCheck
             // 
             this._mceDoNotSpellCheck.AutoSize = true;
+            this._mceDoNotSpellCheck.EffectiveAccess = true;
             this._mceDoNotSpellCheck.Location = new System.Drawing.Point(292, 109);
             this._mceDoNotSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceDoNotSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
@@ -391,6 +392,7 @@ namespace AgentSmith.Options
             // _mceToSpellCheck
             // 
             this._mceToSpellCheck.AutoSize = true;
+            this._mceToSpellCheck.EffectiveAccess = true;
             this._mceToSpellCheck.Location = new System.Drawing.Point(18, 109);
             this._mceToSpellCheck.Matches = new AgentSmith.MemberMatch.Match[0];
             this._mceToSpellCheck.MinimumSize = new System.Drawing.Size(100, 0);
