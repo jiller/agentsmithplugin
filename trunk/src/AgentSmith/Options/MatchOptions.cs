@@ -27,16 +27,21 @@ namespace AgentSmith.Options
                 AccessLevelDescription.Descriptions;
             foreach (AccessLevelDescription descr in visibilityDescriptions.Values)
             {
+                ListViewItem item = new ListViewItem(descr.Name);
+                item.ToolTipText = descr.Description;
+                item.Tag = descr;
+
                 if (_match.AccessLevel == AccessLevels.Any)
-                {
-                    _cbVisibility.Items.Add(descr, descr.AccessLevel == AccessLevels.Any);
+                {                    
+                    item.Checked = descr.AccessLevel == AccessLevels.Any;                    
                 }
                 else
-                {
-                    _cbVisibility.Items.Add(descr,
-                                            (descr.AccessLevel & _match.AccessLevel) != 0 &&
-                                            descr.AccessLevel != AccessLevels.Any);
+                {                    
+                    item.Checked = (descr.AccessLevel & _match.AccessLevel) != 0 &&
+                                   descr.AccessLevel != AccessLevels.Any;                
                 }
+                
+                _lvVisibility.Items.Add(item);                                            
             }
 
             _lbMember.SelectedItem = DeclarationDescription.DeclDescriptions[_match.Declaration];
@@ -95,9 +100,9 @@ namespace AgentSmith.Options
             if (decl.HasAccessLevel)
             {
                 _match.AccessLevel = AccessLevels.None;
-                foreach (AccessLevelDescription descr in _cbVisibility.CheckedItems)
+                foreach (ListViewItem descr in _lvVisibility.CheckedItems)
                 {
-                    _match.AccessLevel |= descr.AccessLevel;
+                    _match.AccessLevel |= ((AccessLevelDescription)descr.Tag).AccessLevel;
                 }
             }
 
@@ -147,7 +152,7 @@ namespace AgentSmith.Options
         private void lbMember_SelectedIndexChanged(object sender, EventArgs e)
         {
             DeclarationDescription description = (DeclarationDescription) _lbMember.SelectedItem;
-            _cbVisibility.Enabled = description.HasAccessLevel;
+            _lvVisibility.Enabled = description.HasAccessLevel;
             _tbInheritedFrom.Enabled = description.CanInherit || description.OwnsType;
             _tbMarkedWithAttribute.Enabled = description.CanBeMarkedWithAttribute;
             _cbReadonly.Enabled = description.CanBeReadonly;
@@ -156,26 +161,26 @@ namespace AgentSmith.Options
             _cbIn.Enabled = _cbOut.Enabled = _cbRef.Enabled = description.Declaration == Declaration.Parameter;
         }
 
-        private void cbVisibility_ItemCheck(object sender, ItemCheckEventArgs e)
+        private void lvVisibility_ItemCheck(object sender, ItemCheckEventArgs e)
         {
-            AccessLevelDescription descr = (AccessLevelDescription)_cbVisibility.Items[e.Index];
+            AccessLevelDescription descr = (AccessLevelDescription)_lvVisibility.Items[e.Index].Tag;
             if (e.NewValue == CheckState.Checked)
             {
                 if (descr.AccessLevel == AccessLevels.Any)
                 {
-                    for (int i = 0; i < _cbVisibility.Items.Count; i++)
+                    for (int i = 0; i < _lvVisibility.Items.Count; i++)
                     {
                         if (i != e.Index)
                         {
-                            _cbVisibility.SetItemChecked(i, false);
+                            _lvVisibility.Items[i].Checked = false;
                         }
                     }
                 }
                 else
                 {
-                    _cbVisibility.SetItemChecked(0, false);
+                    _lvVisibility.Items[0].Checked = false;
                 }
             }
-        }
+        }                
     }
 }

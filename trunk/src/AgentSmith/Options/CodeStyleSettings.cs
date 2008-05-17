@@ -30,8 +30,8 @@ namespace AgentSmith.Options
         {
             _namingConventionSettings.LoadDefaults();
             _commentsSettings = new CommentsSettings();
-            _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
-            _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
+            _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal), };
+            _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal) };
         }
 
 

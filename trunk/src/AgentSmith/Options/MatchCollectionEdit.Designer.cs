@@ -50,7 +50,7 @@ namespace AgentSmith.Options
             this._lvMatches.Size = new System.Drawing.Size(152, 150);
             this._lvMatches.TabIndex = 56;
             this._lvMatches.UseCompatibleStateImageBehavior = false;
-            this._lvMatches.View = System.Windows.Forms.View.Details;
+            this._lvMatches.View = System.Windows.Forms.View.Details;            
             this._lvMatches.DoubleClick += new System.EventHandler(this.lvMatches_DoubleClick);
             this._lvMatches.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvMatches_KeyDown);
             // 
@@ -107,7 +107,7 @@ namespace AgentSmith.Options
             this.MinimumSize = new System.Drawing.Size(100, 0);
             this.Name = "MatchCollectionEdit";
             this.Size = new System.Drawing.Size(199, 155);
-            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.matchCollectionEdit_Layout);            
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.matchCollectionEdit_Layout);
             this.ResumeLayout(false);
             this.PerformLayout();
 
