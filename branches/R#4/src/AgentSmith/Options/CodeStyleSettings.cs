@@ -23,11 +23,15 @@ namespace AgentSmith.Options
         private string _defaultResXDictionary = "en-US";
         private string _lastSelectedCustomDictionary = "en-US";
 
+        private Match[] _identifiersToSpellCheck;
+        private Match[] _identifiersNotToSpellCheck;
+
         public CodeStyleSettings()
         {
             _namingConventionSettings.LoadDefaults();
             _commentsSettings = new CommentsSettings();
-            _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public) };
+            _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal), };
+            _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal) };
         }
 
 
@@ -73,6 +77,18 @@ namespace AgentSmith.Options
             set { _namingConventionSettings = value; }
         }
 
+        public Match[] IdentifiersToSpellCheck
+        {
+            get { return _identifiersToSpellCheck; }
+            set { _identifiersToSpellCheck = value; }
+        }
+
+        public Match[] IdentifiersNotToSpellCheck
+        {
+            get { return _identifiersNotToSpellCheck; }
+            set { _identifiersNotToSpellCheck = value; }
+        }
+
         public static CodeStyleSettings GetInstance(ISolution solution)
         {
             JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = Shell.Instance.IsTestShell ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
@@ -114,6 +130,8 @@ namespace AgentSmith.Options
                     _defaultResXDictionary = settings._defaultResXDictionary;
                     _identifierDictionary = settings._identifierDictionary;                    
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
+                    _identifiersToSpellCheck = settings._identifiersToSpellCheck;
+                    _identifiersNotToSpellCheck = settings._identifiersNotToSpellCheck;
                 }
                 catch (Exception ex)
                 {

@@ -85,14 +85,14 @@ namespace AgentSmith.Options
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.label3.Location = new System.Drawing.Point(12, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(149, 13);
+            this.label3.Size = new System.Drawing.Size(151, 13);
             this.label3.TabIndex = 63;
-            this.label3.Text = "XML comment validation.";
+            this.label3.Text = "XML Comment Validation.";
             // 
             // _lbPPS
             // 
             this._lbPPS.AutoSize = true;
-            this._lbPPS.Location = new System.Drawing.Point(12, 199);
+            this._lbPPS.Location = new System.Drawing.Point(12, 196);
             this._lbPPS.Name = "_lbPPS";
             this._lbPPS.Size = new System.Drawing.Size(409, 13);
             this._lbPPS.TabIndex = 64;
@@ -102,7 +102,7 @@ namespace AgentSmith.Options
             // _lbPS
             // 
             this._lbPS.AutoSize = true;
-            this._lbPS.Location = new System.Drawing.Point(15, 216);
+            this._lbPS.Location = new System.Drawing.Point(12, 238);
             this._lbPS.Name = "_lbPS";
             this._lbPS.Size = new System.Drawing.Size(289, 13);
             this._lbPS.TabIndex = 65;
@@ -121,7 +121,7 @@ namespace AgentSmith.Options
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 245);
+            this.label1.Location = new System.Drawing.Point(12, 225);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(473, 13);
             this.label1.TabIndex = 67;

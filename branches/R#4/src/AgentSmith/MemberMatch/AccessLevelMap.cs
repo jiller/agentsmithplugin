@@ -14,7 +14,7 @@ namespace AgentSmith.MemberMatch
             _rightsMap.Add(AccessRights.INTERNAL, AccessLevels.Internal);
             _rightsMap.Add(AccessRights.PRIVATE, AccessLevels.Private);
             _rightsMap.Add(AccessRights.PROTECTED, AccessLevels.Protected);
-            _rightsMap.Add(AccessRights.PROTECTED_AND_INTERNAL, AccessLevels.ProtectedInternal);
+            _rightsMap.Add(AccessRights.PROTECTED_AND_INTERNAL, AccessLevels.ProtectedAndInternal);
             _rightsMap.Add(AccessRights.PROTECTED_OR_INTERNAL, AccessLevels.ProtectedInternal);
             _rightsMap.Add(AccessRights.PUBLIC, AccessLevels.Public);
             _rightsMap.Add(AccessRights.NONE, AccessLevels.Public);

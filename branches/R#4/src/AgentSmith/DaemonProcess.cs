@@ -19,9 +19,13 @@ namespace AgentSmith
     public class DaemonProcess : ElementVisitor, IDaemonStageProcess, IRecursiveElementProcessor
     {
         private readonly IDeclarationAnalyzer[] _analyzers;
+
+        private readonly GeneratedCodeRegionDetector _generatedCodeRegionDetector =
+            new GeneratedCodeRegionDetector();
+
         private readonly List<HighlightingInfo> _highlightings = new List<HighlightingInfo>();
         private readonly IDaemonProcess _process;
-        private CodeStyleSettings _styleSettings;
+        private readonly CodeStyleSettings _styleSettings;
 
         public DaemonProcess(IDaemonProcess daemonProcess)
         {
@@ -38,7 +42,8 @@ namespace AgentSmith
                     {
                         new NamingConventionsAnalyzer(_styleSettings.NamingConventionSettings, _process.Solution),
                         new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution),
-                        new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution)
+                        new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution,
+                                                         _styleSettings)
                     };
             }
         }
@@ -63,12 +68,18 @@ namespace AgentSmith
 
         public void ProcessBeforeInterior(IElement element)
         {
+            _generatedCodeRegionDetector.Process(element);
+            if (_generatedCodeRegionDetector.InGeneratedCode)
+            {
+                return;
+            }
             if (StringSpellCheckSuggestion.Enabled && element is ITokenNode && _styleSettings != null)
             {
                 ITokenNode token = (ITokenNode) element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
                 {
-                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, _styleSettings.StringsDictionary);
+                    ISpellChecker spellChecker =
+                        SpellCheckManager.GetSpellChecker(_process.Solution, _styleSettings.StringsDictionary);
 
                     IList<SuggestionBase> suggestions =
                         StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
