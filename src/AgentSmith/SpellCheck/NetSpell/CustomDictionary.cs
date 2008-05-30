@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace AgentSmith.SpellCheck.NetSpell
 {
@@ -46,11 +47,12 @@ namespace AgentSmith.SpellCheck.NetSpell
         {
             get
             {
-                return Convert.ToBase64String(Encoding.Unicode.GetBytes(_userWords));
+                return _decodedWords == null ? "" : Convert.ToBase64String(Encoding.Unicode.GetBytes(_decodedWords));
             }
             set
             {
                 _userWords = value;
+                _decodedWords = null;
                 _version++;
             }
         }
