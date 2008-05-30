@@ -73,12 +73,12 @@ namespace AgentSmith.SpellCheck.NetSpell
             {
                 _customDictionaryVersion = _customDictionary.Version;
                 _userWords.Clear();
-                if (_customDictionary.UserWords != null)
+                if (_customDictionary.DecodedUserWords != null)
                 {
                     string[] words = _customDictionary.CaseSensitive
-                                         ? _customDictionary.UserWords.Split('\n')
+                                         ? _customDictionary.DecodedUserWords.Split('\n')
                                          :
-                                             _customDictionary.UserWords.ToLower().Split('\n');
+                                             _customDictionary.DecodedUserWords.ToLower().Split('\n');
                     _userWords.AddAll(words);
                 }
             }
