@@ -180,6 +180,7 @@
     <Compile Include="Options\LanguageSelector.Designer.cs">
       <DependentUpon>LanguageSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Options\ResharperSettingsImporter.cs" />
     <Compile Include="Options\SpellCheckSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
