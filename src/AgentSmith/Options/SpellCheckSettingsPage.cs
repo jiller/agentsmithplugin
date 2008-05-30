@@ -61,9 +61,8 @@ namespace AgentSmith.Options
         {
             saveCustomDictionary();
             Settings.CommentsSettings.DictionaryName = _lsComments.SelectedDictionariesString;
-            Settings.StringsDictionary = _cbStrings.SelectedItem.ToString();
-            Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();
-            Settings.DefaultResXDictionary = _cbResX.SelectedItem.ToString();
+            Settings.StringsDictionary = _lsStrings.SelectedDictionariesString;
+            Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();            
             Settings.LastSelectedCustomDictionary = _cbDictionary.SelectedItem.ToString();
 
             Settings.IdentifiersToSpellCheck = _mceToSpellCheck.Matches;
@@ -94,7 +93,7 @@ namespace AgentSmith.Options
             
             if (_currentCustomDictionary != null)
             {
-                _currentCustomDictionary.UserWords = sb.ToString();
+                _currentCustomDictionary.DecodedUserWords = sb.ToString();
                 _currentCustomDictionary.CaseSensitive = _cbCaseSensitive.Checked;
             }
         }
@@ -108,9 +107,8 @@ namespace AgentSmith.Options
              //   _cbDictionary.SelectedItem = _cbDictionary.Items[0];
             //}
             _lsComments.SelectedDictionariesString = Settings.CommentsSettings.DictionaryName;
-            _cbStrings.SelectedItem = Settings.StringsDictionary;
-            _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;
-            _cbResX.SelectedItem = Settings.DefaultResXDictionary;
+            _lsStrings.SelectedDictionariesString = Settings.StringsDictionary;
+            _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;            
             _cbDictionary.SelectedItem = Settings.LastSelectedCustomDictionary;
 
             _mceToSpellCheck.Matches = Settings.IdentifiersToSpellCheck;
@@ -121,9 +119,7 @@ namespace AgentSmith.Options
         {
             ComboBox[] cbs = new ComboBox[]
                 {
-                    _cbResX,
-                    _cbIdentifiers,
-                    _cbStrings,
+                    _cbIdentifiers,                    
                     _cbDictionary
                 };
 
@@ -136,6 +132,7 @@ namespace AgentSmith.Options
             }
             
             _lsComments.Dictionaries = dicts.ToArray();
+            _lsStrings.Dictionaries = dicts.ToArray();
         }
 
         private List<string> loadDictionaries()
@@ -172,7 +169,7 @@ namespace AgentSmith.Options
 
                 string dictName = _cbDictionary.SelectedItem.ToString();
                 _currentCustomDictionary = Settings.CustomDictionaries.GetOrCreateCustomDictionary(dictName);
-                _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
+                _tbUserDictionary.Lines = _currentCustomDictionary.DecodedUserWords.Split('\n');
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
         }        

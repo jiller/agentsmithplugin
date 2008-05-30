@@ -19,8 +19,7 @@ namespace AgentSmith.Options
         
         private CustomDictionaries _customDictionaries = new CustomDictionaries();
         private string _stringsDictionary = "en-US";        
-        private string _identifierDictionary = "en-US";
-        private string _defaultResXDictionary = "en-US";
+        private string _identifierDictionary = "en-US";        
         private string _lastSelectedCustomDictionary = "en-US";
 
         private Match[] _identifiersToSpellCheck;
@@ -57,12 +56,6 @@ namespace AgentSmith.Options
         {
             get { return _lastSelectedCustomDictionary; }
             set { _lastSelectedCustomDictionary = value; }
-        }
-
-        public string DefaultResXDictionary
-        {
-            get { return _defaultResXDictionary; }
-            set { _defaultResXDictionary = value; }
         }
 
         public CommentsSettings CommentsSettings
@@ -127,7 +120,6 @@ namespace AgentSmith.Options
                     _commentsSettings = settings.CommentsSettings;
                     _customDictionaries = settings._customDictionaries;
                     _stringsDictionary = settings._stringsDictionary;
-                    _defaultResXDictionary = settings._defaultResXDictionary;
                     _identifierDictionary = settings._identifierDictionary;
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                     _identifiersToSpellCheck = settings._identifiersToSpellCheck;

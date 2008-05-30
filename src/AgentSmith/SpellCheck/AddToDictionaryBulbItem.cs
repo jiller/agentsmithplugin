@@ -24,12 +24,12 @@ namespace AgentSmith.SpellCheck
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            string words = _customDictionary.UserWords.Trim();
+            string words = _customDictionary.DecodedUserWords.Trim();
             if (words.Length > 0)
             {
-                _customDictionary.UserWords = words + "\n";
+                _customDictionary.DecodedUserWords = words + "\n";
             }
-            _customDictionary.UserWords += _word;
+            _customDictionary.DecodedUserWords += _word;
 
             Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);
         }
