@@ -110,8 +110,14 @@ namespace AgentSmith.SpellCheck
             string path = getDictPath(name);
             if (!File.Exists(path))
             {
-                return null;
-            }
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                 String.Format("Agent Smith\\dic\\{0}.dic", name));
+                if (!File.Exists(path))
+                {
+                    return null;
+                }               
+            }            
+            
             try
             {
                 using (TextReader reader = File.OpenText(path))

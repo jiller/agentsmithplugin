@@ -1,11 +1,12 @@
 using System;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using AgentSmith.MemberMatch;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CodeStyle;
-using JetBrains.Shell;
+using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
 using JetBrains.Util;
 
 namespace AgentSmith.Options
@@ -24,6 +25,7 @@ namespace AgentSmith.Options
 
         private Match[] _identifiersToSpellCheck;
         private Match[] _identifiersNotToSpellCheck;
+        private bool _isJustImported;
 
         public CodeStyleSettings()
         {
@@ -31,6 +33,7 @@ namespace AgentSmith.Options
             _commentsSettings = new CommentsSettings();
             _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal), };
             _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal) };
+            _isJustImported = true;
         }
 
 
@@ -82,10 +85,31 @@ namespace AgentSmith.Options
             set { _identifiersNotToSpellCheck = value; }
         }
 
+        [XmlIgnore]
+        public bool IsJustImported
+        {
+            get { return _isJustImported; }
+            set { _isJustImported = false;}
+        }
+
         public static CodeStyleSettings GetInstance(ISolution solution)
         {
-            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = Shell.Instance.IsTestShell ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
-            return settings.Get<CodeStyleSettings>();
+            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = solution == null ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
+            CodeStyleSettings codeSettings = settings.Get<CodeStyleSettings>();
+            if (codeSettings != null)
+            {                
+                DefaultNamingStyleSettings namingSettings =
+                    CodeStyleSettingsManager.Instance.CodeStyleSettings.GetNamingSettings();
+                if (codeSettings.IsJustImported && ResharperSettingsImporter.ReSharperSettingsConfigured(namingSettings) &&
+                    MessageBox.Show("Agent Smith detected that you had configured naming settings in R#.\n Would you like to import them as Agent Smith naming convention rules?", "Agent Smith", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    codeSettings.NamingConventionSettings.Rules =
+                        ResharperSettingsImporter.GetRules(codeSettings.NamingConventionSettings.Rules, namingSettings);
+                    codeSettings.IsJustImported = false;
+                }
+            }
+
+            return codeSettings;
         }
 
         #region IXmlExternalizable implementation
@@ -124,6 +148,7 @@ namespace AgentSmith.Options
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                     _identifiersToSpellCheck = settings._identifiersToSpellCheck;
                     _identifiersNotToSpellCheck = settings._identifiersNotToSpellCheck;
+                    _isJustImported = false;
                 }
                 catch (Exception ex)
                 {
