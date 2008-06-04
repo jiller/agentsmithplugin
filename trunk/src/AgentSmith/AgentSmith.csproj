@@ -188,6 +188,7 @@
       <DependentUpon>SpellCheckSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Options\CustomDictionaries.cs" />
+    <Compile Include="SkipSpellCheckRegionDetector.cs" />
     <Compile Include="SpellCheck\NetSpell\CustomDictionary.cs" />
     <Compile Include="SpellCheck\CamelHumpLexer.cs" />
     <Compile Include="Comments\SurroundWithMetatagsQuickFix.cs" />
