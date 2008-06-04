@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using AgentSmith.NamingConventions;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
+using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
 using JetBrains.UI.Options;
 
 namespace AgentSmith.Options
@@ -170,6 +171,24 @@ namespace AgentSmith.Options
             {
                 removeItem(_lvRules.SelectedItems[0]);
             }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings codeStyleSettings =
+                ((CodeStyleSharingPage) _optionsDialog.GetPage("CodeStyleSharing")).CodeStyleSettings;
+            if (codeStyleSettings == null ||
+                !ResharperSettingsImporter.ReSharperSettingsConfigured(codeStyleSettings.GetNamingSettings()))
+            {
+                MessageBox.Show("ReSharper naming settings are not configured.");
+                return;
+            }
+
+            Settings.NamingConventionSettings.Rules =
+                ResharperSettingsImporter.GetRules(Settings.NamingConventionSettings.Rules,
+                                                   codeStyleSettings.GetNamingSettings());
+
+            bindView();
         }
 
         private void lvRules_ItemChecked(object sender, ItemCheckedEventArgs e)

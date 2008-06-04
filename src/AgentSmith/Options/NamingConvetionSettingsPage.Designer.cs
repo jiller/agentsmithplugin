@@ -40,13 +40,15 @@ namespace AgentSmith.Options
             this._btnDown = new System.Windows.Forms.Button();
             this._btnEdit = new System.Windows.Forms.Button();
             this._btnDelete = new System.Windows.Forms.Button();
+            this._btnImport = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // _sceExclusions
             // 
-            this._sceExclusions.Location = new System.Drawing.Point(13, 343);
+            this._sceExclusions.Location = new System.Drawing.Point(13, 377);
             this._sceExclusions.Name = "_sceExclusions";
             this._sceExclusions.Size = new System.Drawing.Size(438, 96);
             this._sceExclusions.Strings = new string[0];
@@ -55,7 +57,7 @@ namespace AgentSmith.Options
             // _lbExclusions
             // 
             this._lbExclusions.AutoSize = true;
-            this._lbExclusions.Location = new System.Drawing.Point(10, 327);
+            this._lbExclusions.Location = new System.Drawing.Point(10, 361);
             this._lbExclusions.Name = "_lbExclusions";
             this._lbExclusions.Size = new System.Drawing.Size(217, 13);
             this._lbExclusions.TabIndex = 31;
@@ -77,7 +79,7 @@ namespace AgentSmith.Options
             this._lvRules.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.lvRules_ItemChecked);
             this._lvRules.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvRules_KeyDown);
             // 
-            // Description
+            // _chDescription
             // 
             this._chDescription.Text = "Description";
             this._chDescription.Width = 370;
@@ -88,7 +90,7 @@ namespace AgentSmith.Options
             this._btnAdd.Name = "_btnAdd";
             this._btnAdd.Size = new System.Drawing.Size(75, 23);
             this._btnAdd.TabIndex = 33;
-            this._btnAdd.Text = "Add";
+            this._btnAdd.Text = "Add...";
             this._btnAdd.UseVisualStyleBackColor = true;
             this._btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -127,7 +129,7 @@ namespace AgentSmith.Options
             this._btnEdit.Name = "_btnEdit";
             this._btnEdit.Size = new System.Drawing.Size(75, 23);
             this._btnEdit.TabIndex = 37;
-            this._btnEdit.Text = "Edit";
+            this._btnEdit.Text = "Edit...";
             this._btnEdit.UseVisualStyleBackColor = true;
             this._btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
@@ -137,14 +139,24 @@ namespace AgentSmith.Options
             this._btnDelete.Name = "_btnDelete";
             this._btnDelete.Size = new System.Drawing.Size(75, 23);
             this._btnDelete.TabIndex = 38;
-            this._btnDelete.Text = "Delete";
+            this._btnDelete.Text = "Delete...";
             this._btnDelete.UseVisualStyleBackColor = true;
             this._btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // _btnImport
+            // 
+            this._btnImport.Location = new System.Drawing.Point(197, 316);
+            this._btnImport.Name = "_btnImport";
+            this._btnImport.Size = new System.Drawing.Size(75, 23);
+            this._btnImport.TabIndex = 38;
+            this._btnImport.Text = "Import...";
+            this._btnImport.UseVisualStyleBackColor = true;
+            this._btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(16, 479);
+            this.label5.Location = new System.Drawing.Point(16, 513);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(289, 13);
             this.label5.TabIndex = 67;
@@ -153,18 +165,30 @@ namespace AgentSmith.Options
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 462);
+            this.label4.Location = new System.Drawing.Point(13, 496);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(431, 13);
             this.label4.TabIndex = 66;
             this.label4.Text = "* To enable/disable naming convention validation please go to the Inspection Seve" +
                 "rity tab";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(10, 321);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(181, 13);
+            this.label1.TabIndex = 68;
+            this.label1.Text = "Import ReSharper naming rules";
+            // 
             // NamingConventionsSettingsPage
             // 
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this._btnDelete);
+            this.Controls.Add(this._btnImport);
             this.Controls.Add(this._btnEdit);
             this.Controls.Add(this._btnDown);
             this.Controls.Add(this._btnUp);
@@ -187,6 +211,7 @@ namespace AgentSmith.Options
         private System.Windows.Forms.ListView _lvRules;
         private System.Windows.Forms.ColumnHeader _chDescription;
         private System.Windows.Forms.Button _btnAdd;
+        private System.Windows.Forms.Button _btnImport;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button _btnUp;
         private System.Windows.Forms.Button _btnDown;
@@ -194,5 +219,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Button _btnDelete;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label1;
     }
 }

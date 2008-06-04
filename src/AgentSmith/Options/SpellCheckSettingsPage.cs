@@ -138,7 +138,13 @@ namespace AgentSmith.Options
         private List<string> loadDictionaries()
         {
             List<string> list = new List<string>();
-            string dicDirectory = getDicDirectory();
+            string dicDirectory = getUserDicDirectory();
+            foreach (string file in Directory.GetFiles(dicDirectory))
+            {
+                list.Add(Path.GetFileNameWithoutExtension(file));
+            }
+            
+            dicDirectory = getDefaultDicDirectory();
             foreach (string file in Directory.GetFiles(dicDirectory))
             {
                 list.Add(Path.GetFileNameWithoutExtension(file));
@@ -146,7 +152,13 @@ namespace AgentSmith.Options
             return list;
         }
 
-        private string getDicDirectory()
+        private string getUserDicDirectory()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                "Agent Smith\\dic");            
+        }
+
+        private string getDefaultDicDirectory()
         {
             string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             return Path.Combine(assemblyDir, "dic");
@@ -154,7 +166,7 @@ namespace AgentSmith.Options
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            ImportOpenOfficeDictionary frm = new ImportOpenOfficeDictionary(getDicDirectory());
+            ImportOpenOfficeDictionary frm = new ImportOpenOfficeDictionary(getUserDicDirectory());
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 bindDictionaries(loadDictionaries());

@@ -4,23 +4,29 @@ using System.Text;
 using System.Windows.Forms;
 using AgentSmith.MemberMatch;
 using AgentSmith.NamingConventions;
-using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
-using JetBrains.Shell;
 
 namespace AgentSmith.Options
 {
     internal class ResharperSettingsImporter
     {
-        public static NamingConventionRule[] GetRules(NamingConventionRule[] existingRules, ISolution solution)
+        public static bool ReSharperSettingsConfigured(DefaultNamingStyleSettings namingSettings)
         {
-            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = Shell.Instance.IsTestShell ?
-                                             CodeStyleSettingsManager.Instance.CodeStyleSettings :
-                                             SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
+            return namingSettings != null && (
+                                                 isConfigured(namingSettings.FieldNameSettings) ||
+                                                 isConfigured(namingSettings.StaticFieldNameSettings) ||
+                                                 isConfigured(namingSettings.ParameterNameSettings) ||
+                                                 isConfigured(namingSettings.LocalVariableNameSettings));
+        }
 
-            DefaultNamingStyleSettings namingSettings = settings.GetNamingSettings();
+        private static bool isConfigured(NameSettings settings)
+        {
+            return settings.Prefix != null && !string.IsNullOrEmpty(settings.Prefix.Trim()) ||
+                   settings.Suffix != null && !string.IsNullOrEmpty(settings.Suffix.Trim());
+        }
 
+        public static NamingConventionRule[] GetRules(NamingConventionRule[] existingRules, DefaultNamingStyleSettings namingSettings)
+        {
             Match staticField = new Match(Declaration.Field);
             staticField.IsStatic = FuzzyBool.True;
 
@@ -34,8 +40,8 @@ namespace AgentSmith.Options
             NamingConventionRule staticFieldsRule = new NamingConventionRule();
             staticFieldsRule.Matches = new Match[] { staticField };
             staticFieldsRule.Description = "Static fields must have";
-            fillPrefixAndSuffix(staticFieldsRule, namingSettings.FieldNameSettings.Prefix,
-                namingSettings.FieldNameSettings.Suffix);
+            fillPrefixAndSuffix(staticFieldsRule, namingSettings.StaticFieldNameSettings.Prefix,
+                namingSettings.StaticFieldNameSettings.Suffix);
 
             NamingConventionRule parametersRule = new NamingConventionRule();
             parametersRule.Matches = new Match[] { new Match(Declaration.Parameter) };
@@ -49,6 +55,15 @@ namespace AgentSmith.Options
             fillPrefixAndSuffix(variablesRule, namingSettings.LocalVariableNameSettings.Prefix,
                 namingSettings.LocalVariableNameSettings.Suffix);
 
+            NamingConventionRule[] newRules = new NamingConventionRule[]
+                    {
+                        fieldsRule,
+                        staticFieldsRule,
+                        parametersRule,
+                        variablesRule
+                    };
+
+            //Detects conflicts. Designed to work only in this particular case.
             List<NamingConventionRule> conflictingRules = new List<NamingConventionRule>();
             foreach (NamingConventionRule existingRule in existingRules)
             {
@@ -57,22 +72,24 @@ namespace AgentSmith.Options
                     continue;
                 }
 
-                foreach (NamingConventionRule newRule in new NamingConventionRule[]
-                    {
-                        fieldsRule,
-                        staticFieldsRule,
-                        parametersRule,
-                        variablesRule
-                    })
+                bool flag = false;
+                foreach (NamingConventionRule newRule in newRules)
                 {
                     foreach (Match match in existingRule.Matches)
                     {
                         if (match.Declaration == newRule.Matches[0].Declaration &&
                             (existingRule.MustHavePrefixes.Length > 0 && newRule.MustHavePrefixes.Length > 0 ||
-                             existingRule.MustHaveSuffixes.Length > 0 && newRule.MustHaveSuffixes.Length > 0))
+                             existingRule.MustHaveSuffixes.Length > 0 && newRule.MustHaveSuffixes.Length > 0 ||
+                             newRule.MustHavePrefixes.Length > 0 && (existingRule.Rule == RuleKind.Camel || existingRule.Rule == RuleKind.Pascal || existingRule.Rule == RuleKind.UpperCase)))
                         {
                             conflictingRules.Add(existingRule);
+                            flag = true;
+                            break;
                         }
+                    }
+                    if (flag)
+                    {
+                        break;
                     }
                 }
             }
@@ -89,9 +106,19 @@ namespace AgentSmith.Options
 
                 MessageBox.Show(sb.ToString());
             }
-            return null;
+
+            List<NamingConventionRule>  modifiedRules = new List<NamingConventionRule>(existingRules);
+            foreach (NamingConventionRule rule in newRules)
+            {
+                if (rule.MustHavePrefixes.Length > 0 || rule.MustHaveSuffixes.Length > 0)
+                {
+                    modifiedRules.Add(rule);
+                }
+            }
+            
+            return modifiedRules.ToArray();
         }
-        
+
         private static void fillPrefixAndSuffix(NamingConventionRule fieldsRule, string prefix, string suffix)
         {
             bool hasPrefix = false;
