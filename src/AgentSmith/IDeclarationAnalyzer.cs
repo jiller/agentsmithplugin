@@ -8,6 +8,6 @@ namespace AgentSmith
     /// </summary>
     public interface IDeclarationAnalyzer
     {
-        SuggestionBase[] Analyze(IDeclaration declaration);
+        SuggestionBase[] Analyze(IDeclaration declaration, bool spellCheck);
     }
 }

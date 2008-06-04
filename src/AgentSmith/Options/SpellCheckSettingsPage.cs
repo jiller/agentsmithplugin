@@ -139,15 +139,25 @@ namespace AgentSmith.Options
         {
             List<string> list = new List<string>();
             string dicDirectory = getUserDicDirectory();
-            foreach (string file in Directory.GetFiles(dicDirectory))
+            if (Directory.Exists(dicDirectory))
             {
-                list.Add(Path.GetFileNameWithoutExtension(file));
+                foreach (string file in Directory.GetFiles(dicDirectory))
+                {
+                    list.Add(Path.GetFileNameWithoutExtension(file));
+                }
             }
-            
+
             dicDirectory = getDefaultDicDirectory();
-            foreach (string file in Directory.GetFiles(dicDirectory))
+            if (Directory.Exists(dicDirectory))
             {
-                list.Add(Path.GetFileNameWithoutExtension(file));
+                foreach (string file in Directory.GetFiles(dicDirectory))
+                {
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    if (!list.Contains(name))
+                    {
+                        list.Add(name);
+                    }
+                }
             }
             return list;
         }

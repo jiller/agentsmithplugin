@@ -23,6 +23,9 @@ namespace AgentSmith
         private readonly GeneratedCodeRegionDetector _generatedCodeRegionDetector =
             new GeneratedCodeRegionDetector();
 
+        private readonly SkipSpellCheckRegionDetector _skipSpellCheckRegionDetector =
+            new SkipSpellCheckRegionDetector();
+
         private readonly List<HighlightingInfo> _highlightings = new List<HighlightingInfo>();
         private readonly IDaemonProcess _process;
         private readonly CodeStyleSettings _styleSettings;
@@ -73,7 +76,13 @@ namespace AgentSmith
             {
                 return;
             }
-            if (StringSpellCheckSuggestion.Enabled && element is ITokenNode && _styleSettings != null)
+
+            _skipSpellCheckRegionDetector.Process(element);           
+
+            if (!_skipSpellCheckRegionDetector.InSkipSpellCheck && 
+                StringSpellCheckSuggestion.Enabled && 
+                element is ITokenNode && 
+                _styleSettings != null)
             {
                 ITokenNode token = (ITokenNode) element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
@@ -99,7 +108,9 @@ namespace AgentSmith
 
             foreach (IDeclarationAnalyzer analyzer in _analyzers)
             {
-                SuggestionBase[] result = analyzer.Analyze(declaration);
+                SuggestionBase[] result = analyzer.Analyze(declaration,
+                    !_skipSpellCheckRegionDetector.InSkipSpellCheck);
+                
                 if (result != null)
                 {
                     foreach (SuggestionBase highlighting in result)
