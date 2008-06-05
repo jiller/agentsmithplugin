@@ -30,9 +30,9 @@ namespace AgentSmith.Identifiers
                 settings.IdentifiersNotToSpellCheck);
         }
 
-        public SuggestionBase[] Analyze(IDeclaration declaration)
+        public SuggestionBase[] Analyze(IDeclaration declaration, bool spellCheck)
         {
-            if (!IdentifierSpellCheckSuggestion.Enabled || _spellChecker == null)
+            if (!IdentifierSpellCheckSuggestion.Enabled || _spellChecker == null || !spellCheck)
             {
                 return null;
             }

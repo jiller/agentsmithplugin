@@ -6,6 +6,7 @@ using AgentSmith.MemberMatch;
 using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CodeStyle;
+using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
 using JetBrains.Util;
 
 namespace AgentSmith.Options
@@ -20,11 +21,11 @@ namespace AgentSmith.Options
         private CustomDictionaries _customDictionaries = new CustomDictionaries();
         private string _stringsDictionary = "en-US";        
         private string _identifierDictionary = "en-US";
-        private string _defaultResXDictionary = "en-US";
         private string _lastSelectedCustomDictionary = "en-US";
 
         private Match[] _identifiersToSpellCheck;
         private Match[] _identifiersNotToSpellCheck;
+        private bool _isJustImported;
 
         public CodeStyleSettings()
         {
@@ -32,6 +33,7 @@ namespace AgentSmith.Options
             _commentsSettings = new CommentsSettings();
             _commentsSettings.CommentMatch = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal), };
             _identifiersToSpellCheck = new Match[] { new Match(Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal) };
+            _isJustImported = true;
         }
 
 
@@ -59,12 +61,6 @@ namespace AgentSmith.Options
             set { _lastSelectedCustomDictionary = value; }
         }
 
-        public string DefaultResXDictionary
-        {
-            get { return _defaultResXDictionary; }
-            set { _defaultResXDictionary = value; }
-        }
-
         public CommentsSettings CommentsSettings
         {
             get { return _commentsSettings; }
@@ -87,6 +83,14 @@ namespace AgentSmith.Options
         {
             get { return _identifiersNotToSpellCheck; }
             set { _identifiersNotToSpellCheck = value; }
+        }
+
+        
+        [XmlIgnore]
+        public bool IsJustImported
+        {
+            get { return _isJustImported; }
+            set { _isJustImported = value;}
         }
 
         public static CodeStyleSettings GetInstance(ISolution solution)
@@ -127,11 +131,11 @@ namespace AgentSmith.Options
                     _commentsSettings = settings.CommentsSettings;
                     _customDictionaries = settings._customDictionaries;
                     _stringsDictionary = settings._stringsDictionary;
-                    _defaultResXDictionary = settings._defaultResXDictionary;
                     _identifierDictionary = settings._identifierDictionary;                    
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                     _identifiersToSpellCheck = settings._identifiersToSpellCheck;
                     _identifiersNotToSpellCheck = settings._identifiersNotToSpellCheck;
+                    _isJustImported = false;
                 }
                 catch (Exception ex)
                 {

@@ -34,7 +34,7 @@ namespace AgentSmith.NamingConventions
 
         #region IDeclarationAnalyzer Members
 
-        public SuggestionBase[] Analyze(IDeclaration declaration)
+        public SuggestionBase[] Analyze(IDeclaration declaration, bool spellCheck)
         {
             if (declaration == null || declaration.DeclaredName.Length == 0)
             {
