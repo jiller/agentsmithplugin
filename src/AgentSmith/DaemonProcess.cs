@@ -87,9 +87,9 @@ namespace AgentSmith
                 ITokenNode token = (ITokenNode) element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
                 {
-                    ISpellChecker spellChecker =
-                        SpellCheckManager.GetSpellChecker(_process.Solution, _styleSettings.StringsDictionary);
-
+                    string[] dicts = _styleSettings.StringsDictionary == null ? null : _styleSettings.StringsDictionary.Split(',');
+                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, dicts);
+                    
                     IList<SuggestionBase> suggestions =
                         StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
                                                       _process.Solution);

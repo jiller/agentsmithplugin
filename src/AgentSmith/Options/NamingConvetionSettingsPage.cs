@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using AgentSmith.NamingConventions;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
-using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
 using JetBrains.UI.Options;
 
 namespace AgentSmith.Options

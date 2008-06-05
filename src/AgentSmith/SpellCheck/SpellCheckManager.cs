@@ -106,12 +106,12 @@ namespace AgentSmith.SpellCheck
             {
                 return null;
             }
-
-            string path = getDictPath(name);
+            
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                 String.Format("Agent Smith\\dic\\{0}.dic", name));
             if (!File.Exists(path))
             {
-                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                                 String.Format("Agent Smith\\dic\\{0}.dic", name));
+                path = getDictPath(name);
                 if (!File.Exists(path))
                 {
                     return null;
