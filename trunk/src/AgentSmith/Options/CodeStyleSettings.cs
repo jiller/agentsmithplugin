@@ -85,30 +85,18 @@ namespace AgentSmith.Options
             set { _identifiersNotToSpellCheck = value; }
         }
 
+        
         [XmlIgnore]
         public bool IsJustImported
         {
             get { return _isJustImported; }
-            set { _isJustImported = false;}
+            set { _isJustImported = value;}
         }
 
         public static CodeStyleSettings GetInstance(ISolution solution)
         {
             JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = solution == null ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
-            CodeStyleSettings codeSettings = settings.Get<CodeStyleSettings>();
-            if (codeSettings != null)
-            {                
-                DefaultNamingStyleSettings namingSettings =
-                    CodeStyleSettingsManager.Instance.CodeStyleSettings.GetNamingSettings();
-                if (codeSettings.IsJustImported && ResharperSettingsImporter.ReSharperSettingsConfigured(namingSettings) &&
-                    MessageBox.Show("Agent Smith detected that you had configured naming settings in R#.\n Would you like to import them as Agent Smith naming convention rules?", "Agent Smith", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                {
-                    codeSettings.NamingConventionSettings.Rules =
-                        ResharperSettingsImporter.GetRules(codeSettings.NamingConventionSettings.Rules, namingSettings);
-                    codeSettings.IsJustImported = false;
-                }
-            }
-
+            CodeStyleSettings codeSettings = settings.Get<CodeStyleSettings>();       
             return codeSettings;
         }
 

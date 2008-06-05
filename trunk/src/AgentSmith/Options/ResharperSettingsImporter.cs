@@ -98,13 +98,14 @@ namespace AgentSmith.Options
             {
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("Following rules conflict with configured by you ReSharper settings and were disabled:");
+                sb.AppendLine();
                 foreach (NamingConventionRule conflictingRule in conflictingRules)
                 {
                     sb.AppendLine(conflictingRule.Description);
                     conflictingRule.IsDisabled = true;
                 }
 
-                MessageBox.Show(sb.ToString());
+                MessageBox.Show(sb.ToString(), "Agent Smith", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             List<NamingConventionRule>  modifiedRules = new List<NamingConventionRule>(existingRules);
