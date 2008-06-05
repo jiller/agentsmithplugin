@@ -51,6 +51,11 @@ namespace AgentSmith.Options
             {
                 return;
             }
+            
+            if (!Directory.Exists(_dicDir))
+            {
+                Directory.CreateDirectory(_dicDir);
+            }
             string outPath = Path.Combine(_dicDir, _tbDictName.Text.Trim() + ".dic");
             if (!File.Exists(outPath) ||
                 MessageBox.Show("Dictionary with this name already exists. Overwrite?", "Confirm",

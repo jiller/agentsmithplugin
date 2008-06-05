@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Refactorings.RenameNamespace;
 using JetBrains.ReSharper.Refactorings.Workflow;
 using JetBrains.TextControl;
 using JetBrains.Util;
+using JetBrains.ReSharper.Refactorings.Conflicts;
 
 namespace AgentSmith.NamingConventions
 {    
@@ -81,10 +82,14 @@ namespace AgentSmith.NamingConventions
                 if (wf.Initialize(new DataContext(null, declaredElement, textControl)))
                 {
                     wf.CommitInitialStage(newName, NullProgressIndicator.INSTANCE, false);
-                    if (!wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE, true).TransactionResult.Succeded)
+                    if (wf.ConflictSearcher != null)
                     {
-                        MessageBox.Show("Conflicts were found. Can not rename.");
-                        return null;
+                        ConflictSearchResult result = wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE, true);
+                        if (result != null && result.TransactionResult != null && !result.TransactionResult.Succeded)
+                        {
+                            MessageBox.Show("Conflicts were found. Can not rename.");
+                            return null;
+                        }
                     }
                     return wf;
                 }

@@ -9,6 +9,7 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.Util;
+using System.Resources;
 
 namespace AgentSmith.ResX
 {
@@ -34,7 +35,18 @@ namespace AgentSmith.ResX
             }
 
             List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
-            ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file, styleSettings.DefaultResXDictionary);
+            IModuleAttributes moduleAttributes = PsiManager.GetInstance(_file.GetSolution()).GetModuleAttributes(_file.GetProject());
+            string defaultResXDic = "en-US";
+            IList<IAttributeInstance> attributes = moduleAttributes
+                .GetAttributeInstances(new CLRTypeName(typeof (NeutralResourcesLanguageAttribute).FullName));
+            if (attributes != null &&
+                attributes.Count > 0 &&
+                attributes[0].PositionParameter(0).ConstantValue.Value != null)
+            {
+                defaultResXDic = attributes[0].PositionParameter(0).ConstantValue.Value.ToString();
+            }
+
+            ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file, defaultResXDic);
             if (checker != null)
             {
                 foreach (IXmlTokenNode token in getStringsToCheck())

@@ -60,9 +60,8 @@ namespace AgentSmith.Options
         {
             saveCustomDictionary();
             Settings.CommentsSettings.DictionaryName = _lsComments.SelectedDictionariesString;
-            Settings.StringsDictionary = _cbStrings.SelectedItem.ToString();
+            Settings.StringsDictionary = _lsStrings.SelectedDictionariesString;
             Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();
-            Settings.DefaultResXDictionary = _cbResX.SelectedItem.ToString();
             Settings.LastSelectedCustomDictionary = _cbDictionary.SelectedItem.ToString();
 
             Settings.IdentifiersToSpellCheck = _mceToSpellCheck.Matches;
@@ -107,9 +106,8 @@ namespace AgentSmith.Options
              //   _cbDictionary.SelectedItem = _cbDictionary.Items[0];
             //}
             _lsComments.SelectedDictionariesString = Settings.CommentsSettings.DictionaryName;
-            _cbStrings.SelectedItem = Settings.StringsDictionary;
+            _lsStrings.SelectedDictionariesString = Settings.StringsDictionary;
             _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;
-            _cbResX.SelectedItem = Settings.DefaultResXDictionary;
             _cbDictionary.SelectedItem = Settings.LastSelectedCustomDictionary;
 
             _mceToSpellCheck.Matches = Settings.IdentifiersToSpellCheck;
@@ -120,9 +118,7 @@ namespace AgentSmith.Options
         {
             ComboBox[] cbs = new ComboBox[]
                 {
-                    _cbResX,                                        
                     _cbIdentifiers,
-                    _cbStrings,
                     _cbDictionary
                 };
 
@@ -135,20 +131,43 @@ namespace AgentSmith.Options
             }
             
             _lsComments.Dictionaries = dicts.ToArray();
+            _lsStrings.Dictionaries = dicts.ToArray();
         }
 
         private List<string> loadDictionaries()
         {
             List<string> list = new List<string>();
-            string dicDirectory = getDicDirectory();
+            string dicDirectory = getUserDicDirectory();
+            if (Directory.Exists(dicDirectory))
+            {
             foreach (string file in Directory.GetFiles(dicDirectory))
             {
                 list.Add(Path.GetFileNameWithoutExtension(file));
             }
+            }
+
+            dicDirectory = getDefaultDicDirectory();
+            if (Directory.Exists(dicDirectory))
+            {
+                foreach (string file in Directory.GetFiles(dicDirectory))
+                {
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    if (!list.Contains(name))
+                    {
+                        list.Add(name);
+                    }
+                }
+            }
             return list;
         }
 
-        private string getDicDirectory()
+        private string getUserDicDirectory()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                "Agent Smith\\dic");            
+        }
+
+        private string getDefaultDicDirectory()
         {
             string assemblyDir = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
             return Path.Combine(assemblyDir, "dic");
@@ -156,7 +175,7 @@ namespace AgentSmith.Options
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            ImportOpenOfficeDictionary frm = new ImportOpenOfficeDictionary(getDicDirectory());
+            ImportOpenOfficeDictionary frm = new ImportOpenOfficeDictionary(getUserDicDirectory());
             if (frm.ShowDialog() == DialogResult.OK)
             {
                 bindDictionaries(loadDictionaries());

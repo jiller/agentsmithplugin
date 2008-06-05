@@ -37,7 +37,6 @@ namespace AgentSmith.Options
             this._lbPS = new System.Windows.Forms.Label();
             this._lbIdentifiers = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this._cbStrings = new System.Windows.Forms.ComboBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.label3 = new System.Windows.Forms.Label();
             this._cbCaseSensitive = new System.Windows.Forms.CheckBox();
@@ -48,21 +47,20 @@ namespace AgentSmith.Options
             this._btnExportFxCop = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this._lbResx = new System.Windows.Forms.Label();
             this._lbComments = new System.Windows.Forms.Label();
-            this._cbResX = new System.Windows.Forms.ComboBox();
             this._lsComments = new AgentSmith.Options.LanguageSelector();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this._lsStrings = new AgentSmith.Options.LanguageSelector();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this._btnImport = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this._cbDictionary = new System.Windows.Forms.ComboBox();
             this._lbDictionary = new System.Windows.Forms.Label();
-            this._mceDoNotSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
-            this._mceToSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this._mceDoNotSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
+            this._mceToSpellCheck = new AgentSmith.Options.MatchCollectionEdit();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
@@ -140,15 +138,6 @@ namespace AgentSmith.Options
             this.label1.Size = new System.Drawing.Size(39, 13);
             this.label1.TabIndex = 70;
             this.label1.Text = "Strings";
-            // 
-            // _cbStrings
-            // 
-            this._cbStrings.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbStrings.FormattingEnabled = true;
-            this._cbStrings.Location = new System.Drawing.Point(58, 30);
-            this._cbStrings.Name = "_cbStrings";
-            this._cbStrings.Size = new System.Drawing.Size(121, 21);
-            this._cbStrings.TabIndex = 2;
             // 
             // panel1
             // 
@@ -239,9 +228,7 @@ namespace AgentSmith.Options
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this._lbResx, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this._lbComments, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this._cbResX, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this._lsComments, 1, 0);
             this.tableLayoutPanel1.Location = new System.Drawing.Point(267, 34);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -250,16 +237,6 @@ namespace AgentSmith.Options
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.Size = new System.Drawing.Size(282, 54);
             this.tableLayoutPanel1.TabIndex = 86;
-            // 
-            // _lbResx
-            // 
-            this._lbResx.AutoSize = true;
-            this._lbResx.Location = new System.Drawing.Point(0, 35);
-            this._lbResx.Margin = new System.Windows.Forms.Padding(0, 7, 3, 0);
-            this._lbResx.Name = "_lbResx";
-            this._lbResx.Size = new System.Drawing.Size(70, 13);
-            this._lbResx.TabIndex = 79;
-            this._lbResx.Text = "ResX Default";
             // 
             // _lbComments
             // 
@@ -270,15 +247,6 @@ namespace AgentSmith.Options
             this._lbComments.Size = new System.Drawing.Size(81, 13);
             this._lbComments.TabIndex = 73;
             this._lbComments.Text = "XML Comments";
-            // 
-            // _cbResX
-            // 
-            this._cbResX.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this._cbResX.FormattingEnabled = true;
-            this._cbResX.Location = new System.Drawing.Point(87, 31);
-            this._cbResX.Name = "_cbResX";
-            this._cbResX.Size = new System.Drawing.Size(110, 21);
-            this._cbResX.TabIndex = 82;
             // 
             // _lsComments
             // 
@@ -297,10 +265,10 @@ namespace AgentSmith.Options
             this.tableLayoutPanel2.ColumnCount = 2;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel2.Controls.Add(this._lsStrings, 0, 1);
             this.tableLayoutPanel2.Controls.Add(this._lbIdentifiers, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this._cbIdentifiers, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.label1, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this._cbStrings, 1, 1);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(15, 34);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 2;
@@ -308,6 +276,18 @@ namespace AgentSmith.Options
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.Size = new System.Drawing.Size(246, 54);
             this.tableLayoutPanel2.TabIndex = 87;
+            // 
+            // _lsStrings
+            // 
+            this._lsStrings.Dictionaries = null;
+            this._lsStrings.Location = new System.Drawing.Point(58, 30);
+            this._lsStrings.MinimumSize = new System.Drawing.Size(0, 22);
+            this._lsStrings.Name = "_lsStrings";
+            this._lsStrings.SelectedDictionaries = new string[] {
+        ""};
+            this._lsStrings.SelectedDictionariesString = "";
+            this._lsStrings.Size = new System.Drawing.Size(121, 22);
+            this._lsStrings.TabIndex = 79;
             // 
             // tableLayoutPanel3
             // 
@@ -378,6 +358,24 @@ namespace AgentSmith.Options
             this._lbDictionary.TabIndex = 9;
             this._lbDictionary.Text = "Language";
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(289, 93);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(40, 13);
+            this.label7.TabIndex = 91;
+            this.label7.Text = "Except";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(15, 93);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(121, 13);
+            this.label8.TabIndex = 90;
+            this.label8.Text = "Identifiers to spell check";
+            // 
             // _mceDoNotSpellCheck
             // 
             this._mceDoNotSpellCheck.AutoSize = true;
@@ -399,24 +397,6 @@ namespace AgentSmith.Options
             this._mceToSpellCheck.Name = "_mceToSpellCheck";
             this._mceToSpellCheck.Size = new System.Drawing.Size(251, 113);
             this._mceToSpellCheck.TabIndex = 92;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(289, 93);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(40, 13);
-            this.label7.TabIndex = 91;
-            this.label7.Text = "Except";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 93);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(121, 13);
-            this.label8.TabIndex = 90;
-            this.label8.Text = "Identifiers to spell check";
             // 
             // SpellCheckSettingsPage
             // 
@@ -465,7 +445,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.Label _lbIdentifiers;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox _cbStrings;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.CheckBox _cbCaseSensitive;
@@ -476,10 +455,7 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Button _btnExportFxCop;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
-        private LanguageSelector _lsComments;
         private System.Windows.Forms.Label _lbComments;
-        private System.Windows.Forms.Label _lbResx;
-        private System.Windows.Forms.ComboBox _cbResX;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.Button _btnImport;
@@ -491,5 +467,7 @@ namespace AgentSmith.Options
         private MatchCollectionEdit _mceToSpellCheck;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private LanguageSelector _lsComments;
+        private LanguageSelector _lsStrings;
     }
 }

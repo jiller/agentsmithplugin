@@ -182,6 +182,7 @@
     <Compile Include="Options\LanguageSelector.Designer.cs">
       <DependentUpon>LanguageSelector.cs</DependentUpon>
     </Compile>
+    <Compile Include="Options\ResharperSettingsImporter.cs" />
     <Compile Include="Options\SpellCheckSettingsPage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -189,6 +190,7 @@
       <DependentUpon>SpellCheckSettingsPage.cs</DependentUpon>
     </Compile>
     <Compile Include="Options\CustomDictionaries.cs" />
+    <Compile Include="SkipSpellCheckRegionDetector.cs" />
     <Compile Include="Options\StringListEdit.cs">
       <SubType>UserControl</SubType>
     </Compile>

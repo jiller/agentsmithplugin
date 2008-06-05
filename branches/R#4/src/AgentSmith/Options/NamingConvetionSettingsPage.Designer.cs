@@ -38,9 +38,11 @@ namespace AgentSmith.Options
             this._btnDown = new System.Windows.Forms.Button();
             this._btnEdit = new System.Windows.Forms.Button();
             this._btnDelete = new System.Windows.Forms.Button();
+            this._btnImport = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this._sceExclusions = new AgentSmith.Options.StringListEdit();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // _lvRules
@@ -73,7 +75,7 @@ namespace AgentSmith.Options
             this._btnAdd.Name = "_btnAdd";
             this._btnAdd.Size = new System.Drawing.Size(75, 23);
             this._btnAdd.TabIndex = 33;
-            this._btnAdd.Text = "Add";
+            this._btnAdd.Text = "Add...";
             this._btnAdd.UseVisualStyleBackColor = true;
             this._btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -115,7 +117,7 @@ namespace AgentSmith.Options
             this._btnEdit.Name = "_btnEdit";
             this._btnEdit.Size = new System.Drawing.Size(75, 23);
             this._btnEdit.TabIndex = 37;
-            this._btnEdit.Text = "Edit";
+            this._btnEdit.Text = "Edit...";
             this._btnEdit.UseVisualStyleBackColor = true;
             this._btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
@@ -126,9 +128,19 @@ namespace AgentSmith.Options
             this._btnDelete.Name = "_btnDelete";
             this._btnDelete.Size = new System.Drawing.Size(75, 23);
             this._btnDelete.TabIndex = 38;
-            this._btnDelete.Text = "Delete";
+            this._btnDelete.Text = "Delete...";
             this._btnDelete.UseVisualStyleBackColor = true;
             this._btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // _btnImport
+            // 
+            this._btnImport.Location = new System.Drawing.Point(230, 316);
+            this._btnImport.Name = "_btnImport";
+            this._btnImport.Size = new System.Drawing.Size(75, 23);
+            this._btnImport.TabIndex = 38;
+            this._btnImport.Text = "Import...";
+            this._btnImport.UseVisualStyleBackColor = true;
+            this._btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // label5
             // 
@@ -158,17 +170,29 @@ namespace AgentSmith.Options
                         | System.Windows.Forms.AnchorStyles.Right)));
             this._sceExclusions.Caption = "Exclusions (these name will not be validated)";
             this._sceExclusions.Items = new string[0];
-            this._sceExclusions.Location = new System.Drawing.Point(13, 306);
+            this._sceExclusions.Location = new System.Drawing.Point(13, 345);
             this._sceExclusions.Name = "_sceExclusions";
-            this._sceExclusions.Size = new System.Drawing.Size(555, 228);
+            this._sceExclusions.Size = new System.Drawing.Size(555, 189);
             this._sceExclusions.TabIndex = 68;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label1.Location = new System.Drawing.Point(16, 321);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(181, 13);
+            this.label1.TabIndex = 68;
+            this.label1.Text = "Import ReSharper naming rules";
             // 
             // NamingConventionsSettingsPage
             // 
+            this.Controls.Add(this.label1);
             this.Controls.Add(this._sceExclusions);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label4);
             this.Controls.Add(this._btnDelete);
+            this.Controls.Add(this._btnImport);
             this.Controls.Add(this._btnEdit);
             this.Controls.Add(this._btnDown);
             this.Controls.Add(this._btnUp);
@@ -187,6 +211,7 @@ namespace AgentSmith.Options
         private System.Windows.Forms.ListView _lvRules;
         private System.Windows.Forms.ColumnHeader _chDescription;
         private System.Windows.Forms.Button _btnAdd;
+        private System.Windows.Forms.Button _btnImport;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button _btnUp;
         private System.Windows.Forms.Button _btnDown;
@@ -195,5 +220,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label4;
         private StringListEdit _sceExclusions;
+        private System.Windows.Forms.Label label1;
     }
 }

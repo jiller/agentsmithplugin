@@ -23,6 +23,9 @@ namespace AgentSmith
         private readonly GeneratedCodeRegionDetector _generatedCodeRegionDetector =
             new GeneratedCodeRegionDetector();
 
+        private readonly SkipSpellCheckRegionDetector _skipSpellCheckRegionDetector =
+            new SkipSpellCheckRegionDetector();
+
         private readonly List<HighlightingInfo> _highlightings = new List<HighlightingInfo>();
         private readonly IDaemonProcess _process;
         private readonly CodeStyleSettings _styleSettings;
@@ -73,13 +76,19 @@ namespace AgentSmith
             {
                 return;
             }
-            if (StringSpellCheckSuggestion.Enabled && element is ITokenNode && _styleSettings != null)
+
+            _skipSpellCheckRegionDetector.Process(element);           
+
+            if (!_skipSpellCheckRegionDetector.InSkipSpellCheck && 
+                StringSpellCheckSuggestion.Enabled && 
+                element is ITokenNode && 
+                _styleSettings != null)
             {
                 ITokenNode token = (ITokenNode) element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
                 {
-                    ISpellChecker spellChecker =
-                        SpellCheckManager.GetSpellChecker(_process.Solution, _styleSettings.StringsDictionary);
+                    string[] dicts = _styleSettings.StringsDictionary == null ? null : _styleSettings.StringsDictionary.Split(',');
+                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, dicts);
 
                     IList<SuggestionBase> suggestions =
                         StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
@@ -99,7 +108,9 @@ namespace AgentSmith
 
             foreach (IDeclarationAnalyzer analyzer in _analyzers)
             {
-                SuggestionBase[] result = analyzer.Analyze(declaration);
+                SuggestionBase[] result = analyzer.Analyze(declaration,
+                    !_skipSpellCheckRegionDetector.InSkipSpellCheck);
+                
                 if (result != null)
                 {
                     foreach (SuggestionBase highlighting in result)

@@ -172,6 +172,24 @@ namespace AgentSmith.Options
             }
         }
 
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings codeStyleSettings =
+                ((CodeStyleSharingPage) _optionsDialog.GetPage("CodeStyleSharing")).CodeStyleSettings;
+            if (codeStyleSettings == null ||
+                !ResharperSettingsImporter.ReSharperSettingsConfigured(codeStyleSettings.GetNamingSettings()))
+            {
+                MessageBox.Show("ReSharper naming settings are not configured.");
+                return;
+            }
+
+            Settings.NamingConventionSettings.Rules =
+                ResharperSettingsImporter.GetRules(Settings.NamingConventionSettings.Rules,
+                                                   codeStyleSettings.GetNamingSettings());
+
+            bindView();
+        }
+
         private void lvRules_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             ((NamingConventionRule) e.Item.Tag).IsDisabled = !e.Item.Checked;

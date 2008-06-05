@@ -36,6 +36,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                 suggestions.AddRange(spellChecker.Suggest(word, maxSuggestions));
                 if (suggestions.Count > maxSuggestions)
                 {
+                    suggestions.RemoveRange((int)maxSuggestions, (int)(suggestions.Count - maxSuggestions));
                     break;
                 }
             }

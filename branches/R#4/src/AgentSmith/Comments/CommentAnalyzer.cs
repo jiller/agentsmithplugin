@@ -32,7 +32,7 @@ namespace AgentSmith.Comments
 
         #region IDeclarationAnalyzer Members
 
-        public SuggestionBase[] Analyze(IDeclaration declaration)
+        public SuggestionBase[] Analyze(IDeclaration declaration, bool spellCheck)
         {
             if (!(declaration is IClassMemberDeclaration) ||
                 !CanBeSurroundedWithMetatagsSuggestion.Enabled && !WordIsNotInDictionarySuggestion.Enabled)
@@ -42,7 +42,7 @@ namespace AgentSmith.Comments
 
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
 
-            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings);
+            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings, spellCheck);
             checkMembersHaveComments((IClassMemberDeclaration) declaration, highlightings);
 
             return highlightings.ToArray();
@@ -64,7 +64,7 @@ namespace AgentSmith.Comments
         }
 
         private void checkCommentSpelling(IClassMemberDeclaration decl,
-                                          ICollection<SuggestionBase> highlightings)
+                                          ICollection<SuggestionBase> highlightings, bool spellCheck)
         {
             if (_spellChecker == null)
             {
@@ -87,7 +87,7 @@ namespace AgentSmith.Comments
                         highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
                                                                                 range, decl, _solution));
                     }
-                    else
+                    else if (spellCheck)
                     {
                         checkWordSpelling(decl, wordRange, highlightings, range);
                     }
