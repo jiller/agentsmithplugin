@@ -7,12 +7,12 @@ using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using AgentSmith.Strings;
+using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Shell.Progress;
 
 namespace AgentSmith
 {
@@ -89,7 +89,7 @@ namespace AgentSmith
                 {
                     string[] dicts = _styleSettings.StringsDictionary == null ? null : _styleSettings.StringsDictionary.Split(',');
                     ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, dicts);
-                    
+
                     IList<SuggestionBase> suggestions =
                         StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
                                                       _process.Solution);

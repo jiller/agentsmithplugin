@@ -1,9 +1,9 @@
 using System;
 using System.IO;
-using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
 using AgentSmith.MemberMatch;
+using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
@@ -20,7 +20,7 @@ namespace AgentSmith.Options
         
         private CustomDictionaries _customDictionaries = new CustomDictionaries();
         private string _stringsDictionary = "en-US";        
-        private string _identifierDictionary = "en-US";        
+        private string _identifierDictionary = "en-US";
         private string _lastSelectedCustomDictionary = "en-US";
 
         private Match[] _identifiersToSpellCheck;
@@ -95,9 +95,8 @@ namespace AgentSmith.Options
 
         public static CodeStyleSettings GetInstance(ISolution solution)
         {
-            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = solution == null ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
-            CodeStyleSettings codeSettings = settings.Get<CodeStyleSettings>();       
-            return codeSettings;
+            JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings settings = Shell.Instance.IsTestShell ? CodeStyleSettingsManager.Instance.CodeStyleSettings : SolutionCodeStyleSettings.GetInstance(solution).CodeStyleSettings;
+            return settings.Get<CodeStyleSettings>();
         }
 
         #region IXmlExternalizable implementation
@@ -132,7 +131,7 @@ namespace AgentSmith.Options
                     _commentsSettings = settings.CommentsSettings;
                     _customDictionaries = settings._customDictionaries;
                     _stringsDictionary = settings._stringsDictionary;
-                    _identifierDictionary = settings._identifierDictionary;
+                    _identifierDictionary = settings._identifierDictionary;                    
                     _lastSelectedCustomDictionary = settings._lastSelectedCustomDictionary;
                     _identifiersToSpellCheck = settings._identifiersToSpellCheck;
                     _identifiersNotToSpellCheck = settings._identifiersNotToSpellCheck;

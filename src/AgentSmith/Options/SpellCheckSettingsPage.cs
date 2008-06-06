@@ -9,7 +9,6 @@ using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
 using JetBrains.UI.Options;
-using JetBrains.Util;
 
 namespace AgentSmith.Options
 {
@@ -62,7 +61,7 @@ namespace AgentSmith.Options
             saveCustomDictionary();
             Settings.CommentsSettings.DictionaryName = _lsComments.SelectedDictionariesString;
             Settings.StringsDictionary = _lsStrings.SelectedDictionariesString;
-            Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();            
+            Settings.IdentifierDictionary = _cbIdentifiers.SelectedItem.ToString();
             Settings.LastSelectedCustomDictionary = _cbDictionary.SelectedItem.ToString();
 
             Settings.IdentifiersToSpellCheck = _mceToSpellCheck.Matches;
@@ -93,7 +92,7 @@ namespace AgentSmith.Options
             
             if (_currentCustomDictionary != null)
             {
-                _currentCustomDictionary.DecodedUserWords = sb.ToString();
+                _currentCustomDictionary.UserWords = sb.ToString();
                 _currentCustomDictionary.CaseSensitive = _cbCaseSensitive.Checked;
             }
         }
@@ -108,7 +107,7 @@ namespace AgentSmith.Options
             //}
             _lsComments.SelectedDictionariesString = Settings.CommentsSettings.DictionaryName;
             _lsStrings.SelectedDictionariesString = Settings.StringsDictionary;
-            _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;            
+            _cbIdentifiers.SelectedItem = Settings.IdentifierDictionary;
             _cbDictionary.SelectedItem = Settings.LastSelectedCustomDictionary;
 
             _mceToSpellCheck.Matches = Settings.IdentifiersToSpellCheck;
@@ -119,7 +118,7 @@ namespace AgentSmith.Options
         {
             ComboBox[] cbs = new ComboBox[]
                 {
-                    _cbIdentifiers,                    
+                    _cbIdentifiers,
                     _cbDictionary
                 };
 
@@ -141,10 +140,10 @@ namespace AgentSmith.Options
             string dicDirectory = getUserDicDirectory();
             if (Directory.Exists(dicDirectory))
             {
-                foreach (string file in Directory.GetFiles(dicDirectory))
-                {
-                    list.Add(Path.GetFileNameWithoutExtension(file));
-                }
+            foreach (string file in Directory.GetFiles(dicDirectory))
+            {
+                list.Add(Path.GetFileNameWithoutExtension(file));
+            }
             }
 
             dicDirectory = getDefaultDicDirectory();
@@ -191,10 +190,10 @@ namespace AgentSmith.Options
 
                 string dictName = _cbDictionary.SelectedItem.ToString();
                 _currentCustomDictionary = Settings.CustomDictionaries.GetOrCreateCustomDictionary(dictName);
-                _tbUserDictionary.Lines = _currentCustomDictionary.DecodedUserWords.Split('\n');
+                _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
-        }        
+        }
 
         private void btnImportFxCop_Click(object sender, EventArgs e)
         {
@@ -313,5 +312,5 @@ namespace AgentSmith.Options
                 MessageBox.Show("Export failed: " + ex.Message);
             }
         }
-    }
+     }
 }

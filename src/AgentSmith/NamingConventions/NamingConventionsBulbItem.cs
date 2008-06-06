@@ -1,5 +1,7 @@
 using System;
 using System.Windows.Forms;
+using JetBrains.Application;
+using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -7,10 +9,9 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Refactorings.Rename;
 using JetBrains.ReSharper.Refactorings.RenameNamespace;
 using JetBrains.ReSharper.Refactorings.Workflow;
-using JetBrains.ReSharper.TextControl;
-using JetBrains.Shell;
-using JetBrains.Shell.Progress;
+using JetBrains.TextControl;
 using JetBrains.Util;
+using JetBrains.ReSharper.Refactorings.Conflicts;
 
 namespace AgentSmith.NamingConventions
 {    
@@ -34,7 +35,7 @@ namespace AgentSmith.NamingConventions
             lock (_syncObj)
             {
                 PsiManager psiManager = PsiManager.GetInstance(solution);
-                if (psiManager.WaitForCaches())
+                if (psiManager.WaitForCaches("Agent Smith", "Cancel"))
                 {
                     using (CommandCookie.Create("QuickFix: " + GetText()))
                     {
@@ -42,7 +43,7 @@ namespace AgentSmith.NamingConventions
                         {
                             if (modificationCookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
                             {
-                                IRefactoringWorkflow workflow = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
+                                RefactoringWorkflow workflow = getRefactoringWorkflow(solution, _declaration.DeclaredElement, _newName, textControl);
                                 if (workflow != null)
                                 {                                    
                                     PsiManager manager = PsiManager.GetInstance(solution);
@@ -62,13 +63,13 @@ namespace AgentSmith.NamingConventions
 
         #endregion
 
-        private static IRefactoringWorkflow getRefactoringWorkflow(IDeclaredElement declaredElement, string newName,
-                                                                   ITextControl textControl)
+        private static RefactoringWorkflow getRefactoringWorkflow(ISolution solution, 
+            IDeclaredElement declaredElement, string newName, ITextControl textControl)
         {
             if (declaredElement is INamespace)
             {
                 RenameNamespaceRefactoringWorkflow wf = new RenameNamespaceRefactoringWorkflow();
-                if (wf.Initialize(new DataContext(null, declaredElement, textControl), null))
+                if (wf.Initialize(new DataContext(null, declaredElement, textControl)))
                 {
                     wf.InitializeRefactoring(newName, NullProgressIndicator.INSTANCE, false);                    
                     return wf;
@@ -77,14 +78,18 @@ namespace AgentSmith.NamingConventions
             }
             else
             {
-                RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
-                if (wf.Initialize(new DataContext(null, declaredElement, textControl), null))
+                RenameWorkflow wf = new RenameWorkflow(solution);
+                if (wf.Initialize(new DataContext(null, declaredElement, textControl)))
                 {
-                    wf.SetName(newName, NullProgressIndicator.INSTANCE, false);
-                    if (wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE).Conflicts.Count > 0)
+                    wf.CommitInitialStage(newName, NullProgressIndicator.INSTANCE, false);
+                    if (wf.ConflictSearcher != null)
                     {
-                        MessageBox.Show("Conflicts were found. Can not rename.");
-                        return null;
+                        ConflictSearchResult result = wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE, true);
+                        if (result != null && result.TransactionResult != null && !result.TransactionResult.Succeded)
+                        {
+                            MessageBox.Show("Conflicts were found. Can not rename.");
+                            return null;
+                        }
                     }
                     return wf;
                 }
@@ -94,7 +99,7 @@ namespace AgentSmith.NamingConventions
 
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
-            IRefactoringWorkflow wf = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
+            RefactoringWorkflow wf = getRefactoringWorkflow(solution, _declaration.DeclaredElement, _newName, textControl);
             if (wf != null)
             {                
                 wf.Execute(NullProgressIndicator.INSTANCE);                
@@ -103,8 +108,8 @@ namespace AgentSmith.NamingConventions
 
         private ModificationCookie ensureWritable()
         {
-            HashSet<IProjectFile> set = new HashSet<IProjectFile>();
-            IProjectFile projectFile = _declaration.GetContainingFile().ProjectItem;
+            OrderedHashSet<IProjectFile> set = new OrderedHashSet<IProjectFile>();
+            IProjectFile projectFile = _declaration.GetContainingFile().ProjectFile;
             set.Add(projectFile);
             ISolution solution = projectFile.GetSolution();
 

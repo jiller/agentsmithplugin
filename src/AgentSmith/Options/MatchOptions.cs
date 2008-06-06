@@ -37,11 +37,11 @@ namespace AgentSmith.Options
                 item.Tag = descr;
 
                 if (_match.AccessLevel == AccessLevels.Any)
-                {                    
+                {
                     item.Checked = descr.AccessLevel == AccessLevels.Any;                    
                 }
                 else
-                {                    
+                {
                     item.Checked = (descr.AccessLevel & _match.AccessLevel) != 0 &&
                                    descr.AccessLevel != AccessLevels.Any;                
                 }
@@ -115,7 +115,7 @@ namespace AgentSmith.Options
             {
                 _match.InheritedFrom = _tbInheritedFrom.Text.Trim();
             }
-
+            
             if (decl.OwnsType)
             {
                 _match.IsOfType = _tbInheritedFrom.Text.Trim();
@@ -186,6 +186,6 @@ namespace AgentSmith.Options
                     _lvVisibility.Items[0].Checked = false;
                 }
             }
-        }                
+        }
     }
 }

@@ -3,7 +3,7 @@ using JetBrains.ActionManagement;
 using JetBrains.ReSharper;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
-using JetBrains.ReSharper.TextControl;
+using JetBrains.TextControl;
 
 namespace AgentSmith.NamingConventions
 {
@@ -34,11 +34,17 @@ namespace AgentSmith.NamingConventions
             {
                 return _declaredElement.Language;
             }
-            if (dataConstant == DataConstants.TEXT_CONTROL)
+            if (dataConstant == TextControlDataConstants.TEXT_CONTROL)
             {
                 return _textControl;
             }
             return null;
+        }
+
+
+        protected override object DoSetData(IDataConstant constant, object data)
+        {
+            throw new NotImplementedException();
         }
     }
 }

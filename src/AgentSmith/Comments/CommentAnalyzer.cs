@@ -4,8 +4,9 @@ using AgentSmith.MemberMatch;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Editor;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Parsing;
@@ -19,7 +20,7 @@ namespace AgentSmith.Comments
         private readonly CommentsSettings _settings;
         private readonly ISolution _solution;
         private readonly ISpellChecker _spellChecker;
-        
+
         public CommentAnalyzer(CommentsSettings settings, ISolution solution)
         {
             _settings = settings;
@@ -27,7 +28,7 @@ namespace AgentSmith.Comments
             _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
 
             ComplexMatchEvaluator.Prepare(solution, _settings.CommentMatch, _settings.CommentNotMatch);
-        }        
+        }
 
         #region IDeclarationAnalyzer Members
 
@@ -42,7 +43,7 @@ namespace AgentSmith.Comments
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
 
             checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings, spellCheck);
-            checkMembersHaveComments((IClassMemberDeclaration)declaration, highlightings);
+            checkMembersHaveComments((IClassMemberDeclaration) declaration, highlightings);
 
             return highlightings.ToArray();
         }
@@ -84,13 +85,13 @@ namespace AgentSmith.Comments
                     if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
                     {
                         highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
-                            range, decl, _solution));
+                                                                                range, decl, _solution));
                     }
                     else if (spellCheck)
                     {
                         checkWordSpelling(decl, wordRange, highlightings, range);
                     }
-                }
+               }
             }
         }
 
@@ -176,7 +177,7 @@ namespace AgentSmith.Comments
             if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
                 Match match = ComplexMatchEvaluator.IsMatch(declaration,
-                    _settings.CommentMatch, _settings.CommentNotMatch, true);
+                                                            _settings.CommentMatch, _settings.CommentNotMatch, true);
 
                 if (match != null)
                 {
@@ -184,13 +185,13 @@ namespace AgentSmith.Comments
                     highlightings.Add(suggestion);
                     return;
                 }
-            }            
+            }
         }
 
         #region Nested type: Range
 
         private struct Range
-        {            
+        {
             public readonly TextRange TextRange;
             public readonly string Word;
 
