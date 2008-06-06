@@ -1,3 +1,11 @@
+==1.2.0 (06/06/2008) ==
+  * Ported for build 816 of R# 4 (Release candidate).
+  * Ability to disalbe spellchecking inside '//agentsmith spellcheck disable' and '//agentsmith spellcheck restore' comments
+  * Multilanguage support in strings
+  * Detection of NeutralResourcesLanguageAttribute
+  * Import of R# naming settings as Agent Smith rules
+  * Fixed defect with importing dictionary in Vista
+
 ==1.1.9 (05/17/2008) ==
   * Ported for build 801 of R# 4.
   * Skipping of generated regions.
