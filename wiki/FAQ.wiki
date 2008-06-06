@@ -23,3 +23,6 @@
 
   * *How do I disable spell checking of strings/comments/identifiers only*
     # This can be disabled individually in ReSharper Inspection Severity configuration page.
+
+  * *How do I specify default language for resx file spell checking?*
+    # [assembly: NeutralResourcesLanguage("es-ES")]
