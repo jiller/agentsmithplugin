@@ -1,7 +1,7 @@
   * *Where are Agent Smith settings?*
     # Agent Smith settings pages are under ReSharper->Options->C#->Agent Smith Code Style Settings'
 
-  * Why Agent Smigh warnings are not shown in R# solution-wide analysis?
+  * *Why Agent Smigh warnings are not shown in R# solution-wide analysis?*
     # R# shows only issues that have severity 'Error' in ReSharper's Inspection Severity settings. To see Agent Smith's warnings and suggestions in solution-wide analysis windows please set corresponding inspection severity level in ReSharper->Options->Inspection Serverity to 'Error'
 
   * *How do I import new dictionary?*
