@@ -5,6 +5,8 @@ namespace AgentSmith.Options
 {
     public partial class StringListItemEditDialog : Form
     {
+        private ValidateHandler _itemValidate;
+
         private StringListItemEditDialog()
         {
             InitializeComponent();
@@ -12,14 +14,13 @@ namespace AgentSmith.Options
             CustomInitializeComponent();
         }
 
-
         private void CustomInitializeComponent()
         {
             ActiveControl = _itemTextBox;
             _itemTextBox.TextChanged += _itemTextBox_TextChanged;
         }
 
-        void _itemTextBox_TextChanged(object sender, EventArgs e)
+        private void _itemTextBox_TextChanged(object sender, EventArgs e)
         {
             InvalidateState();
         }
@@ -31,11 +32,12 @@ namespace AgentSmith.Options
         }
 
 
-        public static StringListItemEditDialog CreateNewItemEditDialog()
+        public static StringListItemEditDialog CreateNewItemEditDialog(ValidateHandler validateHandler)
         {
             StringListItemEditDialog dialog = new StringListItemEditDialog();
             dialog.Text = "Add New Item";
             dialog.InvalidateState();
+            dialog._itemValidate = validateHandler;
             return dialog;
         }
 
@@ -55,9 +57,13 @@ namespace AgentSmith.Options
             get { return _itemTextBox.Text; }
         }
 
-        private void _okButton_Click(object sender, EventArgs e)
+        private void okButton_Click(object sender, EventArgs e)
         {
-            Close();
+            if (_itemValidate == null || _itemValidate(Value))
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
         }
     }
 }
