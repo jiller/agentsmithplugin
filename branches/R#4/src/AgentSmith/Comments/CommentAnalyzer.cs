@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AgentSmith.MemberMatch;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
@@ -12,19 +13,22 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using Match=AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Comments
 {
     public class CommentAnalyzer : IDeclarationAnalyzer
     {
         private readonly CommentsSettings _settings;
+        private readonly IList<Regex> _patternsToIgnore;
         private readonly ISolution _solution;
         private readonly ISpellChecker _spellChecker;
 
-        public CommentAnalyzer(CommentsSettings settings, ISolution solution)
+        public CommentAnalyzer(CommentsSettings settings, ISolution solution, IList<Regex> patternsToIgnore)
         {
             _settings = settings;
             _solution = solution;
+            _patternsToIgnore = patternsToIgnore;
             _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
 
             ComplexMatchEvaluator.Prepare(solution, _settings.CommentMatch, _settings.CommentNotMatch);
@@ -148,7 +152,8 @@ namespace AgentSmith.Comments
                     }
                     if (lexer.TokenType == lexer.XmlTokenType.TEXT && inCode == 0)
                     {
-                        ILexer wordLexer = new WordLexer(lexer.TokenText);
+                        string textWithoutPatterns = PatternRemover.RemovePatterns(lexer.TokenText, _patternsToIgnore);
+                        ILexer wordLexer = new WordLexer(textWithoutPatterns);
                         wordLexer.Start();
                         while (wordLexer.TokenType != null)
                         {

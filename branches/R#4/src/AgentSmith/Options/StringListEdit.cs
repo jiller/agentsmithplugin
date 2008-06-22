@@ -4,42 +4,48 @@ using System.Windows.Forms;
 
 namespace AgentSmith.Options
 {
+    public delegate bool ValidateHandler(string value);
+    
     public partial class StringListEdit : UserControl
     {
         public StringListEdit()
         {
             InitializeComponent();
 
-            CustomInitializeComponent();
+            customInitializeComponent();
 
-            InvalidateState();
+            invalidateState();
         }
 
 
-        private void CustomInitializeComponent()
+        private void customInitializeComponent()
         {
-            _addButton.Click += _addButton_Click;
-            _editButton.Click += _editButton_Click;
-            _removeButton.Click += _removeButton_Click;
-            _itemsListBox.SelectedIndexChanged += _itemsListBox_SelectedIndexChanged;
-            _itemsListBox.DoubleClick += _itemsListBox_DoubleClick;
+            _addButton.Click += addButton_Click;
+            _editButton.Click += editButton_Click;
+            _removeButton.Click += removeButton_Click;
+            _itemsListBox.SelectedIndexChanged += itemsListBox_SelectedIndexChanged;
+            _itemsListBox.DoubleClick += itemsListBox_DoubleClick;
         }
 
-        void _itemsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void itemsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            InvalidateState();
+            invalidateState();
         }
 
-        void _removeButton_Click(object sender, EventArgs e)
+        private void removeButton_Click(object sender, EventArgs e)
         {
-            if (!IsRemoveEnabled())
+            if (!isRemoveEnabled())
+            {
                 return;
+            }
 
             _itemsListBox.BeginUpdate();
-            
+
             List<int> selectedIndexes = new List<int>();
             foreach (int selectedIndex in _itemsListBox.SelectedIndices)
+            {
                 selectedIndexes.Add(selectedIndex);
+            }
             selectedIndexes.Sort();
 
             int deletedCount = 0;
@@ -47,41 +53,43 @@ namespace AgentSmith.Options
             {
                 _itemsListBox.Items.RemoveAt(selectedIndex - deletedCount);
                 deletedCount++;
-            }                
+            }
 
-            _itemsListBox.EndUpdate();            
+            _itemsListBox.EndUpdate();
         }
 
-        void _itemsListBox_DoubleClick(object sender, EventArgs e)
+        private void itemsListBox_DoubleClick(object sender, EventArgs e)
         {
-            EditSelectedItem();
-        }
-
-
-        void _editButton_Click(object sender, EventArgs e)
-        {
-            EditSelectedItem();
-        }
-
-        void _addButton_Click(object sender, EventArgs e)
-        {
-            AddNewItem();
+            editSelectedItem();
         }
 
 
-        private void AddNewItem()
+        private void editButton_Click(object sender, EventArgs e)
         {
-            using (StringListItemEditDialog dialog = StringListItemEditDialog.CreateNewItemEditDialog())
+            editSelectedItem();
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            addNewItem();
+        }
+
+
+        private void addNewItem()
+        {
+            using (StringListItemEditDialog dialog = StringListItemEditDialog.CreateNewItemEditDialog(OnValidate))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
+                {
                     return;
+                }
 
-                DoAddNewItem(dialog.Value);
+                doAddNewItem(dialog.Value);
             }
         }
 
 
-        private void DoAddNewItem(string value)
+        private void doAddNewItem(string value)
         {
             _itemsListBox.Items.Add(value);
             _itemsListBox.ClearSelected();
@@ -89,38 +97,44 @@ namespace AgentSmith.Options
         }
 
 
-        void InvalidateState()
+        private void invalidateState()
         {
-            _editButton.Enabled = IsEditEnabled();
-            _removeButton.Enabled = IsRemoveEnabled();
+            _editButton.Enabled = isEditEnabled();
+            _removeButton.Enabled = isRemoveEnabled();
         }
 
 
-        private bool IsRemoveEnabled()
+        private bool isRemoveEnabled()
         {
             return _itemsListBox.SelectedIndices.Count > 0;
         }
 
-
-        bool IsEditEnabled()
+        private bool isEditEnabled()
         {
             return _itemsListBox.SelectedIndices.Count == 1;
         }
 
-        private void EditSelectedItem()
+        private void editSelectedItem()
         {
-            if (!IsEditEnabled())
+            if (!isEditEnabled())
+            {
                 return;
+            }
 
             int index = _itemsListBox.SelectedIndices[0];
-            string itemToChange = (string)_itemsListBox.SelectedItem;
+            string itemToChange = (string) _itemsListBox.SelectedItem;
             if (itemToChange == null)
+            {
                 return;
+            }
 
-            using (StringListItemEditDialog dialog = StringListItemEditDialog.CreateExistingItemEditDialog(itemToChange))
+            using (StringListItemEditDialog dialog = StringListItemEditDialog.CreateExistingItemEditDialog(itemToChange)
+                )
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
+                {
                     return;
+                }
 
                 _itemsListBox.BeginUpdate();
                 _itemsListBox.Items.Insert(index + 1, dialog.Value);
@@ -128,24 +142,27 @@ namespace AgentSmith.Options
                 _itemsListBox.ClearSelected();
                 _itemsListBox.SelectedIndex = index;
 
-                _itemsListBox.EndUpdate();            
-
+                _itemsListBox.EndUpdate();
             }
         }
 
         public string Caption
         {
-            get { return _captionLabel.Text;  }
+            get { return _captionLabel.Text; }
             set { _captionLabel.Text = value; }
         }
 
-        public string [] Items
+        public event ValidateHandler OnValidate;
+
+        public string[] Items
         {
             get
             {
                 List<string> result = new List<string>(_itemsListBox.Items.Count);
                 foreach (string str in _itemsListBox.Items)
+                {
                     result.Add(str);
+                }
 
                 return result.ToArray();
             }
@@ -153,10 +170,14 @@ namespace AgentSmith.Options
             {
                 _itemsListBox.Items.Clear();
                 if (value == null)
+                {
                     return;
+                }
 
                 foreach (string str in value)
+                {
                     _itemsListBox.Items.Add(str);
+                }
             }
         }
     }
