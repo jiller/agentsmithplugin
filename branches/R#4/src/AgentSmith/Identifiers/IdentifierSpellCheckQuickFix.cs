@@ -22,7 +22,7 @@ namespace AgentSmith.Identifiers
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _suggestion.Declaration.IsValid();
         }
 
         public IBulbItem[] Items
@@ -30,7 +30,7 @@ namespace AgentSmith.Identifiers
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-
+                
                 ISpellChecker spellChecker = _suggestion.SpellChecker;
 
                 if (spellChecker != null)

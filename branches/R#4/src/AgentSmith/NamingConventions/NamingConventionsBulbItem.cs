@@ -1,17 +1,14 @@
 using System;
-using System.Windows.Forms;
 using JetBrains.Application;
-using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Refactorings.PostRename.PostRenameModel;
 using JetBrains.ReSharper.Refactorings.Rename;
-using JetBrains.ReSharper.Refactorings.RenameNamespace;
 using JetBrains.ReSharper.Refactorings.Workflow;
 using JetBrains.TextControl;
 using JetBrains.Util;
-using JetBrains.ReSharper.Refactorings.Conflicts;
 
 namespace AgentSmith.NamingConventions
 {    
@@ -43,12 +40,7 @@ namespace AgentSmith.NamingConventions
                         {
                             if (modificationCookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
                             {
-                                RefactoringWorkflow workflow = getRefactoringWorkflow(solution, _declaration.DeclaredElement, _newName, textControl);
-                                if (workflow != null)
-                                {                                    
-                                    PsiManager manager = PsiManager.GetInstance(solution);
-                                    manager.DoTransaction(delegate { workflow.Execute(NullProgressIndicator.INSTANCE); });                                    
-                                }
+                                ExecuteEx(solution, textControl);                                
                             }
                         }
                     }
@@ -63,46 +55,46 @@ namespace AgentSmith.NamingConventions
 
         #endregion
 
-        private static RefactoringWorkflow getRefactoringWorkflow(ISolution solution, 
-            IDeclaredElement declaredElement, string newName, ITextControl textControl)
+        private class RenameDataProvider : IRenameDataProvider
         {
-            if (declaredElement is INamespace)
+            private readonly string _oldName;
+            private readonly string _newName;
+            public RenameDataProvider(string oldName, string newName)
             {
-                RenameNamespaceRefactoringWorkflow wf = new RenameNamespaceRefactoringWorkflow();
-                if (wf.Initialize(new DataContext(null, declaredElement, textControl)))
-                {
-                    wf.InitializeRefactoring(newName, NullProgressIndicator.INSTANCE, false);                    
-                    return wf;
-                }
-                return null;
+                _oldName = oldName;
+                _newName = newName;
             }
-            else
+            public NameChanges GetBaseNameChanges()
             {
-                RenameWorkflow wf = new RenameWorkflow(solution);
-                if (wf.Initialize(new DataContext(null, declaredElement, textControl)))
-                {
-                    wf.CommitInitialStage(newName, NullProgressIndicator.INSTANCE, false);
-                    if (wf.ConflictSearcher != null)
-                    {
-                        ConflictSearchResult result = wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE, true);
-                        if (result != null && result.TransactionResult != null && !result.TransactionResult.Succeded)
-                        {
-                            MessageBox.Show("Conflicts were found. Can not rename.");
-                            return null;
-                        }
-                    }
-                    return wf;
-                }
-                return null;
-            }            
-        }
+                return new NameChanges(_oldName, _newName);
+            }
+            public string Name
+            {
+                get { return _newName; }
+            }
+            public bool DoRenameFile
+            {
+                get { return true; }
+            }
+            public bool ChangeText
+            {
+                get { return false; }
+            }
+        }       
 
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
-            RefactoringWorkflow wf = getRefactoringWorkflow(solution, _declaration.DeclaredElement, _newName, textControl);
-            if (wf != null)
-            {                
-                wf.Execute(NullProgressIndicator.INSTANCE);                
+            IDeclaredElement declaredElement = _declaration.DeclaredElement;
+            if (declaredElement != null)
+            {
+                RefactoringWorkflow wf = RefactoringWorkflow.GetRefactoringWorkflow(declaredElement, solution);
+
+                string oldName = declaredElement.ShortName;
+                
+                RenameDataProvider provider = new RenameDataProvider(oldName, _newName);
+                WorkflowProcessor p = new WorkflowProcessor(wf, solution);
+                p.Initialize(new DataContext(null, declaredElement, textControl, solution, provider));
+                p.ExecuteAction();
             }
         }
 
