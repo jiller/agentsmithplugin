@@ -40,6 +40,7 @@ namespace AgentSmith.Options
 
         private void initializeUI()
         {
+            bindDictionaries(DicUtil.LoadDictionaries());
             _cbDictionary.SelectedItem = Settings.LastSelectedCustomDictionary;
         }
 

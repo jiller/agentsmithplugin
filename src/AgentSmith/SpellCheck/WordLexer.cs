@@ -90,7 +90,7 @@ namespace AgentSmith.SpellCheck
 
         private bool isSeparator(int i)
         {
-            return !(char.IsLetterOrDigit(_data, i) || _data[i] == '_') || _data[i] == '-';
+            return !(char.IsLetterOrDigit(_data, i) || _data[i] == '_' || _data[i] == '\'') || _data[i] == '-';
         }
 
         #region Nested type: WordTokenType
