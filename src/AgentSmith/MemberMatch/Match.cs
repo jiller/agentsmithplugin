@@ -344,7 +344,7 @@ namespace AgentSmith.MemberMatch
             {
                 return true;
             }
-            
+
             if (_inheritedFromType == null)
             {
                 return false;
@@ -353,7 +353,7 @@ namespace AgentSmith.MemberMatch
             ITypeElement typeElement = declaration.DeclaredElement as ITypeElement;
             if (typeElement == null)
             {
-                return false;                
+                return false;
             }
             return typeElement.IsDescendantOf(_inheritedFromType);
         }
@@ -409,7 +409,7 @@ namespace AgentSmith.MemberMatch
                 return false;
             }
             rights = getRights((IModifiersOwner)declaration, useEffectiveRights);
-            
+
             return AccessLevelMap.Map.ContainsKey(rights) && ((AccessLevelMap.Map[rights] & _accessLevel) != 0);
         }
 

@@ -2,12 +2,14 @@ using System;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Daemon;
 
 namespace AgentSmith
 {
     internal class GeneratedCodeRegionDetector
     {
-        private readonly string[] _skipRegions = CodeStyleSettingsManager.Instance.CodeStyleSettings.SkipRegions;
+        private readonly string[] _skipRegions = HighlightingSettingsManager.Instance.Settings.GeneratedCodeRegions;
+
         private int _inGeneratedCode;
 
         public bool InGeneratedCode

@@ -21,13 +21,13 @@ namespace AgentSmith.NamingConventions
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _declaration.IsValid();
         }
 
         public IBulbItem[] Items
         {
             get
-            {
+            {               
                 if (_newNames.Length == 0 || _declaration is INamespaceDeclaration)
                 {
                     return new IBulbItem[] {new RenameBulbItem(_declaration)};
