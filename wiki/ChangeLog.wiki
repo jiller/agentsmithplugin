@@ -1,3 +1,6 @@
+==1.2.2 (24/06/2008) ==
+  * Fixed issue when Solution Analysis restarted on clicking on an Agent Smith's error.
+
 ==1.2.1 (23/06/2008) ==
   * Fixed exception on renaming identifiers.
   * Added patterns to ignore when performing spell checking. This allows ignoring emails, urls etc.
