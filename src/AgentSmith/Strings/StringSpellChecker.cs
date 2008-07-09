@@ -73,7 +73,7 @@ namespace AgentSmith.Strings
             while (wordLexer.TokenType != null)
             {
                 if (SpellCheckUtil.ShouldSpellCheck(wordLexer.TokenText) &&
-                    !spellChecker.TestWord(wordLexer.TokenText, true))
+                    !spellChecker.TestWord(wordLexer.TokenText.Replace("&", ""), true))
                 {
                     IClassMemberDeclaration containingElement =
                         token.GetContainingElement<IClassMemberDeclaration>(false);
@@ -94,7 +94,7 @@ namespace AgentSmith.Strings
                                 DocumentRange documentRange = new DocumentRange(document, range);
                                 TextRange textRange = new TextRange(humpToken.Start - wordLexer.TokenStart,
                                                                     humpToken.End - wordLexer.TokenStart);
-
+                                
                                 suggestions.Add(new StringSpellCheckSuggestion(document.GetText(range), documentRange,
                                                                                humpToken.Value, textRange,
                                                                                solution, spellChecker));

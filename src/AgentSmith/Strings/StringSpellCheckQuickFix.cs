@@ -35,7 +35,8 @@ namespace AgentSmith.Strings
                 ISpellChecker spellChecker = _suggestion.SpellChecker;
 
                 if (spellChecker != null)
-                {
+                {                                                           
+
                     foreach (string newWord in spellChecker.Suggest(_suggestion.MisspelledWord, MAX_SUGGESTION_COUNT))
                     {
                         string wordWithMisspelledWordDeleted =
@@ -44,6 +45,12 @@ namespace AgentSmith.Strings
 
                         string newString = wordWithMisspelledWordDeleted.Insert(
                             _suggestion.MisspelledRange.StartOffset, newWord);
+
+                        int ampersandPosition = newString.IndexOf(_suggestion.AmpersandChar);
+                        if (ampersandPosition>=0)
+                        {
+                            newString = newString.Insert(ampersandPosition, "&");
+                        }
 
                         items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newString));
                     }
