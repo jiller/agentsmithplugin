@@ -15,14 +15,21 @@ namespace AgentSmith.Strings
 
         private readonly string _word;        
         private readonly TextRange _misspelledRange;
+        private readonly char _ampersandChar = (char)0;        
 
         public StringSpellCheckSuggestion(string word, DocumentRange range, string misspelledWord,
                                           TextRange misspelledRange, ISolution solution,
                                           ISpellChecker spellChecker)
-            : base(NAME, range, misspelledWord, solution, spellChecker)
+            : base(NAME, range, misspelledWord.Replace("&", ""), solution, spellChecker)
         {
             _word = word;            
             _misspelledRange = misspelledRange;
+            int ampersandIndex = misspelledWord.IndexOf("&");
+            
+            if (ampersandIndex >=0 && ampersandIndex < misspelledWord.Length - 1)
+            {
+                _ampersandChar = misspelledWord[ampersandIndex + 1];
+            }                       
         }
 
         public string Word
@@ -34,7 +41,12 @@ namespace AgentSmith.Strings
         {
             get { return _misspelledRange; }
         }
-        
+       
+        public char AmpersandChar
+        {
+            get { return _ampersandChar; }
+        }
+
         public override Severity Severity
         {
             get

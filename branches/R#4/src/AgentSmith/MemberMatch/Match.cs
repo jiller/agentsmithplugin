@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -27,6 +28,7 @@ namespace AgentSmith.MemberMatch
         private ITypeElement _isOfTypeType;
         private ParamDirection _paramDirection = ParamDirection.Any;
         private static readonly Dictionary<RightsPair, AccessRights> _rightsMap;
+        private Regex _namespaceRegex;
 
         static Match()
         {
@@ -189,11 +191,15 @@ namespace AgentSmith.MemberMatch
             set { _paramDirection = value; }
         }
 
+        public string Namespace { get; set; }
+
         public void Prepare(ISolution solution, PsiManager manager)
         {
             _markedWithAttributeType = null;
             _inheritedFromType = null;
             _isOfTypeType = null;
+            _namespaceRegex = null;
+
             DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
             IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
             if (!string.IsNullOrEmpty(_markedWithAttribute))
@@ -209,6 +215,10 @@ namespace AgentSmith.MemberMatch
             if (!string.IsNullOrEmpty(_isOfType))
             {
                 _isOfTypeType = cache[_isOfType] as ITypeElement;
+            }
+            if (Namespace!= null && !string.IsNullOrEmpty(Namespace.Trim()))
+            {
+                _namespaceRegex = new Regex(Namespace, RegexOptions.Compiled);
             }
         }
 
@@ -231,8 +241,21 @@ namespace AgentSmith.MemberMatch
                        ownsTypeMatch(declaration) &&
                        isReadOnlyMatch(declaration) &&
                        isStaticMatch(declaration) && 
-                       paramDirectionMatch(declaration);
+                       paramDirectionMatch(declaration) &&
+                       namespaceMatch(declaration);
             }
+        }
+
+        private bool namespaceMatch(IDeclaration declaration)
+        {
+            if (_namespaceRegex == null)
+            {
+                return true;
+            }
+
+            IClassLikeDeclaration decl = declaration as IClassLikeDeclaration;
+            return (decl != null && decl.OwnerNamespaceDeclaration != null &&
+                    _namespaceRegex.IsMatch(decl.OwnerNamespaceDeclaration.QualifiedName));
         }
 
         private bool paramDirectionMatch(IDeclaration declaration)
@@ -280,6 +303,10 @@ namespace AgentSmith.MemberMatch
             if (description.CanBeMarkedWithAttribute && !string.IsNullOrEmpty(_markedWithAttribute))
             {
                 sb.AppendFormat("marked with '{0}' ", _markedWithAttribute);
+            }
+            if (description.HasNamespace && !string.IsNullOrEmpty(Namespace.Trim()))
+            {
+                sb.AppendFormat("in namespace '{0}' ", Namespace);
             }
             return sb.ToString();
         }
