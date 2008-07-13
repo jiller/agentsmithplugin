@@ -1,3 +1,7 @@
+==1.2.3 (13/07/2008) ==
+  * Namespace match in naming convention validation.
+  * Removing of & during spellcheck.
+
 ==1.2.2 (24/06/2008) ==
   * Fixed issue when Solution Analysis restarted on clicking on an Agent Smith's error.
 
