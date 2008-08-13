@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.Comments.Reflow
 {
     /// <summary>
     /// I want to hello
@@ -29,78 +29,50 @@ namespace AgentSmith.Comments
     public class XmlCommentReflower
     {   
         private const int MAX_LINE_WIDTH = 80;
-        private IEnumerable<string> getStrBlocks(string block)
-        {
-            int start = 0;
-            while (IsSpace(block[start]) && start < block.Length)
-                start++;
-            
-            yield return block.Substring(0, start);
-
-            
-            int end = block.Length - 1;
-            while (IsSpace(block[end]) && end >= 0)
-                end--;
-
-            while (start < end)
-            {
-                int i = start;
-                while (!IsSpace(block[i]) && i < end)
-                {
-                    i++;
-                }
-                
-                if (i>start)
-                    yield return block.Substring(start, i - start);
-                
-                while (IsSpace(block[i]) && i < end)
-                {
-                    i++;
-                }
-
-                if (i>start)
-                    yield return block.Substring(start, i - start);
-                start = i;
-            }
-
-            if (end < block.Length-1)
-                yield return block.Substring(end + 1);
-        }
-
-        private bool IsSpace(char c)
-        {
-            return c == ' ' || c == '\n' || c=='\t';
-        }
-
+               
         public void Reflow()
         {
             LineBuilder lb = new LineBuilder();
-            XmlCommentReflowableBlockLexer xmlBlockLexer = null;
-            foreach (string block in xmlBlockLexer)
-            {                
-                if (block.StartsWith("<"))
+
+            XmlCommentParagraphParser paragraphParser = null;
+            bool firstParagraph = true;
+            foreach (Paragraph paragraph in paragraphParser)
+            {
+                if (!firstParagraph)
                 {
-                    //This is xml element - just put it as it is.
-                    lb.AppendMultilineBlock(strBlock, MAX_LINE_WIDTH);
+                    lb.Append("\n");
                 }
-                else
-                {                    
-                    foreach (string strBlock in getStrBlocks(block))
+                foreach (ParagraphLine paragraphLine in paragraph)
+                {
+                    foreach (ParagraphLineItem lineItem in paragraphLine)
                     {
-                        if (!IsSpace(strBlock[0]))
+                        if (lineItem.ItemType == ItemType.XmlElement ||
+                            lineItem.ItemType == ItemType.NonReflowableBlock)
                         {
-                            lb.AppendMultilineBlock(strBlock, MAX_LINE_WIDTH);
+                            if (lb.CurrentLine.Length + lineItem.FirstLine.Length > MAX_LINE_WIDTH)
+                                lb.AppendMultilineBlock("\n");
+                            lb.AppendMultilineBlock(lineItem.Text);
                         }
-                        else
+
+                        if (lineItem.ItemType == ItemType.Space)
                         {
-                            foreach (char c in strBlock)
+                            lb.AppendMultilineBlock(lineItem.Text);
+                        }
+
+                        if (lineItem.ItemType == ItemType.Text)
+                        {
+                            string[] words = lineItem.Text.Split(" ");
+                            foreach (string word in words)
                             {
-                                
+                                if (lb.CurrentLine.Length + word.Length > MAX_LINE_WIDTH)
+                                    lb.AppendMultilineBlock("\n");
+                                lb.AppendMultilineBlock(lineItem.Text);
                             }
                         }
                     }
                 }
-            }                                 
+                firstParagraph = false;
+            }            
         }        
     }
 }

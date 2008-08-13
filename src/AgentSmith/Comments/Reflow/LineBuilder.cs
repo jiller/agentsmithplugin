@@ -33,7 +33,7 @@ namespace AgentSmith.Comments
             }
         }
 
-        public void AppendMultilineBlock(string s, int maxLineLength)
+        public void AppendMultilineBlock(string block, int maxLineLength)
         {
             int n = block.IndexOf("\n");
             if (n < 0)
