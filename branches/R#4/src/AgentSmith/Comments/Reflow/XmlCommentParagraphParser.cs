@@ -7,7 +7,14 @@ namespace AgentSmith.Comments.Reflow
 {
     public class XmlCommentParagraphParser
     {
-        IEnumerable<Paragraph> Parse()
+        private readonly XmlCommentReflowableBlockLexer  _xmlBlockLexer = null;
+        
+        public XmlCommentParagraphParser(XmlCommentReflowableBlockLexer xmlBlockLexer)
+        {
+            XmlCommentReflowableBlockLexer _xmlBlockLexer = xmlBlockLexer;
+        }
+
+        public IEnumerable<Paragraph> Parse()
         {
             Paragraph paragraph = new Paragraph();
             ParagraphLine previousLine = null;
@@ -51,9 +58,8 @@ namespace AgentSmith.Comments.Reflow
 
         IEnumerable<ParagraphLine> readLines()
         {
-            ParagraphLine paragraphLine = new ParagraphLine();
-            XmlCommentReflowableBlockLexer xmlBlockLexer = null;
-            foreach (string block in xmlBlockLexer)
+            ParagraphLine paragraphLine = new ParagraphLine();            
+            foreach (string block in _xmlBlockLexer)
             {
                 ParagraphLineItem item = new ParagraphLineItem();                
                 if (block.StartsWith("<code>") || block.StartsWith("<c>"))
