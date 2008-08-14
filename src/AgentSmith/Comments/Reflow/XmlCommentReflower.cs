@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Comments.Reflow
 {
@@ -30,21 +31,23 @@ namespace AgentSmith.Comments.Reflow
     {   
         private const int MAX_LINE_WIDTH = 80;
                
-        public void Reflow()
+        public string Reflow(IDocCommentBlockNode blockNode)
         {
             LineBuilder lb = new LineBuilder();
 
-            XmlCommentParagraphParser paragraphParser = null;
+            XmlCommentReflowableBlockLexer lexer = new XmlCommentReflowableBlockLexer(blockNode);
+
+            XmlCommentParagraphParser paragraphParser = new XmlCommentParagraphParser(lexer);
             bool firstParagraph = true;
-            foreach (Paragraph paragraph in paragraphParser)
+            foreach (Paragraph paragraph in paragraphParser.Parse())
             {
                 if (!firstParagraph)
                 {
                     lb.Append("\n");
                 }
-                foreach (ParagraphLine paragraphLine in paragraph)
+                foreach (ParagraphLine paragraphLine in paragraph.Lines)
                 {
-                    foreach (ParagraphLineItem lineItem in paragraphLine)
+                    foreach (ParagraphLineItem lineItem in paragraphLine.Items)
                     {
                         if (lineItem.ItemType == ItemType.XmlElement ||
                             lineItem.ItemType == ItemType.NonReflowableBlock)
@@ -61,7 +64,7 @@ namespace AgentSmith.Comments.Reflow
 
                         if (lineItem.ItemType == ItemType.Text)
                         {
-                            string[] words = lineItem.Text.Split(" ");
+                            string[] words = lineItem.Text.Split(' ');
                             foreach (string word in words)
                             {
                                 if (lb.CurrentLine.Length + word.Length > MAX_LINE_WIDTH)
@@ -72,7 +75,9 @@ namespace AgentSmith.Comments.Reflow
                     }
                 }
                 firstParagraph = false;
-            }            
+            }
+
+            return lb.ToString();
         }        
     }
 }
