@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AgentSmith.Comments.Reflow
 {
@@ -11,7 +9,7 @@ namespace AgentSmith.Comments.Reflow
         
         public XmlCommentParagraphParser(XmlCommentReflowableBlockLexer xmlBlockLexer)
         {
-            XmlCommentReflowableBlockLexer _xmlBlockLexer = xmlBlockLexer;
+            _xmlBlockLexer = xmlBlockLexer;
         }
 
         public IEnumerable<Paragraph> Parse()
@@ -22,7 +20,7 @@ namespace AgentSmith.Comments.Reflow
             {                              
                 //xml element on start of line starts new paragraph
                 ParagraphLine trimmedLine = line.TrimStart();
-                ParagraphLine previousTrimmedLine = line.Trim();
+                ParagraphLine previousTrimmedLine = previousLine == null ? null : previousLine.Trim();
                 if (trimmedLine.Items.Count > 0 && trimmedLine.Items[0].ItemType == ItemType.XmlElement)
                 {
                     if (paragraph.Lines.Count > 0)
@@ -39,7 +37,7 @@ namespace AgentSmith.Comments.Reflow
                     paragraph.Add(line);
                 }
                 //anything after xml element on own line starts new paragraph.
-                else if (previousTrimmedLine.Items.Count == 1 && previousTrimmedLine.Items[0].ItemType == ItemType.XmlElement)
+                else if (previousTrimmedLine != null && previousTrimmedLine.Items.Count == 1 && previousTrimmedLine.Items[0].ItemType == ItemType.XmlElement)
                 {
                     if (paragraph.Lines.Count > 0)
                         yield return paragraph;
@@ -65,17 +63,19 @@ namespace AgentSmith.Comments.Reflow
                 if (block.StartsWith("<code>") || block.StartsWith("<c>"))
                 {
                     item.Text = block;
-                    item.ItemType = ItemType.NonReflowableBlock;                    
+                    item.ItemType = ItemType.NonReflowableBlock;
+                    paragraphLine.AddItem(item);                    
                 }
                 //TODO: is this true?
                 else if (block.StartsWith("<"))
                 {
                     item.Text = block;
                     item.ItemType = ItemType.XmlElement;
+                    paragraphLine.AddItem(item);                    
                 }
                 else
                 {
-                    string[] lines = block.Split('\n');
+                    string[] lines = block.Replace("\r", "").Split('\n');
                     foreach (string line in lines)
                     {
                         item.Text = line;

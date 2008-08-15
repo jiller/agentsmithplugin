@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using AgentSmith.Comments.Reflow;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 
 namespace AgentSmith.Test.Comments.Reflow
 {
@@ -14,8 +10,7 @@ namespace AgentSmith.Test.Comments.Reflow
         [Test]
         public void TestReflow()
         {
-            string unreflownBlock = @"
-<summary>
+            string unreflownBlock = @"///<summary>
     This block needs to be reflown.
     Here goes some crap. Here goes some <c> some code</c> that should not
     be reflown. <code> 
@@ -31,8 +26,7 @@ as they are
     </list>
 </summary>";
 
-            string reflownBlock = @"
-<summary>
+            string reflownBlock = @"<summary>
     This block needs to be reflown.
     Here goes some crap. Here goes some <c> some code</c> that should not
     be reflown <code> 
@@ -48,8 +42,8 @@ as they are.
     </list>
 </summary>";
 
-            Buffer buffer = new Buffer(unreflownBlock);
-            DocCommentNode docCommentNode = new DocCommentNode(null, buffer, 0, unreflownBlock.Length);
+            Buffer buffer = new Buffer(unreflownBlock);            
+            DocCommentNode docCommentNode = new DocCommentNode(new MyNodeType(), buffer, 0, unreflownBlock.Length);
             DocCommentBlockNode blockNode = new DocCommentBlockNode(docCommentNode);
             XmlCommentReflower reflower = new XmlCommentReflower();
             string result = reflower.Reflow(blockNode);

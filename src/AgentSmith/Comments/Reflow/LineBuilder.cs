@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace AgentSmith.Comments
 {
     public class LineBuilder
     {
-        private StringBuilder sb = new StringBuilder();
-        private string _currentLine;
+        private readonly StringBuilder _sb = new StringBuilder();
+        private string _currentLine = "";
         
         public string CurrentLine
         {
@@ -23,8 +21,8 @@ namespace AgentSmith.Comments
             int n = s.LastIndexOf("\n");
             if (n >= 0)
             {
-                sb.Append(_currentLine);
-                sb.Append(s.Substring(0, n + 1));
+                _sb.Append(_currentLine);
+                _sb.Append(s.Substring(0, n + 1));
                 _currentLine = s.Substring(n + 1);
             }
             else
@@ -34,17 +32,13 @@ namespace AgentSmith.Comments
         }
 
         public void AppendMultilineBlock(string block)
-        {
-            int n = block.IndexOf("\n");
-            if (n < 0)
-                n = block.Length;            
-
+        {              
             Append(block);
         }
 
         public override string ToString()
         {
-            return sb.ToString() + _currentLine;
+            return _sb + _currentLine;
         }
     }
 }
