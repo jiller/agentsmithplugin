@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace AgentSmith.Comments.Reflow
 {
     public class ParagraphLine
     {
-        private List<ParagraphLineItem> _items;
+        private readonly List<ParagraphLineItem> _items = new List<ParagraphLineItem>();
 
         public void AddItem(ParagraphLineItem item)
         {

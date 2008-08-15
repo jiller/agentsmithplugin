@@ -166,6 +166,13 @@
     <Compile Include="AssemblyRegistrar.cs" />
     <Compile Include="Comments\CanBeSurroundedWithMetatagsSuggestion.cs" />
     <Compile Include="Comments\IdentifierResolver.cs" />
+    <Compile Include="Comments\Reflow\LineBuilder.cs" />
+    <Compile Include="Comments\Reflow\Paragraph.cs" />
+    <Compile Include="Comments\Reflow\ParagraphLine.cs" />
+    <Compile Include="Comments\Reflow\ParagraphLineItem.cs" />
+    <Compile Include="Comments\Reflow\XmlCommentParagraphParser.cs" />
+    <Compile Include="Comments\Reflow\XmlCommentReflowableBlockLexer.cs" />
+    <Compile Include="Comments\Reflow\XmlCommentReflower.cs" />
     <Compile Include="GeneratedCodeRegionDetector.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckAnalyzer.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckQuickFix.cs" />

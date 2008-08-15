@@ -19,8 +19,7 @@ namespace AgentSmith.Comments
         public IEnumerator<string> GetEnumerator()
         {
             docLexer.Start();
-            int inCode = 0;            
-            bool inTag = false;
+            int inCode = 0;                      
             StringBuilder blockBuilder = new StringBuilder();
             while (docLexer.TokenType != null)
             {
@@ -41,14 +40,9 @@ namespace AgentSmith.Comments
                     }
                     
                     blockBuilder.Append(docLexer.TokenText);
-                    docLexer.Advance();
-                    
-                    if (docLexer.TokenType == docLexer.XmlTokenType.TAG_END1)
-                    {
-                        inCode--;                    
-                    }
+                    docLexer.Advance();                                        
                 }
-                if (docLexer.TokenType == docLexer.XmlTokenType.TAG_START1)
+                else if (docLexer.TokenType == docLexer.XmlTokenType.TAG_START1)
                 {
                     if (blockBuilder.Length > 0 && inCode == 0)
                         yield return blockBuilder.ToString();
@@ -63,9 +57,26 @@ namespace AgentSmith.Comments
                         inCode--;
                     }
                 }
+                else if (docLexer.TokenType == docLexer.XmlTokenType.TAG_END ||
+                    docLexer.TokenType == docLexer.XmlTokenType.TAG_END1)
+                {
+                    if (docLexer.TokenType == docLexer.XmlTokenType.TAG_END1)
+                    {
+                        inCode--;
+                    }
+                    blockBuilder.Append(docLexer.TokenText);
+                    if (inCode == 0)
+                        yield return blockBuilder.ToString();
 
-                blockBuilder.Append(docLexer.TokenText);
-                docLexer.Advance();
+                    blockBuilder.Remove(0, blockBuilder.Length);
+                    docLexer.Advance();
+                }
+                else
+                {
+                    blockBuilder.Append(docLexer.TokenText);
+                    docLexer.Advance();
+                }
+                
             }
 
             yield return blockBuilder.ToString();

@@ -43,7 +43,7 @@ namespace AgentSmith.Test.Comments.Reflow
 
         public ITreeNode FirstChild
         {
-            get { throw new NotImplementedException(); }
+            get { return _commentNode; }
         }
 
         public ITreeNode GetNextMeaningfulChild(ITreeNode child)

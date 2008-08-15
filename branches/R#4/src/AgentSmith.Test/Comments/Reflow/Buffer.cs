@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using JetBrains.Util;
 
@@ -29,7 +27,7 @@ namespace AgentSmith.Test.Comments.Reflow
 
         public string GetText(TextRange from)
         {
-            throw new NotImplementedException();
+            return _text.Substring(from.StartOffset, from.EndOffset - from.StartOffset);
         }
 
         public string GetText()
@@ -39,12 +37,12 @@ namespace AgentSmith.Test.Comments.Reflow
 
         public int Length
         {
-            get { throw new NotImplementedException(); }
+            get { return _text.Length; }
         }
 
         public char this[int i]
         {
-            get { throw new NotImplementedException(); }
+            get { return _text[i]; }
         }
 
         #endregion
