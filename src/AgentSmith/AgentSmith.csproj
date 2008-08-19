@@ -128,6 +128,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.IDECore.dll</HintPath>
     </Reference>
+    <Reference Include="JetBrains.ReSharper.Intentions, Version=4.0.819.19, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.Intentions.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.ReSharper.Intentions.CSharp, Version=4.0.819.19, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.Intentions.CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="JetBrains.ReSharper.NewRefactorings, Version=4.0.737.4, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.NewRefactorings.dll</HintPath>
@@ -166,13 +174,18 @@
     <Compile Include="AssemblyRegistrar.cs" />
     <Compile Include="Comments\CanBeSurroundedWithMetatagsSuggestion.cs" />
     <Compile Include="Comments\IdentifierResolver.cs" />
+    <Compile Include="Comments\Reflow\DocCommentBlockNode.cs" />
+    <Compile Include="Comments\Reflow\DocCommentNode.cs" />
     <Compile Include="Comments\Reflow\LineBuilder.cs" />
+    <Compile Include="Comments\Reflow\MyNodeType.cs" />
     <Compile Include="Comments\Reflow\Paragraph.cs" />
     <Compile Include="Comments\Reflow\ParagraphLine.cs" />
     <Compile Include="Comments\Reflow\ParagraphLineItem.cs" />
+    <Compile Include="Comments\Reflow\CommentReflowAction.cs" />
     <Compile Include="Comments\Reflow\XmlCommentParagraphParser.cs" />
     <Compile Include="Comments\Reflow\XmlCommentReflowableBlockLexer.cs" />
     <Compile Include="Comments\Reflow\XmlCommentReflower.cs" />
+    <Compile Include="Comments\XmlUtil.cs" />
     <Compile Include="GeneratedCodeRegionDetector.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckAnalyzer.cs" />
     <Compile Include="Identifiers\IdentifierSpellCheckQuickFix.cs" />

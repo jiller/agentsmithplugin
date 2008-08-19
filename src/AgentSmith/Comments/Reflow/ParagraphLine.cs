@@ -25,13 +25,12 @@ namespace AgentSmith.Comments.Reflow
             ParagraphLine newLine = new ParagraphLine();
             int i = 0;
             
-            while (i < Items.Count && Items[i].ItemType == ItemType.Space)
+            while (i < Items.Count && Items[i].ItemType == ItemType.XmlSpace)
                 i++;
-            
-            while (i < Items.Count)
+
+            for (; i < Items.Count; i++)
             {
-                newLine.AddItem(Items[i]);
-                i++;
+                newLine.AddItem(Items[i]);                
             }
 
             return newLine;
@@ -42,14 +41,12 @@ namespace AgentSmith.Comments.Reflow
             ParagraphLine newLine = new ParagraphLine();
             int i = Items.Count - 1;
 
-            while (i >=0 && Items[i].ItemType == ItemType.Space)
+            while (i >=0 && Items[i].ItemType == ItemType.XmlSpace)
                 i--;
-
-            int j=0;
-            while (j<=i)
+            
+            for (int j=0; j<=i; j++)
             {
-                newLine.AddItem(Items[j]);
-                j++;
+                newLine.AddItem(Items[j]);                
             }
 
             return newLine;

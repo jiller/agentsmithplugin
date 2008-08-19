@@ -39,6 +39,9 @@ namespace AgentSmith.Options
             this._lbPS = new System.Windows.Forms.Label();
             this._cbLookAtBase = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this._udLineLength = new System.Windows.Forms.NumericUpDown();
+            ((System.ComponentModel.ISupportInitialize)(this._udLineLength)).BeginInit();
             this.SuspendLayout();
             // 
             // _lbMustHaveComments
@@ -94,21 +97,20 @@ namespace AgentSmith.Options
             // _lbPPS
             // 
             this._lbPPS.AutoSize = true;
-            this._lbPPS.Location = new System.Drawing.Point(12, 196);
+            this._lbPPS.Location = new System.Drawing.Point(12, 243);
             this._lbPPS.Name = "_lbPPS";
-            this._lbPPS.Size = new System.Drawing.Size(409, 13);
+            this._lbPPS.Size = new System.Drawing.Size(409, 26);
             this._lbPPS.TabIndex = 64;
             this._lbPPS.Text = "* To enable/disable XML comment validation please go to the Inspection Severity t" +
-                "ab";
+                "ab\r\n   and select appropriate level for an Agent Smith highlighting.";
             // 
             // _lbPS
             // 
             this._lbPS.AutoSize = true;
-            this._lbPS.Location = new System.Drawing.Point(12, 238);
+            this._lbPS.Location = new System.Drawing.Point(23, 212);
             this._lbPS.Name = "_lbPS";
-            this._lbPS.Size = new System.Drawing.Size(289, 13);
+            this._lbPS.Size = new System.Drawing.Size(0, 13);
             this._lbPS.TabIndex = 65;
-            this._lbPS.Text = " and select appropriate level for an Agent Smith highlighting.";
             // 
             // _cbLookAtBase
             // 
@@ -123,15 +125,43 @@ namespace AgentSmith.Options
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 225);
+            this.label1.Location = new System.Drawing.Point(12, 283);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(473, 13);
             this.label1.TabIndex = 67;
             this.label1.Text = "* These settings\' sharing as well as import/export are managed with ReSharper Cod" +
                 "e Style Sharing.";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(12, 199);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(177, 13);
+            this.label2.TabIndex = 68;
+            this.label2.Text = "Maximum Xml Comment Line Length";
+            // 
+            // _udLineLength
+            // 
+            this._udLineLength.Location = new System.Drawing.Point(195, 197);
+            this._udLineLength.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this._udLineLength.Name = "_udLineLength";
+            this._udLineLength.Size = new System.Drawing.Size(49, 20);
+            this._udLineLength.TabIndex = 70;
+            this._udLineLength.Value = new decimal(new int[] {
+            80,
+            0,
+            0,
+            0});
+            // 
             // AgentSmithSettingsPage
             // 
+            this.Controls.Add(this._udLineLength);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._cbLookAtBase);
             this.Controls.Add(this._lbPS);
@@ -142,7 +172,8 @@ namespace AgentSmith.Options
             this.Controls.Add(this._lbMustHaveCommentsExcept);
             this.Controls.Add(this._lbMustHaveComments);
             this.Name = "AgentSmithSettingsPage";
-            this.Size = new System.Drawing.Size(552, 519);            
+            this.Size = new System.Drawing.Size(552, 519);
+            ((System.ComponentModel.ISupportInitialize)(this._udLineLength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -159,5 +190,7 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label _lbPS;
         private System.Windows.Forms.CheckBox _cbLookAtBase;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown _udLineLength;
     }
 }

@@ -91,12 +91,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Comments\Reflow\Buffer.cs" />
-    <Compile Include="Comments\Reflow\DocCommentBlockNode.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Comments\Reflow\DocCommentNode.cs" />
-    <Compile Include="Comments\Reflow\MyNodeType.cs" />
+    <Compile Include="Comments\Reflow\XmlCommentReflowerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpellCheck\CamelHumpLexerTest.cs" />
     <Compile Include="SpellCheck\WordLexerTest.cs" />

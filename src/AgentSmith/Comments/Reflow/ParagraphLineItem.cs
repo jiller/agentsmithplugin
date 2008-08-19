@@ -7,7 +7,7 @@ namespace AgentSmith.Comments.Reflow
 {
     public enum ItemType
     {
-        Space,
+        XmlSpace,
         XmlElement,
         NonReflowableBlock,
         Text
