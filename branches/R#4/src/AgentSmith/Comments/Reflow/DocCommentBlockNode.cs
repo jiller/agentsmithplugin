@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace AgentSmith.Test.Comments.Reflow
+namespace AgentSmith.Comments.Reflow
 {
-    class DocCommentBlockNode :  IDocCommentBlockNode
+    public class DocCommentBlockNode :  IDocCommentBlockNode
     {
-        private DocCommentNode _commentNode;
+        private readonly DocCommentNode _commentNode;
         
         public DocCommentBlockNode(DocCommentNode commentNode)
         {

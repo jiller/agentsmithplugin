@@ -1,10 +1,9 @@
 using System;
+using System.Windows.Forms;
 using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
@@ -75,19 +74,11 @@ namespace AgentSmith.Comments
 
             if (docCommentBlockOwnerNode != null)
             {
-                int myCursorOffset;
+                int myCursorOffset;                
                 string text = XmlDocTemplateUtil.GetDocTemplate(docCommentBlockOwnerNode, out myCursorOffset).Trim();
-                text = String.Format("///{0}\r\nclass Tmp {{}}", text.Replace("\n", "\n///"));
-
-                Logger.LogMessage(text);
-                Logger.LogMessage("Set comment.");
-
-                ICSharpTypeMemberDeclaration declaration =
-                    CSharpElementFactory.GetInstance(solution.SolutionProject).CreateTypeMemberDeclaration(text, new object[0]);
-                ICSharpTypeMemberDeclarationNode node = declaration.ToTreeNode();
-                docCommentBlockOwnerNode.SetDocCommentBlockNode(
-                    ((IDocCommentBlockOwnerNode)node).GetDocCommentBlockNode());
+                
+                XmlUtil.SetDocComment(docCommentBlockOwnerNode, text, solution);
             }
-        }
+        }        
     }
 }

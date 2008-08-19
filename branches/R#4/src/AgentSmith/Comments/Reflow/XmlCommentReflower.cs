@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Comments.Reflow
@@ -28,11 +24,9 @@ namespace AgentSmith.Comments.Reflow
     /// 6. Non reflowable expressions?
     /// </remarks>
     public class XmlCommentReflower
-    {   
-        private const int MAX_LINE_WIDTH = 80;
-               
-        public string Reflow(IDocCommentBlockNode blockNode)
-        {
+    {        
+        public string Reflow(IDocCommentBlockNode blockNode, int maxLineLength)
+        {            
             LineBuilder lb = new LineBuilder();
 
             XmlCommentReflowableBlockLexer lexer = new XmlCommentReflowableBlockLexer(blockNode);
@@ -43,33 +37,45 @@ namespace AgentSmith.Comments.Reflow
             {
                 if (!firstParagraph)
                 {
-                    lb.Append("\n");
+                    lb.Append("\r\n");
                 }
                 foreach (ParagraphLine paragraphLine in paragraph.Lines)
-                {
+                {                    
                     foreach (ParagraphLineItem lineItem in paragraphLine.Items)
                     {
                         if (lineItem.ItemType == ItemType.XmlElement ||
                             lineItem.ItemType == ItemType.NonReflowableBlock)
                         {
-                            if (lb.CurrentLine.Length + lineItem.FirstLine.Length > MAX_LINE_WIDTH)
-                                lb.AppendMultilineBlock("\n");
+                            if (lb.CurrentLine.Length + lineItem.FirstLine.Length > maxLineLength)
+                                lb.AppendMultilineBlock("\r\n");
                             lb.AppendMultilineBlock(lineItem.Text);
                         }
 
-                        if (lineItem.ItemType == ItemType.Space)
+                        if (lineItem.ItemType == ItemType.XmlSpace)
                         {
                             lb.AppendMultilineBlock(lineItem.Text);
                         }
 
                         if (lineItem.ItemType == ItemType.Text)
                         {
-                            string[] words = lineItem.Text.Split(' ');
-                            foreach (string word in words)
+                            string text = lineItem.Text;
+                            if (lineItem == paragraphLine.Items[0])
                             {
-                                if (lb.CurrentLine.Length + word.Length > MAX_LINE_WIDTH)
-                                    lb.AppendMultilineBlock("\n");
-                                lb.AppendMultilineBlock(lineItem.Text);
+                                text = text.TrimStart();
+                                if (lb.CurrentLine.Length > 0)
+                                    lb.AppendMultilineBlock(" ");
+                            }
+                            string[] words = text.Split(' ');
+
+                            for (int i=0; i<words.Length; i++)
+                            {
+                                if (lb.CurrentLine.Length == 0)
+                                    lb.AppendMultilineBlock(paragraph.Offset);
+                                
+                                string word = words[i];
+                                if (lb.CurrentLine.Length + word.Length > maxLineLength)
+                                    lb.AppendMultilineBlock("\r\n" + paragraph.Offset);
+                                lb.AppendMultilineBlock(word + ((i!=words.Length-1)?" ": ""));
                             }
                         }
                     }

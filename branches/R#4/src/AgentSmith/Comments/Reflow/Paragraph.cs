@@ -9,6 +9,20 @@ namespace AgentSmith.Comments.Reflow
     {
         private readonly List<ParagraphLine> _lines = new List<ParagraphLine>();
 
+        public string Offset
+        {
+            get
+            {
+                if (Lines.Count == 0 || Lines[0].Items.Count == 0 )
+                    return String.Empty;
+                ParagraphLineItem firstItem = Lines[0].Items[0];
+                int i = 0;
+                while (i<firstItem.Text.Length && (firstItem.Text[i] == ' ' || firstItem.Text[i] == '\t'))
+                    i++;
+                return firstItem.Text.Substring(0, i);                    
+            }
+        }
+
         public IList<ParagraphLine> Lines
         {
             get

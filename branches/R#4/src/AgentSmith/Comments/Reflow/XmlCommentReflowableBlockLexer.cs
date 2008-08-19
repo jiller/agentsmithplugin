@@ -4,77 +4,80 @@ using System.Collections.Generic;
 using System.Text;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.Comments.Reflow
 {
     public class XmlCommentReflowableBlockLexer : IEnumerable<string>
     {
-        private XmlDocLexer docLexer;
+        private readonly XmlDocLexer _docLexer;
 
         public XmlCommentReflowableBlockLexer(IDocCommentBlockNode docCommentBlock)
         {
-            docLexer = new XmlDocLexer(docCommentBlock);
-            docLexer.Start();
+            _docLexer = new XmlDocLexer(docCommentBlock);
+            _docLexer.Start();
         }
 
         public IEnumerator<string> GetEnumerator()
         {
-            docLexer.Start();
+            _docLexer.Start();
             int inCode = 0;                      
             StringBuilder blockBuilder = new StringBuilder();
-            while (docLexer.TokenType != null)
+            while (_docLexer.TokenType != null)
             {
-                if (docLexer.TokenType == docLexer.XmlTokenType.TAG_START)
+                if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_START)
                 {
                     if (blockBuilder.Length > 0 && inCode == 0)
+                    {
                         yield return blockBuilder.ToString();
-                    
-                    blockBuilder.Remove(0, blockBuilder.Length);
-                    
-                    blockBuilder.Append(docLexer.TokenText);                    
-                    docLexer.Advance();
+                        blockBuilder.Remove(0, blockBuilder.Length);
+                    }
 
-                    if (docLexer.TokenType == docLexer.XmlTokenType.IDENTIFIER &&
-                        (docLexer.TokenText == "code" || docLexer.TokenText == "c"))
+                    blockBuilder.Append(_docLexer.TokenText);                    
+                    _docLexer.Advance();
+
+                    if (_docLexer.TokenType == _docLexer.XmlTokenType.IDENTIFIER &&
+                        (_docLexer.TokenText == "code" || _docLexer.TokenText == "c"))
                     {
                         inCode++;
                     }
                     
-                    blockBuilder.Append(docLexer.TokenText);
-                    docLexer.Advance();                                        
+                    blockBuilder.Append(_docLexer.TokenText);
+                    _docLexer.Advance();                                        
                 }
-                else if (docLexer.TokenType == docLexer.XmlTokenType.TAG_START1)
+                else if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_START1)
                 {
                     if (blockBuilder.Length > 0 && inCode == 0)
+                    {
                         yield return blockBuilder.ToString();
+                        blockBuilder.Remove(0, blockBuilder.Length);
+                    }
 
-                    blockBuilder.Remove(0, blockBuilder.Length);
-
-                    blockBuilder.Append(docLexer.TokenText);
-                    docLexer.Advance();
-                    if (docLexer.TokenType == docLexer.XmlTokenType.IDENTIFIER &&
-                        (docLexer.TokenText == "code" || docLexer.TokenText == "c"))
+                    blockBuilder.Append(_docLexer.TokenText);
+                    _docLexer.Advance();
+                    if (_docLexer.TokenType == _docLexer.XmlTokenType.IDENTIFIER &&
+                        (_docLexer.TokenText == "code" || _docLexer.TokenText == "c"))
                     {
                         inCode--;
                     }
                 }
-                else if (docLexer.TokenType == docLexer.XmlTokenType.TAG_END ||
-                    docLexer.TokenType == docLexer.XmlTokenType.TAG_END1)
+                else if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_END ||
+                         _docLexer.TokenType == _docLexer.XmlTokenType.TAG_END1)
                 {
-                    if (docLexer.TokenType == docLexer.XmlTokenType.TAG_END1)
+                    if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_END1)
                     {
                         inCode--;
                     }
-                    blockBuilder.Append(docLexer.TokenText);
+                    blockBuilder.Append(_docLexer.TokenText);
                     if (inCode == 0)
+                    {
                         yield return blockBuilder.ToString();
-
-                    blockBuilder.Remove(0, blockBuilder.Length);
-                    docLexer.Advance();
+                        blockBuilder.Remove(0, blockBuilder.Length);
+                    }
+                    _docLexer.Advance();
                 }
                 else
                 {
-                    blockBuilder.Append(docLexer.TokenText);
-                    docLexer.Advance();
+                    blockBuilder.Append(_docLexer.TokenText);
+                    _docLexer.Advance();
                 }
                 
             }
