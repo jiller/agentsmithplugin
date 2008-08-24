@@ -16,7 +16,7 @@ namespace AgentSmith.Options
         }
 
         public EditRule(NamingConventionRule rule) : this()
-        {
+        {            
             _rule = rule;
             _tbDescription.Text = rule.Description;
             _sceMustHavePrefix.Items = rule.MustHavePrefixes;
@@ -24,6 +24,7 @@ namespace AgentSmith.Options
             _sceMustHaveSuffix.Items = rule.MustHaveSuffixes;
             _sceMustNotHaveSuffix.Items = rule.MustNotHaveSuffixes;
             _cbStyle.DataSource = RuleKindDescription.GetDescriptions();
+            
             foreach (RuleKindDescription descr in _cbStyle.Items)
             {
                 if (descr.Rule == rule.Rule)
@@ -32,10 +33,11 @@ namespace AgentSmith.Options
                     break;
                 }
             }
+            
             _tbRegex.Text = rule.Regex;
             _cbDisabled.Checked = _rule.IsDisabled;
             _mceMatches.Matches = rule.Matches;
-            _mceNotMatches.Matches = rule.NotMatches;           
+            _mceNotMatches.Matches = rule.NotMatches;                                    
         }
 
         private void btnOK_Click(object sender, EventArgs e)

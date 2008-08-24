@@ -151,7 +151,7 @@ namespace AgentSmith.Options
 
             if (decl.HasNamespace)
             {
-                _match.Namespace = _tbNamespace.Text;
+                _match.Namespace = _tbNamespace.Text.Trim();
             }
 
             if (decl.Declaration == Declaration.Parameter)

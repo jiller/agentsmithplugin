@@ -41,6 +41,7 @@ namespace AgentSmith.Options
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this._udLineLength = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this._udLineLength)).BeginInit();
             this.SuspendLayout();
             // 
@@ -158,8 +159,18 @@ namespace AgentSmith.Options
             0,
             0});
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(250, 199);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(181, 13);
+            this.label4.TabIndex = 71;
+            this.label4.Text = "(This affects comment reflowing only)";
+            // 
             // AgentSmithSettingsPage
             // 
+            this.Controls.Add(this.label4);
             this.Controls.Add(this._udLineLength);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -192,5 +203,6 @@ namespace AgentSmith.Options
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown _udLineLength;
+        private System.Windows.Forms.Label label4;
     }
 }
