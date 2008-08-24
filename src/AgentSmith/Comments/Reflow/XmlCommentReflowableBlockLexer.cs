@@ -19,7 +19,8 @@ namespace AgentSmith.Comments.Reflow
         public IEnumerator<string> GetEnumerator()
         {
             _docLexer.Start();
-            int inCode = 0;                      
+            int inCode = 0;
+            bool currentTagIsCode = false;
             StringBuilder blockBuilder = new StringBuilder();
             while (_docLexer.TokenType != null)
             {
@@ -34,14 +35,17 @@ namespace AgentSmith.Comments.Reflow
                     blockBuilder.Append(_docLexer.TokenText);                    
                     _docLexer.Advance();
 
+                    currentTagIsCode = false;
                     if (_docLexer.TokenType == _docLexer.XmlTokenType.IDENTIFIER &&
                         (_docLexer.TokenText == "code" || _docLexer.TokenText == "c"))
                     {
                         inCode++;
+                        currentTagIsCode = true;
                     }
                     
                     blockBuilder.Append(_docLexer.TokenText);
-                    _docLexer.Advance();                                        
+                    _docLexer.Advance();
+                                        
                 }
                 else if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_START1)
                 {
@@ -62,10 +66,11 @@ namespace AgentSmith.Comments.Reflow
                 else if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_END ||
                          _docLexer.TokenType == _docLexer.XmlTokenType.TAG_END1)
                 {
-                    if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_END1)
+                    if (_docLexer.TokenType == _docLexer.XmlTokenType.TAG_END1 && currentTagIsCode)
                     {
                         inCode--;
                     }
+                    
                     blockBuilder.Append(_docLexer.TokenText);
                     if (inCode == 0)
                     {
