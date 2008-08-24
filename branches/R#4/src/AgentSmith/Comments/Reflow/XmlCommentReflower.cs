@@ -2,22 +2,11 @@
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Comments.Reflow
-{
-    /// <summary>
-    /// I want to hello
-    /// ff <c> something safd dfsdf sdfsdf sdfsdf </c>
-    /// <code>
-    ///   adsfasdf
-    ///    asdklfjlaksdfj
-    /// asdfasdfasdf
-    /// </code>
-    /// <list type="fdfd"> <item>hello</item>
-    /// </list>
-    /// </summary>
+{    
     /// <remarks>
     /// 1. All whitespace after a tag is preserved.
     /// 2. <c></c> and <code></code> are treated as non reflowable tags.
-    /// 3. Blank lines or are treated as paragraph separators.
+    /// 3. Blank lines or (?)are treated as paragraph separators.
     /// 4. Line with indentation different from previous line is paragraph start.
     /// 4. XML tags are not split.
     /// 5. Bullet points are paragraph start.
@@ -39,6 +28,8 @@ namespace AgentSmith.Comments.Reflow
                 {
                     lb.Append("\r\n");
                 }
+
+                bool previousBlockIsText = false;
                 foreach (ParagraphLine paragraphLine in paragraph.Lines)
                 {                    
                     foreach (ParagraphLineItem lineItem in paragraphLine.Items)
@@ -46,11 +37,16 @@ namespace AgentSmith.Comments.Reflow
                         if (lineItem.ItemType == ItemType.XmlElement ||
                             lineItem.ItemType == ItemType.NonReflowableBlock)
                         {
-                            if (lb.CurrentLine.Length + lineItem.FirstLine.Length > maxLineLength)
-                                lb.AppendMultilineBlock("\r\n");
+                            if (//if current line is empty, no matter how big text is, just append it (to 
+                                // not create extra lines.
+                                lb.CurrentLine.Trim().Length > 0 &&
+                                //Append new line otherwise
+                                lb.CurrentLine.Length + lineItem.FirstLine.Length > maxLineLength)
+                                lb.AppendMultilineBlock("\r\n" + paragraph.Offset);
                             lb.AppendMultilineBlock(lineItem.Text);
                         }
 
+                        //Space between XML elements is not reflown.
                         if (lineItem.ItemType == ItemType.XmlSpace)
                         {
                             lb.AppendMultilineBlock(lineItem.Text);
@@ -61,24 +57,35 @@ namespace AgentSmith.Comments.Reflow
                             string text = lineItem.Text;
                             if (lineItem == paragraphLine.Items[0])
                             {
-                                text = text.TrimStart();
-                                if (lb.CurrentLine.Length > 0)
-                                    lb.AppendMultilineBlock(" ");
+                                text = text.TrimStart();                               
                             }
+
                             string[] words = text.Split(' ');
 
                             for (int i=0; i<words.Length; i++)
                             {
                                 if (lb.CurrentLine.Length == 0)
                                     lb.AppendMultilineBlock(paragraph.Offset);
-                                
+
                                 string word = words[i];
-                                if (lb.CurrentLine.Length + word.Length > maxLineLength)
-                                    lb.AppendMultilineBlock("\r\n" + paragraph.Offset);
-                                lb.AppendMultilineBlock(word + ((i!=words.Length-1)?" ": ""));
+
+                                if (lb.CurrentLine.Length == paragraph.Offset.Length && word.Trim().Length == 0)
+                                    continue;
+
+                                //prepend space if this is not first word in block and not first word on paragraph line 
+                                //or this is first word in block and block is appended to previous line.
+                                string toAppend = (lb.CurrentLine.Length > paragraph.Offset.Length && (i>0 || previousBlockIsText)? " " : "") + word;
+                                if (lb.CurrentLine.Length + toAppend.Length > maxLineLength)
+                                {
+                                    lb.AppendMultilineBlock("\r\n" + paragraph.Offset);                                    
+                                    toAppend = word;
+                                }
+
+                                lb.AppendMultilineBlock(toAppend);
                             }
                         }
-                    }
+                        previousBlockIsText = lineItem.ItemType == ItemType.Text;
+                    }                    
                 }
                 firstParagraph = false;
             }

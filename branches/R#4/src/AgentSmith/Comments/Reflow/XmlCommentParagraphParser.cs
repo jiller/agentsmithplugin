@@ -73,7 +73,7 @@ namespace AgentSmith.Comments.Reflow
             foreach (string block in _xmlBlockLexer)
             {                
                 ParagraphLineItem item = new ParagraphLineItem();                
-                if (block.StartsWith("<code>") || block.StartsWith("<c>"))
+                if (block.StartsWith("<code") || block.StartsWith("<c"))
                 {
                     item.Text = block;
                     item.ItemType = ItemType.NonReflowableBlock;
