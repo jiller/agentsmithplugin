@@ -216,7 +216,7 @@ namespace AgentSmith.MemberMatch
             {
                 _isOfTypeType = cache[_isOfType] as ITypeElement;
             }
-            if (Namespace!= null && !string.IsNullOrEmpty(Namespace.Trim()))
+            if (Namespace!= null && !string.IsNullOrEmpty(Namespace))
             {
                 _namespaceRegex = new Regex(Namespace, RegexOptions.Compiled);
             }
@@ -304,7 +304,7 @@ namespace AgentSmith.MemberMatch
             {
                 sb.AppendFormat("marked with '{0}' ", _markedWithAttribute);
             }
-            if (description.HasNamespace && !string.IsNullOrEmpty(Namespace.Trim()))
+            if (description.HasNamespace && !string.IsNullOrEmpty(Namespace))
             {
                 sb.AppendFormat("in namespace '{0}' ", Namespace);
             }

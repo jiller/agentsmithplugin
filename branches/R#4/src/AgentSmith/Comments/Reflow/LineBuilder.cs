@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace AgentSmith.Comments
+namespace AgentSmith.Comments.Reflow
 {
     public class LineBuilder
     {
