@@ -47,12 +47,11 @@ namespace AgentSmith.Comments
             if (_myCurrentCommentNode != null)
             {
                 uint state = _myLexer.LexerState;
-                _myLexer.Advance();
+                _myLexer.Advance();                
                 if (_myLexer.TokenType == null)
                 {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);
-                    Logger.LogMessage("TokenStart=" + TokenStart);
-                }
+                    restartLexer(_myCurrentCommentNode.NextSibling, state);                    
+                }                
             }
         }
 

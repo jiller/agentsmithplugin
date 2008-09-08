@@ -1,9 +1,9 @@
 using System;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
-using JetBrains.ReSharper.TextControl;
+using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck
 {
@@ -24,12 +24,12 @@ namespace AgentSmith.SpellCheck
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            string words = _customDictionary.DecodedUserWords.Trim();
+            string words = _customDictionary.UserWords.Trim();
             if (words.Length > 0)
             {
-                _customDictionary.DecodedUserWords = words + "\n";
+                _customDictionary.UserWords = words + "\n";
             }
-            _customDictionary.DecodedUserWords += _word;
+            _customDictionary.UserWords += _word;
 
             Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);
         }

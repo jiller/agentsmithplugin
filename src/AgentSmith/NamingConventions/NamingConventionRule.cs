@@ -347,9 +347,9 @@ namespace AgentSmith.NamingConventions
             if (name != originalName)
             {
                 forceError = true;
-                returnNames = new string[] { name };
+                returnNames = new string[] {name};
             }
-            
+
             if (!checkedObligatoryPrefixes)
             {
                 string[] prefixedNames = new string[_mustHavePrefixes.Length];
@@ -362,7 +362,7 @@ namespace AgentSmith.NamingConventions
             }
 
             if (!checkedObligatorySuffixes)
-            {                
+            {
                 if (returnNames.Length == 0)
                 {
                     returnNames = new string[] { name };

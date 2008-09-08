@@ -16,33 +16,34 @@ namespace AgentSmith.MemberMatch
         public readonly bool CanBeStatic;
         public readonly bool CanBeReadonly;
         public readonly bool OwnsType;
+        public readonly bool HasNamespace;
 
         static DeclarationDescription()
         {
-            _dict.Add(Declaration.Any, new DeclarationDescription(Declaration.Any, "Any Member", true, false, false, false, false, false));
-            _dict.Add(Declaration.Class, new DeclarationDescription(Declaration.Class, "Class", true, true, true, true, false, false));
-            _dict.Add(Declaration.Constant, new DeclarationDescription(Declaration.Constant, "Constant", true, false, true, false, false, true));
-            _dict.Add(Declaration.Delegate, new DeclarationDescription(Declaration.Delegate, "Delegate", true, false, true, false, false, false));
-            _dict.Add(Declaration.Enum, new DeclarationDescription(Declaration.Enum, "Enumeration", true, false, true, false, false, false));
-            _dict.Add(Declaration.EnumerationMember, new DeclarationDescription(Declaration.EnumerationMember, "Enumeration member", true, false, true, false, false, false));
-            _dict.Add(Declaration.Event, new DeclarationDescription(Declaration.Event, "Event", true, false, true, true, false, true));
-            _dict.Add(Declaration.Field, new DeclarationDescription(Declaration.Field, "Field", true, false, true, true, true, true));
-            _dict.Add(Declaration.Interface, new DeclarationDescription(Declaration.Interface, "Interface", true, true, true, false, false, false));
-            _dict.Add(Declaration.Method, new DeclarationDescription(Declaration.Method, "Method", true, false, true, true, false, false));
-            _dict.Add(Declaration.Namespace, new DeclarationDescription(Declaration.Namespace, "Namespace", false, false, false, false, false, false));
-            _dict.Add(Declaration.Parameter, new DeclarationDescription(Declaration.Parameter, "Parameter", true, false, true, false, false, true));
-            _dict.Add(Declaration.Property, new DeclarationDescription(Declaration.Property, "Property", true, false, true, true, false, true));
-            _dict.Add(Declaration.Struct, new DeclarationDescription(Declaration.Struct, "Struct", true, false, true, false, false, false));
-            _dict.Add(Declaration.Variable, new DeclarationDescription(Declaration.Variable, "Variable", false, false, true, false, false, true));
+            _dict.Add(Declaration.Any, new DeclarationDescription(Declaration.Any, "Any Member", true, false, false, false, false, false, false));
+            _dict.Add(Declaration.Class, new DeclarationDescription(Declaration.Class, "Class", true, true, true, true, false, false, true));
+            _dict.Add(Declaration.Constant, new DeclarationDescription(Declaration.Constant, "Constant", true, false, true, false, false, true, false));
+            _dict.Add(Declaration.Delegate, new DeclarationDescription(Declaration.Delegate, "Delegate", true, false, true, false, false, false, true));
+            _dict.Add(Declaration.Enum, new DeclarationDescription(Declaration.Enum, "Enumeration", true, false, true, false, false, false, true));
+            _dict.Add(Declaration.EnumerationMember, new DeclarationDescription(Declaration.EnumerationMember, "Enumeration member", true, false, true, false, false, false, false));
+            _dict.Add(Declaration.Event, new DeclarationDescription(Declaration.Event, "Event", true, false, true, true, false, true, false));
+            _dict.Add(Declaration.Field, new DeclarationDescription(Declaration.Field, "Field", true, false, true, true, true, true, false));
+            _dict.Add(Declaration.Interface, new DeclarationDescription(Declaration.Interface, "Interface", true, true, true, false, false, false, true));
+            _dict.Add(Declaration.Method, new DeclarationDescription(Declaration.Method, "Method", true, false, true, true, false, false, false));
+            _dict.Add(Declaration.Namespace, new DeclarationDescription(Declaration.Namespace, "Namespace", false, false, false, false, false, false, false));
+            _dict.Add(Declaration.Parameter, new DeclarationDescription(Declaration.Parameter, "Parameter", true, false, true, false, false, true, false));
+            _dict.Add(Declaration.Property, new DeclarationDescription(Declaration.Property, "Property", true, false, true, true, false, true, false));
+            _dict.Add(Declaration.Struct, new DeclarationDescription(Declaration.Struct, "Struct", true, false, true, false, false, false, true));
+            _dict.Add(Declaration.Variable, new DeclarationDescription(Declaration.Variable, "Variable", false, false, true, false, false, true, false));
 
-            _dict.Add(Declaration.Constructor, new DeclarationDescription(Declaration.Constructor, "Constructor", true, false, true, true, false, false));
-            _dict.Add(Declaration.Destructor, new DeclarationDescription(Declaration.Destructor, "Destructor", true, false, true, false, false, false));
-            _dict.Add(Declaration.Indexer, new DeclarationDescription(Declaration.Indexer, "Indexer", true, false, true, true, false, false));
-            _dict.Add(Declaration.Operator, new DeclarationDescription(Declaration.Operator, "Operator", true, false, true, false, false, false));
+            _dict.Add(Declaration.Constructor, new DeclarationDescription(Declaration.Constructor, "Constructor", true, false, true, true, false, false, false));
+            _dict.Add(Declaration.Destructor, new DeclarationDescription(Declaration.Destructor, "Destructor", true, false, true, false, false, false, false));
+            _dict.Add(Declaration.Indexer, new DeclarationDescription(Declaration.Indexer, "Indexer", true, false, true, true, false, false, false));
+            _dict.Add(Declaration.Operator, new DeclarationDescription(Declaration.Operator, "Operator", true, false, true, false, false, false, false));
         }
 
         public DeclarationDescription(Declaration declaration, string name, bool hasAccessLevel, bool canInherit,
-                                      bool canBeMarkedWithAttribute, bool canBeStatic, bool canBeReadOnly, bool ownsType)
+                                      bool canBeMarkedWithAttribute, bool canBeStatic, bool canBeReadOnly, bool ownsType, bool hasNamespace)
         {
             Declaration = declaration;
             Name = name;
@@ -52,6 +53,7 @@ namespace AgentSmith.MemberMatch
             CanBeStatic = canBeStatic;
             CanBeReadonly = canBeReadOnly;
             OwnsType = ownsType;
+            HasNamespace = hasNamespace;
         }
 
         public static Dictionary<Declaration, DeclarationDescription> DeclDescriptions

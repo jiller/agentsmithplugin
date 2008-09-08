@@ -23,7 +23,7 @@ namespace AgentSmith.Strings
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _suggestion.Range.IsValid;
         }
 
         public IBulbItem[] Items
@@ -35,15 +35,22 @@ namespace AgentSmith.Strings
                 ISpellChecker spellChecker = _suggestion.SpellChecker;
 
                 if (spellChecker != null)
-                {
+                {                                                           
+
                     foreach (string newWord in spellChecker.Suggest(_suggestion.MisspelledWord, MAX_SUGGESTION_COUNT))
                     {
                         string wordWithMisspelledWordDeleted =
                             _suggestion.Word.Remove(_suggestion.MisspelledRange.StartOffset,
-                            _suggestion.MisspelledRange.Length);
+                                                    _suggestion.MisspelledRange.Length);
 
                         string newString = wordWithMisspelledWordDeleted.Insert(
                             _suggestion.MisspelledRange.StartOffset, newWord);
+
+                        int ampersandPosition = newString.IndexOf(_suggestion.AmpersandChar);
+                        if (ampersandPosition>=0)
+                        {
+                            newString = newString.Insert(ampersandPosition, "&");
+                        }
 
                         items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newString));
                     }

@@ -7,12 +7,13 @@ using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using AgentSmith.Strings;
+using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Shell.Progress;
+using JetBrains.Util;
 
 namespace AgentSmith
 {
@@ -44,7 +45,7 @@ namespace AgentSmith
                 _analyzers = new IDeclarationAnalyzer[]
                     {
                         new NamingConventionsAnalyzer(_styleSettings.NamingConventionSettings, _process.Solution),
-                        new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution),
+                        new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution, _styleSettings.CompiledPatternsToIgnore),
                         new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution,
                                                          _styleSettings)
                     };
@@ -59,7 +60,7 @@ namespace AgentSmith
             ICSharpFile file =
                 (ICSharpFile) PsiManager.GetInstance(_process.Solution).GetPsiFile(_process.ProjectFile);
             ProcessFile(file);
-            result.FullyRehighlighted = true;
+            result.FullyRehighlighted = true;            
 
             result.Highlightings = _highlightings.ToArray();
             return result;
@@ -89,10 +90,10 @@ namespace AgentSmith
                 {
                     string[] dicts = _styleSettings.StringsDictionary == null ? null : _styleSettings.StringsDictionary.Split(',');
                     ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, dicts);
-                    
+
                     IList<SuggestionBase> suggestions =
                         StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
-                                                      _process.Solution);
+                                                      _process.Solution, _styleSettings.CompiledPatternsToIgnore);
                     foreach (SuggestionBase suggestion in suggestions)
                     {
                         addHighlighting(suggestion);

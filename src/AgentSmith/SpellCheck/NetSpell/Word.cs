@@ -40,124 +40,27 @@ namespace AgentSmith.SpellCheck.NetSpell
     /// </summary>
     public class Word : IComparable
     {
-        private string _affixKeys = "";
+        private int _affixKeysIndex = -1;
         private int _editDistance = 0;
-        private int _height = 0;
-        private int _index = 0;
-        private string _phoneticCode = "";
+        private int _phoneticCodeIndex = -1;
         private string _text = "";
-
-        public Word()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="text" type="string">        
-        /// The string for the base word.        
-        /// </param>
-        /// <param name="affixKeys" type="string">        
-        /// The affix keys that can be applied to this base word.        
-        /// </param>
-        /// <param name="phoneticCode" type="string">        
-        /// The phonetic code for this word.        
-        /// </param>
-        public Word(string text, string affixKeys, string phoneticCode)
-        {
-            _text = text;
-            _affixKeys = affixKeys;
-            _phoneticCode = phoneticCode;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="text" type="string">        
-        /// The string for the base word.        
-        /// </param>
-        /// <param name="affixKeys" type="string">        
-        ///  The affix keys that can be applied to this base word.        
-        /// </param>
-        public Word(string text, string affixKeys)
-        {
-            _text = text;
-            _affixKeys = affixKeys;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="text" type="string">        
-        /// The string for the base word.        
-        /// </param>
-        public Word(string text)
-        {
-            _text = text;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="text" type="string">        
-        /// The string for the word.        
-        /// </param>
-        /// <param name="index" type="int">        
-        /// The position index of this word.        
-        /// </param>
-        /// <param name="height" type="int">        
-        ///  The line height of this word.        
-        /// </param>
-        /// <returns>
-        ///  A void value...
-        /// </returns>
-        internal Word(string text, int index, int height)
-        {
-            _text = text;
-            _index = index;
-            _height = height;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
-        /// <param name="text" type="string">        
-        ///  The string for the base word.        
-        /// </param>
-        /// <param name="editDistance" type="int">        
-        ///  The edit distance from the misspelled word        
-        /// </param>
-        internal Word(string text, int editDistance)
-        {
-            _text = text;
-            _editDistance = editDistance;
-        }
 
         /// <summary>
         /// The affix keys that can be applied to this base word.
         /// </summary>
-        public string AffixKeys
+        public int AffixKeysIndex
         {
-            get { return _affixKeys; }
-            set { _affixKeys = value; }
-        }
-
-        /// <summary>
-        /// The index position of where this word appears.
-        /// </summary>
-        public int Index
-        {
-            get { return _index; }
-            set { _index = value; }
+            get { return _affixKeysIndex; }
+            set { _affixKeysIndex = value; }
         }
 
         /// <summary>
         /// The phonetic code for this word.
         /// </summary>
-        public string PhoneticCode
+        public int PhoneticCode
         {
-            get { return _phoneticCode; }
-            set { _phoneticCode = value; }
+            get { return _phoneticCodeIndex; }
+            set { _phoneticCodeIndex = value; }
         }
 
         /// <summary>
@@ -177,15 +80,6 @@ namespace AgentSmith.SpellCheck.NetSpell
         {
             get { return _editDistance; }
             set { _editDistance = value; }
-        }
-
-        /// <summary>
-        /// The line height of this word.
-        /// </summary>
-        internal int Height
-        {
-            get { return _height; }
-            set { _height = value; }
         }
 
         #region IComparable Members

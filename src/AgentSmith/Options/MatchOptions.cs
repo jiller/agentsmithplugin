@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using AgentSmith.MemberMatch;
+using Match=AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Options
 {
@@ -37,11 +39,11 @@ namespace AgentSmith.Options
                 item.Tag = descr;
 
                 if (_match.AccessLevel == AccessLevels.Any)
-                {                    
+                {
                     item.Checked = descr.AccessLevel == AccessLevels.Any;                    
                 }
                 else
-                {                    
+                {
                     item.Checked = (descr.AccessLevel & _match.AccessLevel) != 0 &&
                                    descr.AccessLevel != AccessLevels.Any;                
                 }
@@ -58,6 +60,7 @@ namespace AgentSmith.Options
             _tbMarkedWithAttribute.Text = _match.MarkedWithAttribute;
             _cbReadonly.CheckState = convertBool(_match.IsReadOnly);
             _cbStatic.CheckState = convertBool(_match.IsStatic);
+            _tbNamespace.Text = _match.Namespace;
 
             _cbIn.Checked = (_match.ParamDirection & ParamDirection.In) != 0;
             _cbOut.Checked = (_match.ParamDirection & ParamDirection.Out) != 0;
@@ -92,6 +95,16 @@ namespace AgentSmith.Options
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            try
+            {
+                new Regex(_tbNamespace.Text);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(String.Format("Invalid namespace regex, '{0}'", ex.Message));
+                return;
+            }
+
             DeclarationDescription decl = (DeclarationDescription) _lbMember.SelectedItem;
             _match.AccessLevel = AccessLevels.Any;
             _match.Declaration = decl.Declaration;
@@ -115,7 +128,7 @@ namespace AgentSmith.Options
             {
                 _match.InheritedFrom = _tbInheritedFrom.Text.Trim();
             }
-
+            
             if (decl.OwnsType)
             {
                 _match.IsOfType = _tbInheritedFrom.Text.Trim();
@@ -136,6 +149,11 @@ namespace AgentSmith.Options
                 _match.IsStatic = convertToBool(_cbStatic.CheckState);
             }
 
+            if (decl.HasNamespace)
+            {
+                _match.Namespace = _tbNamespace.Text.Trim();
+            }
+
             if (decl.Declaration == Declaration.Parameter)
             {
                 _match.ParamDirection = 0;
@@ -152,6 +170,10 @@ namespace AgentSmith.Options
                     _match.ParamDirection |= ParamDirection.Ref;
                 }
             }
+
+            DialogResult = DialogResult.OK;
+            Close();
+            return;
         }
 
         private void lbMember_SelectedIndexChanged(object sender, EventArgs e)
@@ -162,6 +184,7 @@ namespace AgentSmith.Options
             _tbMarkedWithAttribute.Enabled = description.CanBeMarkedWithAttribute;
             _cbReadonly.Enabled = description.CanBeReadonly;
             _cbStatic.Enabled = description.CanBeStatic;
+            _tbNamespace.Enabled = description.HasNamespace;
 
             _cbIn.Enabled = _cbOut.Enabled = _cbRef.Enabled = description.Declaration == Declaration.Parameter;
         }
@@ -186,6 +209,6 @@ namespace AgentSmith.Options
                     _lvVisibility.Items[0].Checked = false;
                 }
             }
-        }                
+        }
     }
 }
