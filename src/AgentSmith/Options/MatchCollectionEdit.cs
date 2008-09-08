@@ -120,6 +120,6 @@ namespace AgentSmith.Options
             _btnAdd.Top = 0;
             _btnEdit.Top = _btnAdd.Bottom + 3;
             _btnDelete.Top = _btnEdit.Bottom + 3;
-        }        
+        }
     }
 }

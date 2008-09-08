@@ -4,7 +4,7 @@
     <separator/>
     <action id="AgentSmith.SmartPaste" text="Smart Paste" shortcut="Shift+Alt+Insert">
         <vs-shortcut>Control+S P</vs-shortcut>
-    </action>
+    </action>    
   </insert>
   
 </actions>
