@@ -15,8 +15,16 @@ using JetBrains.Util;
 
 namespace AgentSmith.Strings
 {
+    /// <summary>
+    /// Spell checks string and produces spell checking suggestions.
+    /// </summary>
     internal static class StringSpellChecker
     {
+        /// <summary>
+        /// Unescapes string to be spellchecked.
+        /// </summary>
+        /// <param name="text">String to be unescaped.</param>
+        /// <returns>Upescaped string.</returns>
         private static string unescape(string text)
         {
             if (!text.StartsWith("@"))
@@ -53,6 +61,7 @@ namespace AgentSmith.Strings
                                                        ISolution solution, List<Regex> patternsToIgnore)
         {
             List<SuggestionBase> suggestions = new List<SuggestionBase>();
+            
             if (spellChecker == null)
             {
                 return suggestions;
@@ -94,10 +103,22 @@ namespace AgentSmith.Strings
                                 DocumentRange documentRange = new DocumentRange(document, range);
                                 TextRange textRange = new TextRange(humpToken.Start - wordLexer.TokenStart,
                                                                     humpToken.End - wordLexer.TokenStart);
-                                
-                                suggestions.Add(new StringSpellCheckSuggestion(document.GetText(range), documentRange,
-                                                                               humpToken.Value, textRange,
-                                                                               solution, spellChecker));
+
+                                StringSpellCheckSuggestionBase suggestion;
+                                if (buffer.StartsWith("@"))
+                                {
+                                    suggestion = new VerbatimStringSpellCheckSuggestion(document.GetText(range),
+                                                                                        documentRange,
+                                                                                        humpToken.Value, textRange,
+                                                                                        solution, spellChecker);
+                                }
+                                else
+                                {
+                                    suggestion = new StringSpellCheckSuggestion(document.GetText(range), documentRange,
+                                                                          humpToken.Value, textRange,
+                                                                          solution, spellChecker);   
+                                }                                
+                                suggestions.Add(suggestion);
                                 break;
                             }
                         }

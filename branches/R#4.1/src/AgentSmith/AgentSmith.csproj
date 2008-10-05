@@ -284,8 +284,10 @@
     <Compile Include="MemberMatch\FuzzyBool.cs" />
     <Compile Include="ResX\ResXDaemonStage.cs" />
     <Compile Include="SpellCheck\SpellCheckSuggestionBase.cs" />
+    <Compile Include="Strings\VerbatimStringSpellCheckSuggestion.cs" />
     <Compile Include="Strings\StringSpellChecker.cs" />
     <Compile Include="Strings\StringSpellCheckSuggestion.cs" />
+    <Compile Include="Strings\StringSpellCheckSuggestionBase.cs" />
     <Compile Include="SuggestionBase.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -13,10 +13,13 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
 
 namespace AgentSmith
 {
+    /// <summary>
+    /// Main Agent Smith process.
+    /// Performs spell checking of everything in C# files and checks naming conventions.
+    /// </summary>
     public class DaemonProcess : ElementVisitor, IDaemonStageProcess, IRecursiveElementProcessor
     {
         private readonly IDeclarationAnalyzer[] _analyzers;
@@ -44,9 +47,12 @@ namespace AgentSmith
             {
                 _analyzers = new IDeclarationAnalyzer[]
                     {
-                        new NamingConventionsAnalyzer(_styleSettings.NamingConventionSettings, _process.Solution),
-                        new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution, _styleSettings.CompiledPatternsToIgnore),
-                        new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary, _process.Solution,
+                                     new NamingConventionsAnalyzer(_styleSettings.NamingConventionSettings,
+                                                                   _process.Solution),
+                                     new CommentAnalyzer(_styleSettings.CommentsSettings, _process.Solution,
+                                                         _styleSettings.CompiledPatternsToIgnore),
+                                     new IdentifierSpellCheckAnalyzer(_styleSettings.IdentifierDictionary,
+                                                                      _process.Solution,
                                                          _styleSettings)
                     };
             }
@@ -72,34 +78,18 @@ namespace AgentSmith
 
         public void ProcessBeforeInterior(IElement element)
         {
+            //Don't process generated regions at all.
             _generatedCodeRegionDetector.Process(element);
             if (_generatedCodeRegionDetector.InGeneratedCode)
             {
                 return;
             }
 
+            //Don't spell check regions inside '//agentsmith spell check enable/disable' regions.
             _skipSpellCheckRegionDetector.Process(element);           
 
-            if (!_skipSpellCheckRegionDetector.InSkipSpellCheck && 
-                StringSpellCheckSuggestion.Enabled && 
-                element is ITokenNode && 
-                _styleSettings != null)
-            {
-                ITokenNode token = (ITokenNode) element;
-                if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
-                {
-                    string[] dicts = _styleSettings.StringsDictionary == null ? null : _styleSettings.StringsDictionary.Split(',');
-                    ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, dicts);
-
-                    IList<SuggestionBase> suggestions =
-                        StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
-                                                      _process.Solution, _styleSettings.CompiledPatternsToIgnore);
-                    foreach (SuggestionBase suggestion in suggestions)
-                    {
-                        addHighlighting(suggestion);
-                    }
-                }
-            }
+            //If this element is string then spell check it.
+            testIfStringAndSpellCheck(element);
 
             IDeclaration declaration = element as IDeclaration;
             if (declaration == null)
@@ -107,6 +97,7 @@ namespace AgentSmith
                 return;
             }
 
+            //Analyze naming conventions, perform identifier spell checking etc.
             foreach (IDeclarationAnalyzer analyzer in _analyzers)
             {
                 SuggestionBase[] result = analyzer.Analyze(declaration,
@@ -118,6 +109,42 @@ namespace AgentSmith
                     {
                         addHighlighting(highlighting);
                     }
+                }
+            }
+        }
+
+        private void testIfStringAndSpellCheck(IElement element)
+        {
+            if (_skipSpellCheckRegionDetector.InSkipSpellCheck ||               
+                !(element is ITokenNode) ||
+                _styleSettings == null)
+            {
+                return;
+            }
+
+            ITokenNode token = (ITokenNode) element;
+
+            if (!VerbatimStringSpellCheckSuggestion.Enabled && token.GetText().StartsWith("@"))
+                return;
+
+            if (!StringSpellCheckSuggestion.Enabled && !token.GetText().StartsWith("@"))
+                return;
+
+            if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL)
+            {
+                //load spell checker that can handle multiple languages configured for strings.
+                string[] dicts = _styleSettings.StringsDictionary == null
+                                     ? null
+                                     : _styleSettings.StringsDictionary.Split(',');
+                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_process.Solution, dicts);
+
+                //Spell check string and get suggestions.
+                IList<SuggestionBase> suggestions =
+                    StringSpellChecker.SpellCheck(element.GetDocumentRange().Document, token, spellChecker,
+                                                  _process.Solution, _styleSettings.CompiledPatternsToIgnore);
+                foreach (SuggestionBase suggestion in suggestions)
+                {
+                    addHighlighting(suggestion);
                 }
             }
         }
