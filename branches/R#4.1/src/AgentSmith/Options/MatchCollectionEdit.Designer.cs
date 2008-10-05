@@ -28,36 +28,12 @@ namespace AgentSmith.Options
         /// </summary>
         private void InitializeComponent()
         {
-            this._lvMatches = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this._btnAdd = new System.Windows.Forms.Button();
             this._btnEdit = new System.Windows.Forms.Button();
             this._btnDelete = new System.Windows.Forms.Button();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this._lvMatches = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
-            // 
-            // _lvMatches
-            // 
-            this._lvMatches.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this._lvMatches.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this._lvMatches.FullRowSelect = true;
-            this._lvMatches.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this._lvMatches.HideSelection = false;
-            this._lvMatches.Location = new System.Drawing.Point(0, 2);
-            this._lvMatches.Margin = new System.Windows.Forms.Padding(0);
-            this._lvMatches.Name = "_lvMatches";
-            this._lvMatches.ShowItemToolTips = true;
-            this._lvMatches.Size = new System.Drawing.Size(152, 150);
-            this._lvMatches.TabIndex = 56;
-            this._lvMatches.UseCompatibleStateImageBehavior = false;
-            this._lvMatches.View = System.Windows.Forms.View.Details;            
-            this._lvMatches.DoubleClick += new System.EventHandler(this.lvMatches_DoubleClick);
-            this._lvMatches.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvMatches_KeyDown);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Description";
-            this.columnHeader1.Width = 140;
             // 
             // _btnAdd
             // 
@@ -95,6 +71,23 @@ namespace AgentSmith.Options
             this._btnDelete.UseVisualStyleBackColor = true;
             this._btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Description";
+            this.columnHeader1.Width = 1000;
+            // 
+            // _lvMatches
+            // 
+            this._lvMatches.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this._lvMatches.HorizontalScrollbar = true;
+            this._lvMatches.Location = new System.Drawing.Point(0, 2);
+            this._lvMatches.Margin = new System.Windows.Forms.Padding(0);
+            this._lvMatches.Name = "_lvMatches";
+            this._lvMatches.Size = new System.Drawing.Size(152, 147);
+            this._lvMatches.TabIndex = 56;
+            this._lvMatches.DoubleClick += new System.EventHandler(this.lvMatches_DoubleClick);
+            this._lvMatches.KeyDown += new System.Windows.Forms.KeyEventHandler(this.lvMatches_KeyDown);
+            // 
             // MatchCollectionEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -107,7 +100,7 @@ namespace AgentSmith.Options
             this.MinimumSize = new System.Drawing.Size(100, 0);
             this.Name = "MatchCollectionEdit";
             this.Size = new System.Drawing.Size(199, 155);
-            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.matchCollectionEdit_Layout);            
+            this.Layout += new System.Windows.Forms.LayoutEventHandler(this.matchCollectionEdit_Layout);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,10 +108,10 @@ namespace AgentSmith.Options
 
         #endregion
 
-        private System.Windows.Forms.ListView _lvMatches;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.Button _btnAdd;
         private System.Windows.Forms.Button _btnEdit;
         private System.Windows.Forms.Button _btnDelete;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ListBox _lvMatches;
     }
 }

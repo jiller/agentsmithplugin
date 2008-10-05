@@ -29,13 +29,13 @@ namespace AgentSmith.Options
         {
             foreach (Match match in _matches)
             {
-                ListViewItem lvi = new ListViewItem(match.ToString());
-                lvi.Tag = match;
-                _lvMatches.Items.Add(lvi);
+                //ListViewItem lvi = new ListViewItem(match.ToString());
+                //lvi.Tag = match;
+                _lvMatches.Items.Add(match);
             }
             if (_lvMatches.Items.Count > 0)
             {
-                _lvMatches.Items[0].Selected = true;
+                _lvMatches.SelectedIndex = 0;
             }
         }
 
@@ -48,10 +48,10 @@ namespace AgentSmith.Options
         {
             if (_lvMatches.SelectedItems.Count == 1)
             {
-                Match match = (Match) _lvMatches.SelectedItems[0].Tag;
+                Match match = (Match) _lvMatches.SelectedItems[0];
                 if (new MatchOptions(match, EffectiveAccess).ShowDialog() == DialogResult.OK)
                 {
-                    _lvMatches.SelectedItems[0].Text = match.ToString();
+                    _lvMatches.SelectedItem = match;
                 }
             }
         }
@@ -70,12 +70,13 @@ namespace AgentSmith.Options
             {
                 _matches.Add(newMatch);
 
-                ListViewItem item = new ListViewItem(newMatch.ToString());
-                item.ToolTipText = newMatch.ToString();
+                //ListViewItem item = new ListViewItem(newMatch.ToString());
+                //item.ToolTipText = newMatch.ToString();
                 _lvMatches.SelectedItems.Clear();
-                item.Selected = true;
-                item.Tag = newMatch;
-                _lvMatches.Items.Add(item);
+                //item.Selected = true;
+                //item.Tag = newMatch;
+                _lvMatches.Items.Add(newMatch);
+                _lvMatches.SelectedItem = newMatch;
             }
         }
 
@@ -91,7 +92,7 @@ namespace AgentSmith.Options
         {
             if (_lvMatches.SelectedItems.Count == 1)
             {
-                _matches.Remove((Match) _lvMatches.SelectedItems[0].Tag);
+                _matches.Remove((Match) _lvMatches.SelectedItems[0]);
                 _lvMatches.Items.Remove(_lvMatches.SelectedItems[0]);
             }
         }

@@ -49,7 +49,7 @@ namespace AgentSmith.Strings
             get
             {
                 Severity severity = HighlightingSettingsManager.Instance.Settings.GetSeverity(SuggestionName);
-                return severity == JetBrains.ReSharper.Daemon.Severity.DO_NOT_SHOW ? severity : Severity.INFO;
+                return severity == Severity.DO_NOT_SHOW ? severity : Severity.INFO;
             }
         }
 

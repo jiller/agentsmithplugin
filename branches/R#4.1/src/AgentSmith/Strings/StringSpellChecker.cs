@@ -82,8 +82,9 @@ namespace AgentSmith.Strings
             while (wordLexer.TokenType != null)
             {
                 if (SpellCheckUtil.ShouldSpellCheck(wordLexer.TokenText) &&
-                    !spellChecker.TestWord(wordLexer.TokenText.Replace("&", ""), true))
+                    !spellCheckWithAmpersand(spellChecker, wordLexer.TokenText, true))
                 {
+                    
                     IClassMemberDeclaration containingElement =
                         token.GetContainingElement<IClassMemberDeclaration>(false);
                     if (containingElement == null ||
@@ -94,7 +95,7 @@ namespace AgentSmith.Strings
                         foreach (LexerToken humpToken in camelHumpLexer)
                         {
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
-                                !spellChecker.TestWord(humpToken.Value, true))
+                                !spellCheckWithAmpersand(spellChecker, humpToken.Value, true))
                             {
                                 int start = token.GetTreeStartOffset() + wordLexer.TokenStart;
                                 int end = start + wordLexer.TokenText.Length;
@@ -128,6 +129,35 @@ namespace AgentSmith.Strings
                 wordLexer.Advance();
             }
             return suggestions;
+        }
+
+        /// <summary>
+        /// Spell checks word taking into account that '&' char can be used in windows forms to define
+        /// hot key.
+        /// </summary>        
+        private static bool spellCheckWithAmpersand(ISpellChecker spellChecker, string text, bool matchCase)
+        {
+            if (spellChecker.TestWord(text, matchCase))
+                return true;
+
+            if (text.Contains("&"))
+            {
+                if (spellChecker.TestWord(text.Replace("&", ""), matchCase))
+                {
+                    return true;
+                }
+
+                foreach (string part in text.Split('&'))
+                {
+                    if (part.Length > 0 && part != "&")
+                    {
+                        if (!spellChecker.TestWord(part, matchCase))
+                            return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }
