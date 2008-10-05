@@ -162,7 +162,8 @@ namespace AgentSmith.NamingConventions
             {
                 return true;
             }
-            if (!checkObligatoryPrefixes(ref name))
+            string correctPrefix;
+            if (!checkObligatoryPrefixes(ref name, out correctPrefix))
             {
                 return false;
             }
@@ -172,7 +173,8 @@ namespace AgentSmith.NamingConventions
                 return false;
             }
 
-            if (!checkObligatorySuffixes(ref name))
+            string correctSuffix;
+            if (!checkObligatorySuffixes(ref name, out correctSuffix))
             {
                 return false;
             }
@@ -224,8 +226,9 @@ namespace AgentSmith.NamingConventions
             return true;
         }
 
-        private bool checkObligatorySuffixes(ref string name)
+        private bool checkObligatorySuffixes(ref string name, out string correctSuffix)
         {
+            correctSuffix = null;
             if (_mustHaveSuffixes == null || _mustHaveSuffixes.Length == 0)
             {
                 return true;
@@ -238,11 +241,13 @@ namespace AgentSmith.NamingConventions
                     if (name.EndsWith(suffix))
                     {
                         name = name.Substring(0, name.Length - suffix.Length);
+                        correctSuffix = suffix;
                         return true;
                     }
                     if (name.ToLower().EndsWith(suffix.ToLower()))
                     {
                         name = name.Substring(0, name.Length - suffix.Length);
+                        correctSuffix = suffix;
                         return false;
                     }
                 }
@@ -271,10 +276,11 @@ namespace AgentSmith.NamingConventions
             return true;
         }
 
-        private bool checkObligatoryPrefixes(ref string name)
+        private bool checkObligatoryPrefixes(ref string name, out string correctPrefix)
         {
+            correctPrefix = null;
             if (_mustHavePrefixes == null || _mustHavePrefixes.Length == 0)
-            {
+            {                
                 return true;
             }
             if (_mustHavePrefixes.Length > 0)
@@ -284,11 +290,13 @@ namespace AgentSmith.NamingConventions
                     if (name.StartsWith(prefix))
                     {
                         name = name.Substring(prefix.Length);
+                        correctPrefix = prefix;
                         return true;
                     }
                     if (name.ToLower().StartsWith(prefix.ToLower()))
                     {
                         name = name.Substring(prefix.Length);
+                        correctPrefix = prefix;
                         return false;
                     }
                 }
@@ -303,11 +311,13 @@ namespace AgentSmith.NamingConventions
                 return new string[0];
             }
             string originalName = name;
-            bool forceError = false;
+            //bool forceError = false;
             checkForbiddenPrefixes(ref name);
             checkForbiddenSuffixes(ref name);
-            bool checkedObligatoryPrefixes = checkObligatoryPrefixes(ref name);
-            bool checkedObligatorySuffixes = checkObligatorySuffixes(ref name);
+            string correctPrefix;
+            string correctSuffix;
+            bool checkedObligatoryPrefixes = checkObligatoryPrefixes(ref name, out correctPrefix);
+            bool checkedObligatorySuffixes = checkObligatorySuffixes(ref name, out correctSuffix);
             if (name.Length > 0)
             {
                 switch (_rule)
@@ -328,45 +338,44 @@ namespace AgentSmith.NamingConventions
                             {
                                 name = name.Replace(match.Groups["remove"].Captures[0].Value, "");
                             }
-                            else
-                            {
-                                forceError = true;
-                            }
+                            //else
+                            //{
+                            //    forceError = true;
+                            //}
                         }
                         break;
                     case RuleKind.MatchesRegex:
-                        if (!_regex.IsMatch(name))
-                        {
-                            forceError = true;
-                        }
+                        //if (!_regex.IsMatch(name))
+                        //{
+                        //    forceError = true;
+                        //}
                         break;
                 }
             }
 
             string[] returnNames = new string[] {};
-            if (name != originalName)
-            {
-                forceError = true;
-                returnNames = new string[] {name};
+            if (name != originalName || !checkedObligatoryPrefixes || !checkedObligatorySuffixes)
+            {               
+                returnNames = new string[] {(correctPrefix ?? "") + name + (correctSuffix ?? "")};
             }
 
-            if (!checkedObligatoryPrefixes)
-            {
+            if (correctPrefix == null && !checkedObligatoryPrefixes)
+            {             
                 string[] prefixedNames = new string[_mustHavePrefixes.Length];
                 for (int i = 0; i < _mustHavePrefixes.Length; i++)
                 {
                     prefixedNames[i] = _mustHavePrefixes[i] + name;
                 }
-                returnNames = prefixedNames;
-                forceError = true;
+                returnNames = prefixedNames;                
             }
 
-            if (!checkedObligatorySuffixes)
-            {
-                if (returnNames.Length == 0)
+            if (correctSuffix == null && !checkedObligatorySuffixes)
+            {              
+                /*if (returnNames.Length == 0)
                 {
                     returnNames = new string[] { name };
                 }
+                 * */
                 string[] newNames = new string[_mustHaveSuffixes.Length * returnNames.Length];
                 for (int i = 0; i < _mustHaveSuffixes.Length; i++)
                 {
@@ -375,11 +384,10 @@ namespace AgentSmith.NamingConventions
                         newNames[i + j * returnNames.Length] = returnNames[j] + _mustHaveSuffixes[i];
                     }
                 }
-                returnNames = newNames;
-                forceError = true;
+                returnNames = newNames;                
             }
 
-            return forceError ? returnNames : new string[0];            
+            return returnNames;
         }
     }
 }
