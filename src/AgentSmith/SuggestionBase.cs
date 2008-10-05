@@ -83,6 +83,11 @@ namespace AgentSmith
             get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(_suggestionName); }
         }
         
+        public string SuggestionName
+        {
+            get { return _suggestionName; }
+        }
+
         public virtual string ToolTip
         {
             get { return _toolTip + "[Agent Smith]"; }

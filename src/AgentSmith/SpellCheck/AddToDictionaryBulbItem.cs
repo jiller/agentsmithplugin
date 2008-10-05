@@ -7,12 +7,21 @@ using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck
 {
+    /// <summary>
+    /// Bulb item that adds word not recognized by spell checker to custom dictionary.
+    /// </summary>
     public class AddToDictionaryBulbItem : IBulbItem
     {
         private readonly string _word;
         private readonly CustomDictionary _customDictionary;
         private DocumentRange _documentRange;
 
+        /// <summary>
+        /// Initializes new instance.
+        /// </summary>
+        /// <param name="word">Unrecognized word.</param>
+        /// <param name="settings">Custom dictionary instance.</param>
+        /// <param name="range">Range in document which misspelled work occupies.</param>
         public AddToDictionaryBulbItem(string word, CustomDictionary settings, DocumentRange range)
         {
             _word = word;

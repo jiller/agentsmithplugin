@@ -4,6 +4,9 @@ using JetBrains.Util;
 
 namespace AgentSmith.SpellCheck
 {
+    /// <summary>
+    /// Finds words in a string. Implements ReSharper's interface <see cref="ILexer"/>.
+    /// </summary>
     public class WordLexer : ILexer
     {
         private readonly string _data;
@@ -12,6 +15,10 @@ namespace AgentSmith.SpellCheck
         private int _tokenStart = 0;
         private TokenNodeType _tokenType;
 
+        /// <summary>
+        /// Initializes new instance.
+        /// </summary>
+        /// <param name="data">String to be tokenized.</param>
         public WordLexer(string data)
         {
             _data = data;

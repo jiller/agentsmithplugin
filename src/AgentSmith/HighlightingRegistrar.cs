@@ -57,6 +57,11 @@ namespace AgentSmith
                 "Spell checking of a string in C# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
                 Severity.SUGGESTION);
 
+            manager.RegisterConfigurableSeverity(VerbatimStringSpellCheckSuggestion.NAME, group,
+                "Word found in C# verbatim string doesn't exist in dictionary.",
+                "Spell checking of a verbatin string (prefixed with @) in C# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
+                Severity.SUGGESTION);
+
             manager.RegisterConfigurableSeverity(IdentifierSpellCheckSuggestion.NAME, group,
                 "Word found in C# declaration doesn't exist in dictionary.",
                 "Spell checking of C# declaration found a word that doesn't exist in default or user dictionary and is probably misspelled.",

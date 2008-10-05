@@ -8,13 +8,13 @@ using JetBrains.Util;
 namespace AgentSmith.Strings
 {    
     [ConfigurableSeverityHighlighting(NAME)]
-    public class StringSpellCheckSuggestion : StringSpellCheckSuggestionBase
+    public class VerbatimStringSpellCheckSuggestion : StringSpellCheckSuggestionBase
     {
-        public const string NAME = "StringLiteralsWordIsNotInDictionary";
+        public const string NAME = "VerbatimStringLiteralsWordIsNotInDictionary";
 
-        public StringSpellCheckSuggestion(string word, DocumentRange range,
-                                          string misspelledWord, TextRange misspelledRange,
-                                          ISolution solution, ISpellChecker spellChecker) :
+        public VerbatimStringSpellCheckSuggestion(string word, DocumentRange range, 
+            string misspelledWord, TextRange misspelledRange,
+            ISolution solution, ISpellChecker spellChecker) :
             base(NAME, word, range, misspelledWord, misspelledRange, solution, spellChecker)
         {
         }
