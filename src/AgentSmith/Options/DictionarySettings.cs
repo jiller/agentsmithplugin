@@ -23,7 +23,7 @@ namespace AgentSmith.Options
         private CustomDictionary _currentCustomDictionary;
 
         public DictionarySettings(IOptionsDialog optionsDialog)
-        {
+        {            
             InitializeComponent();
             _optionsDialog = optionsDialog;
             initializeUI();
@@ -46,8 +46,11 @@ namespace AgentSmith.Options
 
         public bool OnOk()
         {
-            saveCustomDictionary();
+            saveCustomDictionary();            
             Settings.LastSelectedCustomDictionary = _cbDictionary.SelectedItem.ToString();
+            //TODO: don't need to reset all spellcheckers. Clearing references to custom dictionaries
+            //would be enough.
+            SpellCheckManager.Reset();
             return true;
         }
 
@@ -75,7 +78,7 @@ namespace AgentSmith.Options
         }
 
         private void saveCustomDictionary()
-        {
+        {            
             StringBuilder sb = new StringBuilder();
             foreach (string word in _tbUserDictionary.Lines)
             {
@@ -89,7 +92,7 @@ namespace AgentSmith.Options
             if (_currentCustomDictionary != null)
             {
                 _currentCustomDictionary.UserWords = sb.ToString();
-                _currentCustomDictionary.CaseSensitive = _cbCaseSensitive.Checked;
+                _currentCustomDictionary.CaseSensitive = _cbCaseSensitive.Checked;                
             }
         }
 
@@ -98,9 +101,9 @@ namespace AgentSmith.Options
             if (_cbDictionary.SelectedItem != null)
             {
                 saveCustomDictionary();
-
-                string dictName = _cbDictionary.SelectedItem.ToString();
-                _currentCustomDictionary = Settings.CustomDictionaries.GetOrCreateCustomDictionary(dictName);
+              
+                string dictName = _cbDictionary.SelectedItem.ToString();                
+                _currentCustomDictionary = Settings.CustomDictionaries.GetOrCreateCustomDictionary(dictName);                
                 _tbUserDictionary.Lines = _currentCustomDictionary.UserWords.Split('\n');
                 _cbCaseSensitive.Checked = _currentCustomDictionary.CaseSensitive;
             }
