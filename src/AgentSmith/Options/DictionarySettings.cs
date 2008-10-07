@@ -7,6 +7,7 @@ using System.Xml;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.OptionPages.CodeStyle;
 using JetBrains.UI.Options;
+using AgentSmith.SpellCheck;
 
 namespace AgentSmith.Options
 {
