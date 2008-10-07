@@ -157,7 +157,7 @@ namespace AgentSmith.Strings
                 }
             }
 
-            return true;
+            return false;
         }
     }
 }
