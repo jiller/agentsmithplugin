@@ -11,11 +11,24 @@ using JetBrains.Util;
 
 namespace AgentSmith.SpellCheck
 {
+    /// <summary>
+    /// Manages spell checkers for different languages.
+    /// Solution can be configured to have different elements to be
+    /// in different languages, like resx files, comments, identifiers etc.
+    /// Has internal cache to not load dictionaries from disc on
+    /// each request.
+    /// </summary>
     public class SpellCheckManager
     {
         private static readonly Dictionary<string, SpellChecker> _dictionaryCache =
             new Dictionary<string, SpellChecker>();
 
+        /// <summary>
+        /// Retrieves spell checker for resx file spell checking.
+        /// </summary>
+        /// <param name="resxFile">Instance of resx file.</param>
+        /// <param name="defaultResXDictionary">Default dictionary to be used.</param>
+        /// <returns><see cref="ISpellChecker"/> instance or null.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static ISpellChecker GetSpellChecker(IProjectFile resxFile, string defaultResXDictionary)
         {
@@ -46,6 +59,12 @@ namespace AgentSmith.SpellCheck
             return GetSpellChecker(resxFile.GetSolution(), defaultResXDictionary);
         }
 
+        /// <summary>
+        /// Retrieves spell checker for specified culture.
+        /// </summary>
+        /// <param name="solution">Solution instance.</param>
+        /// <param name="dictionaryName">Culture name. Like en-Us. </param>
+        /// <returns><see cref="ISpellChecker"/> instance or null.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static ISpellChecker GetSpellChecker(ISolution solution, string dictionaryName)
         {
@@ -69,6 +88,13 @@ namespace AgentSmith.SpellCheck
             return _dictionaryCache[dictionaryName];
         }
 
+        /// <summary>
+        /// Retrieves spell checker to spell check strings that can contain words in many
+        /// languages.
+        /// </summary>
+        /// <param name="solution">Solution instance.</param>
+        /// <param name="dictionaryNames">Names of cultures a string can contain words in.</param>
+        /// <returns><see cref="ISpellChecker"/> instance or null.</returns>
         public static ISpellChecker GetSpellChecker(ISolution solution, string[] dictionaryNames)
         {
             if (dictionaryNames == null || dictionaryNames.Length == 0)
@@ -93,6 +119,10 @@ namespace AgentSmith.SpellCheck
             return new MultilingualSpellchecker(checkers.ToArray());
         }
 
+        /// <summary>
+        /// <see cref="SpellCheckManager"/> caches spell checkers for different languages.
+        /// This method clears caches.
+        /// </summary>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static void Reset()
         {
@@ -106,7 +136,7 @@ namespace AgentSmith.SpellCheck
             {
                 return null;
             }
-            
+
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                  String.Format("Agent Smith\\dic\\{0}.dic", name));
             if (!File.Exists(path))
@@ -114,8 +144,8 @@ namespace AgentSmith.SpellCheck
                 path = getDictPath(name);
                 if (!File.Exists(path))
                 {
-                    return null;
-                }               
+                     return null;
+                }
             }            
             
             try
@@ -139,7 +169,7 @@ namespace AgentSmith.SpellCheck
         private static string getDictPath(string dictionaryName)
         {
             return Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
-                String.Format("dic\\{0}.dic", dictionaryName));
+                                String.Format("dic\\{0}.dic", dictionaryName));
         }
     }
 }

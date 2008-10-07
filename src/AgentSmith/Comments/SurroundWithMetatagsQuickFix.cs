@@ -17,7 +17,7 @@ namespace AgentSmith.Comments
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _suggestion.Range.IsValid;
         }
 
         public IBulbItem[] Items

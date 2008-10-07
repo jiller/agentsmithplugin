@@ -53,6 +53,7 @@ namespace AgentSmith.Options
             Settings.CommentsSettings.CommentMatch = _mceMatches.Matches;
             Settings.CommentsSettings.CommentNotMatch = _mceNotMatches.Matches;
             Settings.CommentsSettings.SuppressIfBaseHasComment = _cbLookAtBase.Checked;
+            Settings.CommentsSettings.MaxLineLength = (int)_udLineLength.Value;
             
             return true;
         }
@@ -70,6 +71,7 @@ namespace AgentSmith.Options
             _mceNotMatches.Matches = Settings.CommentsSettings.CommentNotMatch;
             
             _cbLookAtBase.Checked = Settings.CommentsSettings.SuppressIfBaseHasComment;
+            _udLineLength.Value = Settings.CommentsSettings.MaxLineLength;
                        
         }
     }

@@ -1,18 +1,27 @@
 using System;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
-using JetBrains.ReSharper.TextControl;
+using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck
 {
+    /// <summary>
+    /// Bulb item that adds word not recognized by spell checker to custom dictionary.
+    /// </summary>
     public class AddToDictionaryBulbItem : IBulbItem
     {
         private readonly string _word;
         private readonly CustomDictionary _customDictionary;
         private DocumentRange _documentRange;
 
+        /// <summary>
+        /// Initializes new instance.
+        /// </summary>
+        /// <param name="word">Unrecognized word.</param>
+        /// <param name="settings">Custom dictionary instance.</param>
+        /// <param name="range">Range in document which misspelled work occupies.</param>
         public AddToDictionaryBulbItem(string word, CustomDictionary settings, DocumentRange range)
         {
             _word = word;
@@ -24,12 +33,12 @@ namespace AgentSmith.SpellCheck
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            string words = _customDictionary.DecodedUserWords.Trim();
+            string words = _customDictionary.UserWords.Trim();
             if (words.Length > 0)
             {
-                _customDictionary.DecodedUserWords = words + "\n";
+                _customDictionary.UserWords = words + "\n";
             }
-            _customDictionary.DecodedUserWords += _word;
+            _customDictionary.UserWords += _word;
 
             Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);
         }

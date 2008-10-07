@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Resources;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.Util;
+using System.Resources;
 
 namespace AgentSmith.ResX
 {
@@ -41,9 +41,9 @@ namespace AgentSmith.ResX
                 .GetAttributeInstances(new CLRTypeName(typeof (NeutralResourcesLanguageAttribute).FullName));
             if (attributes != null &&
                 attributes.Count > 0 &&
-                attributes[0].PositionParameter(0).Value != null)
+                attributes[0].PositionParameter(0).ConstantValue.Value != null)
             {
-                defaultResXDic = attributes[0].PositionParameter(0).Value.ToString();
+                defaultResXDic = attributes[0].PositionParameter(0).ConstantValue.Value.ToString();
             }
 
             ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file, defaultResXDic);
@@ -89,7 +89,7 @@ namespace AgentSmith.ResX
 
                 if (root != null)
                 {
-                    IList<IXmlTag> datas = root.GetTags(delegate(IXmlTag tag) { return tag.TagName == "data"; });
+                    IEnumerable<IXmlTag> datas = root.GetTags<IXmlTag>(delegate(IXmlTag tag) { return tag.TagName == "data"; });
                     foreach (IXmlTag data in datas)
                     {
                         if (data.GetAttribute("type") == null)

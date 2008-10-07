@@ -5,9 +5,10 @@ using NUnit.Framework;
 
 namespace AgentSmith.Test.SpellCheck
 {
+    
     [TestFixture]
     public class CamelHumpLexerTest
-    {        
+    {       
         [Test]
         public void Test()
         {

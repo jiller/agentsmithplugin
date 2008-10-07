@@ -44,11 +44,13 @@ namespace AgentSmith.Options
             this._cbRef = new System.Windows.Forms.CheckBox();
             this._lvVisibility = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.label3 = new System.Windows.Forms.Label();
+            this._tbNamespace = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // _tbInheritedFrom
             // 
-            this._tbInheritedFrom.Location = new System.Drawing.Point(155, 169);
+            this._tbInheritedFrom.Location = new System.Drawing.Point(155, 196);
             this._tbInheritedFrom.Name = "_tbInheritedFrom";
             this._tbInheritedFrom.Size = new System.Drawing.Size(217, 20);
             this._tbInheritedFrom.TabIndex = 22;
@@ -56,7 +58,7 @@ namespace AgentSmith.Options
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 172);
+            this.label7.Location = new System.Drawing.Point(12, 199);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(119, 13);
             this.label7.TabIndex = 21;
@@ -64,7 +66,7 @@ namespace AgentSmith.Options
             // 
             // _tbMarkedWithAttribute
             // 
-            this._tbMarkedWithAttribute.Location = new System.Drawing.Point(155, 194);
+            this._tbMarkedWithAttribute.Location = new System.Drawing.Point(155, 221);
             this._tbMarkedWithAttribute.Name = "_tbMarkedWithAttribute";
             this._tbMarkedWithAttribute.Size = new System.Drawing.Size(217, 20);
             this._tbMarkedWithAttribute.TabIndex = 20;
@@ -72,7 +74,7 @@ namespace AgentSmith.Options
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(12, 197);
+            this.label6.Location = new System.Drawing.Point(12, 224);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(106, 13);
             this.label6.TabIndex = 19;
@@ -109,8 +111,7 @@ namespace AgentSmith.Options
             // _btnOK
             // 
             this._btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this._btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this._btnOK.Location = new System.Drawing.Point(216, 270);
+            this._btnOK.Location = new System.Drawing.Point(214, 299);
             this._btnOK.Name = "_btnOK";
             this._btnOK.Size = new System.Drawing.Size(75, 23);
             this._btnOK.TabIndex = 23;
@@ -122,7 +123,7 @@ namespace AgentSmith.Options
             // 
             this._btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this._btnCancel.Location = new System.Drawing.Point(297, 270);
+            this._btnCancel.Location = new System.Drawing.Point(295, 299);
             this._btnCancel.Name = "_btnCancel";
             this._btnCancel.Size = new System.Drawing.Size(75, 23);
             this._btnCancel.TabIndex = 24;
@@ -132,7 +133,7 @@ namespace AgentSmith.Options
             // _cbStatic
             // 
             this._cbStatic.AutoSize = true;
-            this._cbStatic.Location = new System.Drawing.Point(155, 220);
+            this._cbStatic.Location = new System.Drawing.Point(155, 247);
             this._cbStatic.Name = "_cbStatic";
             this._cbStatic.Size = new System.Drawing.Size(51, 17);
             this._cbStatic.TabIndex = 26;
@@ -143,7 +144,7 @@ namespace AgentSmith.Options
             // _cbReadonly
             // 
             this._cbReadonly.AutoSize = true;
-            this._cbReadonly.Location = new System.Drawing.Point(242, 220);
+            this._cbReadonly.Location = new System.Drawing.Point(242, 247);
             this._cbReadonly.Name = "_cbReadonly";
             this._cbReadonly.Size = new System.Drawing.Size(66, 17);
             this._cbReadonly.TabIndex = 27;
@@ -154,7 +155,7 @@ namespace AgentSmith.Options
             // _cbIn
             // 
             this._cbIn.AutoSize = true;
-            this._cbIn.Location = new System.Drawing.Point(155, 244);
+            this._cbIn.Location = new System.Drawing.Point(155, 271);
             this._cbIn.Name = "_cbIn";
             this._cbIn.Size = new System.Drawing.Size(35, 17);
             this._cbIn.TabIndex = 28;
@@ -164,7 +165,7 @@ namespace AgentSmith.Options
             // _cbOut
             // 
             this._cbOut.AutoSize = true;
-            this._cbOut.Location = new System.Drawing.Point(197, 244);
+            this._cbOut.Location = new System.Drawing.Point(197, 271);
             this._cbOut.Name = "_cbOut";
             this._cbOut.Size = new System.Drawing.Size(43, 17);
             this._cbOut.TabIndex = 29;
@@ -174,7 +175,7 @@ namespace AgentSmith.Options
             // _cbRef
             // 
             this._cbRef.AutoSize = true;
-            this._cbRef.Location = new System.Drawing.Point(247, 244);
+            this._cbRef.Location = new System.Drawing.Point(247, 271);
             this._cbRef.Name = "_cbRef";
             this._cbRef.Size = new System.Drawing.Size(43, 17);
             this._cbRef.TabIndex = 30;
@@ -193,7 +194,7 @@ namespace AgentSmith.Options
             this._lvVisibility.Size = new System.Drawing.Size(217, 124);
             this._lvVisibility.TabIndex = 31;
             this._lvVisibility.UseCompatibleStateImageBehavior = false;
-            this._lvVisibility.View = System.Windows.Forms.View.Details;            
+            this._lvVisibility.View = System.Windows.Forms.View.Details;
             this._lvVisibility.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.lvVisibility_ItemCheck);
             // 
             // columnHeader1
@@ -201,13 +202,31 @@ namespace AgentSmith.Options
             this.columnHeader1.Text = "Description";
             this.columnHeader1.Width = 180;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(12, 173);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(104, 13);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Namespace (Regex)";
+            // 
+            // _tbNamespace
+            // 
+            this._tbNamespace.Location = new System.Drawing.Point(155, 170);
+            this._tbNamespace.Name = "_tbNamespace";
+            this._tbNamespace.Size = new System.Drawing.Size(217, 20);
+            this._tbNamespace.TabIndex = 33;
+            // 
             // MatchOptions
             // 
             this.AcceptButton = this._btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this._btnCancel;
-            this.ClientSize = new System.Drawing.Size(383, 299);
+            this.ClientSize = new System.Drawing.Size(381, 328);
+            this.Controls.Add(this._tbNamespace);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this._lvVisibility);
             this.Controls.Add(this._cbRef);
             this.Controls.Add(this._cbOut);
@@ -252,5 +271,7 @@ namespace AgentSmith.Options
         private System.Windows.Forms.CheckBox _cbRef;
         private System.Windows.Forms.ListView _lvVisibility;
         private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox _tbNamespace;
     }
 }

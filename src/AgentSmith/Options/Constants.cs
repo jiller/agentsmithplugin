@@ -4,6 +4,7 @@ namespace AgentSmith.Options
 {
     public static class Constants
     {
+        public const string DICTIONARIES_SETTINGS_PAGE_ID = "AgentSmith.DictionarySettingsPage";
         public const string SPELLCHECK_SETTINGS_PAGE_ID = "AgentSmith.SpellCheckSettingsPage";
         public const string AGENT_SMITH_SETTINGS_PAGE_ID = "AgentSmith.CodeStyleSettingsPage";
         public const string CSHARP_CODE_STYLE_PAGE_ID = "CsharpCodeStyle";
