@@ -2,6 +2,9 @@ using System;
 
 namespace AgentSmith.SpellCheck
 {
+    /// <summary>
+    /// This is token which classes like <see cref="CamelHumpLexer"/> produce on output.
+    /// </summary>
     public struct LexerToken
     {
         public string Buffer;
@@ -15,11 +18,17 @@ namespace AgentSmith.SpellCheck
             End = end;
         }
 
+        /// <summary>
+        /// Value of token.
+        /// </summary>
         public string Value
         {
             get { return Buffer.Substring(Start, Length); }
         }
 
+        /// <summary>
+        /// Value length.
+        /// </summary>
         public int Length
         {
             get { return End - Start; }

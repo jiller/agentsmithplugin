@@ -4,7 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using AgentSmith.MemberMatch;
 using AgentSmith.NamingConventions;
-using JetBrains.ReSharper.Psi.Naming.DefaultNamingStyle;
+using JetBrains.ReSharper.Psi.Naming.Legacy;
 
 namespace AgentSmith.Options
 {

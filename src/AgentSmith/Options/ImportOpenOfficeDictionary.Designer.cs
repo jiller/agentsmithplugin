@@ -67,7 +67,9 @@ namespace AgentSmith.Options
             // 
             // _tbDictName
             // 
-            this._tbDictName.Location = new System.Drawing.Point(184, 113);
+            this._tbDictName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._tbDictName.Location = new System.Drawing.Point(184, 116);
             this._tbDictName.Name = "_tbDictName";
             this._tbDictName.Size = new System.Drawing.Size(154, 20);
             this._tbDictName.TabIndex = 5;
@@ -76,7 +78,7 @@ namespace AgentSmith.Options
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 113);
+            this.label2.Location = new System.Drawing.Point(12, 116);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(166, 39);
             this.label2.TabIndex = 3;
@@ -85,6 +87,7 @@ namespace AgentSmith.Options
             // 
             // _btnImport
             // 
+            this._btnImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnImport.Location = new System.Drawing.Point(272, 168);
             this._btnImport.Name = "_btnImport";
             this._btnImport.Size = new System.Drawing.Size(75, 23);
@@ -95,6 +98,7 @@ namespace AgentSmith.Options
             // 
             // _btnCancel
             // 
+            this._btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this._btnCancel.Location = new System.Drawing.Point(354, 168);
             this._btnCancel.Name = "_btnCancel";
@@ -114,6 +118,8 @@ namespace AgentSmith.Options
             // 
             // _tbAffixFile
             // 
+            this._tbAffixFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._tbAffixFile.Location = new System.Drawing.Point(184, 52);
             this._tbAffixFile.Name = "_tbAffixFile";
             this._tbAffixFile.Size = new System.Drawing.Size(154, 20);
@@ -122,6 +128,7 @@ namespace AgentSmith.Options
             // 
             // _btnBrowseAffix
             // 
+            this._btnBrowseAffix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._btnBrowseAffix.Location = new System.Drawing.Point(354, 49);
             this._btnBrowseAffix.Name = "_btnBrowseAffix";
             this._btnBrowseAffix.Size = new System.Drawing.Size(75, 23);
@@ -132,7 +139,8 @@ namespace AgentSmith.Options
             // 
             // _btnBrowseDict
             // 
-            this._btnBrowseDict.Location = new System.Drawing.Point(354, 71);
+            this._btnBrowseDict.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this._btnBrowseDict.Location = new System.Drawing.Point(354, 76);
             this._btnBrowseDict.Name = "_btnBrowseDict";
             this._btnBrowseDict.Size = new System.Drawing.Size(75, 23);
             this._btnBrowseDict.TabIndex = 4;
@@ -142,7 +150,9 @@ namespace AgentSmith.Options
             // 
             // _tbDicFile
             // 
-            this._tbDicFile.Location = new System.Drawing.Point(184, 73);
+            this._tbDicFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this._tbDicFile.Location = new System.Drawing.Point(184, 78);
             this._tbDicFile.Name = "_tbDicFile";
             this._tbDicFile.Size = new System.Drawing.Size(154, 20);
             this._tbDicFile.TabIndex = 3;
@@ -151,7 +161,7 @@ namespace AgentSmith.Options
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 76);
+            this.label4.Location = new System.Drawing.Point(12, 81);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(63, 13);
             this.label4.TabIndex = 11;
@@ -179,6 +189,8 @@ namespace AgentSmith.Options
             this.Controls.Add(this._dictionaryLink);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ImportOpenOfficeDictionary";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import Open Office Dictionary";

@@ -2,13 +2,16 @@ using System;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using IDaemonProcess=JetBrains.ReSharper.Daemon.IDaemonProcess;
+using IDaemonStageProcess=JetBrains.ReSharper.Daemon.IDaemonStageProcess;
+using LanguageSpecificDaemonStage=JetBrains.ReSharper.Daemon.LanguageSpecificDaemonStage;
 
 namespace AgentSmith
 {
     /// <summary>
     /// Agent Smith stage.
     /// </summary>
-    [DaemonStage(StagesBefore = new Type[] { typeof(GlobalErrorStage) },
+    [DaemonStage(StagesBefore = new Type[] { typeof(UnsafeContextCheckingStage) },
         StagesAfter = new Type[] { typeof(LanguageSpecificDaemonStage) }, RunForInvisibleDocument = true)]
     public class DaemonStage : CSharpDaemonStageBase
     {
