@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using AgentSmith.NamingConventions;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Intentions;
 using JetBrains.Util;
 
 namespace AgentSmith.Identifiers
@@ -22,7 +23,7 @@ namespace AgentSmith.Identifiers
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _suggestion.Declaration.IsValid();
         }
 
         public IBulbItem[] Items
@@ -30,7 +31,7 @@ namespace AgentSmith.Identifiers
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-
+                
                 ISpellChecker spellChecker = _suggestion.SpellChecker;
 
                 if (spellChecker != null)

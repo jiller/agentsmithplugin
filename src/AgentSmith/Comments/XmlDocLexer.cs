@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Text;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
@@ -47,12 +48,11 @@ namespace AgentSmith.Comments
             if (_myCurrentCommentNode != null)
             {
                 uint state = _myLexer.LexerState;
-                _myLexer.Advance();
+                _myLexer.Advance();                
                 if (_myLexer.TokenType == null)
                 {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);
-                    Logger.LogMessage("TokenStart=" + TokenStart);
-                }
+                    restartLexer(_myCurrentCommentNode.NextSibling, state);                    
+                }                
             }
         }
 

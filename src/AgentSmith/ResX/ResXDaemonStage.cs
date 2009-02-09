@@ -5,8 +5,8 @@ using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace AgentSmith.ResX
 {
-    [DaemonStage(StagesBefore = new Type[] { typeof(GlobalErrorStage) },
-        StagesAfter = new Type[] { typeof(LanguageSpecificDaemonStage) }, RunForInvisibleDocument = true)]
+    [DaemonStage(StagesBefore=new Type[] { typeof(UnsafeContextCheckingStage) },
+        RunForInvisibleDocument = true)]
     public class ResXDaemonStage : IDaemonStage
     {
         #region IDaemonStage Members
