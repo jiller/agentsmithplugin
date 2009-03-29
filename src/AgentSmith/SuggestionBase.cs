@@ -1,7 +1,7 @@
 using System;
 using System.Drawing;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith
@@ -43,7 +43,24 @@ namespace AgentSmith
 
         public virtual string AttributeId
         {
-            get { return HighlightingAttributeIds.GetDefaultAttribute(Severity); }
+            get
+            {
+                switch (Severity)
+                {
+                    case Severity.ERROR:
+                        return HighlightingAttributeIds.ERROR_ATTRIBUTE;
+                    case Severity.WARNING:
+                        return HighlightingAttributeIds.WARNING_ATTRIBUTE;
+                    case Severity.SUGGESTION:
+                        return HighlightingAttributeIds.SUGGESTION_ATTRIBUTE;
+                    case Severity.HINT:
+                        return HighlightingAttributeIds.HINT_ATTRIBUTE;
+                    case Severity.INFO:
+                    case Severity.DO_NOT_SHOW:
+                        return null;
+                }
+                return null;
+            }
         }
 
         public virtual Color ColorOnStripe
@@ -56,9 +73,9 @@ namespace AgentSmith
             get { return true; }
         }
 
-        public OverlapResolvePolicy OverlapResolvePolicy
+        public OverlapResolveKind OverlapResolvePolicy
         {
-            get { return OverlapResolvePolicy.WARNING; }
+            get { return OverlapResolveKind.WARNING; }
         }
 
         public virtual Severity Severity
@@ -66,6 +83,11 @@ namespace AgentSmith
             get { return HighlightingSettingsManager.Instance.Settings.GetSeverity(_suggestionName); }
         }
         
+        public string SuggestionName
+        {
+            get { return _suggestionName; }
+        }
+
         public virtual string ToolTip
         {
             get { return _toolTip + "[Agent Smith]"; }
@@ -79,6 +101,11 @@ namespace AgentSmith
         public int NavigationOffsetPatch
         {
             get { return 0; }
+        }
+
+        public bool IsValid()
+        {
+            return _range.IsValid() && (_element == null ||_element.IsValid());
         }
 
         #endregion

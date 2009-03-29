@@ -39,7 +39,7 @@
             this._tbDicts.Name = "_tbDicts";
             this._tbDicts.ReadOnly = true;
             this._tbDicts.Size = new System.Drawing.Size(59, 20);
-            this._tbDicts.TabIndex = 0;
+            this._tbDicts.TabIndex = 0;            
             // 
             // _btnSelect
             // 

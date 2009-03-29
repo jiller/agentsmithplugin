@@ -1,7 +1,7 @@
 using System;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace AgentSmith.Comments
