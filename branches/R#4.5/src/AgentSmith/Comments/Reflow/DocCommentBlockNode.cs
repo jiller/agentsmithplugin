@@ -206,22 +206,27 @@ namespace AgentSmith.Comments.Reflow
             throw new NotImplementedException();
         }
 
-        public JetBrains.ReSharper.Psi.PsiLanguageType Language
+        public PsiLanguageType Language
         {
             get { throw new NotImplementedException(); }
         }
 
-        public JetBrains.ReSharper.Psi.LanguageService LanguageService
+        public LanguageService LanguageService
         {
             get { throw new NotImplementedException(); }
         }
 
-        public void ProcessDescendants(JetBrains.ReSharper.Psi.IRecursiveElementProcessor processor)
+        public IEnumerable<IReference> GetSecondClassReferences(string name)
         {
             throw new NotImplementedException();
         }
 
-        public void ProcessDescendantsForResolve(JetBrains.ReSharper.Psi.IRecursiveElementProcessor processor)
+        public void ProcessDescendants(IRecursiveElementProcessor processor)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ProcessDescendantsForResolve(IRecursiveElementProcessor processor)
         {
             throw new NotImplementedException();
         }

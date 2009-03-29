@@ -12,10 +12,10 @@ namespace AgentSmith
     /// Agent Smith stage.
     /// </summary>
     [DaemonStage(StagesBefore = new Type[] { typeof(UnsafeContextCheckingStage) },
-        StagesAfter = new Type[] { typeof(LanguageSpecificDaemonStage) }, RunForInvisibleDocument = true)]
+        StagesAfter = new Type[] { typeof(LanguageSpecificDaemonStage) })]
     public class DaemonStage : CSharpDaemonStageBase
     {
-        public override IDaemonStageProcess CreateProcess(IDaemonProcess process)
+        public override IDaemonStageProcess CreateProcess(IDaemonProcess process, DaemonProcessKind kind)
         {
             //TODO: implement aspx file checking later.
             if (!IsSupported(process.ProjectFile) ||

@@ -161,7 +161,7 @@ namespace AgentSmith.SpellCheck
             }
             catch (Exception ex)
             {
-                Logger.LogError("Failed to load dictionary from path {0},{1}", path, ex.ToString());
+                Logger.LogError("Failed to load dictionary from path {0},{1}", path, ex);
                 return null;
             }
         }
