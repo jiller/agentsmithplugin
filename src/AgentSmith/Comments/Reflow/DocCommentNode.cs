@@ -6,7 +6,7 @@ using JetBrains.Text;
 
 namespace AgentSmith.Comments.Reflow
 {
-    public class DocCommentNode : LeafElement, IDocCommentNode
+    public class DocCommentNode : BindedLeafElement, IDocCommentNode
     {        
         public DocCommentNode(NodeType type, IBuffer buffer, int startOffset, int endOffset):
             base(type, buffer, startOffset, endOffset)

@@ -35,7 +35,7 @@ namespace AgentSmith.Comments
                 {
                     return TextRange.InvalidRange;
                 }
-                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
+                BindedLeafElement leaf = (BindedLeafElement)_myCurrentCommentNode;
                 int offset = leaf.Offset - leaf.GetDocumentRange().TextRange.StartOffset;
                 return new TextRange(TokenStart - offset, TokenEnd - offset);
             }
@@ -148,7 +148,7 @@ namespace AgentSmith.Comments
             }
             if (_myCurrentCommentNode != null)
             {
-                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
+                BindedLeafElement leaf = (BindedLeafElement)_myCurrentCommentNode;
                 _myLexer = new XmlLexerGenerated(leaf.Buffer);
                 _myLexer.Start(leaf.Offset + 3, leaf.Offset + leaf.Length, state);
                 if (_myLexer.TokenType == null)
