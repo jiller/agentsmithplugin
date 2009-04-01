@@ -4,9 +4,9 @@ using AgentSmith.Identifiers;
 using AgentSmith.NamingConventions;
 using AgentSmith.ResX;
 using AgentSmith.Strings;
+using JetBrains.Application;
 using JetBrains.ComponentModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.Shell;
 
 namespace AgentSmith
 {
@@ -55,6 +55,11 @@ namespace AgentSmith
             manager.RegisterConfigurableSeverity(StringSpellCheckSuggestion.NAME, group,
                 "Word found in C# literal doesn't exist in dictionary.",
                 "Spell checking of a string in C# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
+                Severity.SUGGESTION);
+
+            manager.RegisterConfigurableSeverity(VerbatimStringSpellCheckSuggestion.NAME, group,
+                "Word found in C# verbatim string doesn't exist in dictionary.",
+                "Spell checking of a verbatin string (prefixed with @) in C# file found a word that doesn't exist in default or user dictionary and is probably misspelled.",
                 Severity.SUGGESTION);
 
             manager.RegisterConfigurableSeverity(IdentifierSpellCheckSuggestion.NAME, group,

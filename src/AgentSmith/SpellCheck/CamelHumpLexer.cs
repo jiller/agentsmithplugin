@@ -4,12 +4,23 @@ using System.Collections.Generic;
 
 namespace AgentSmith.SpellCheck
 {
+    /// <summary>
+    /// Tokenizes a word by camel humps.
+    /// So for word 'someLongWord' it will produce 3 tokens:
+    /// [some, Long, Word].
+    /// </summary>
     public class CamelHumpLexer : IEnumerable<LexerToken>
     {
         private readonly string _buffer;
         private readonly int _start;
         private readonly int _end;
 
+        /// <summary>
+        /// Initializes new instance.
+        /// </summary>
+        /// <param name="buffer">String containing word to be tokenized by camel humps.</param>
+        /// <param name="start">Index of word's first letter in string.</param>
+        /// <param name="end">Index of first letter after the word's end in string.</param>
         public CamelHumpLexer(string buffer, int start, int end)
         {
             _buffer = buffer;
@@ -19,6 +30,10 @@ namespace AgentSmith.SpellCheck
 
         #region IEnumerable<LexerToken> Members
 
+        /// <summary>
+        /// Enumerates all tokens.
+        /// </summary>
+        /// <returns></returns>
         IEnumerator<LexerToken> IEnumerable<LexerToken>.GetEnumerator()
         {
             LexerToken currentToken = new LexerToken(_buffer, _start, _start);
