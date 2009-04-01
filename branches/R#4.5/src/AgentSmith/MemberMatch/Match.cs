@@ -6,9 +6,6 @@ using System.Windows.Forms;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
-using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
-using JetBrains.ReSharper.Psi.CSharp.Impl.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -401,7 +398,9 @@ namespace AgentSmith.MemberMatch
 
             foreach (IAttributeInstance attribute in attributesOwner.GetAttributeInstances(false))
             {
-                if (attribute.AttributeType.GetTypeElement().CLRName == _markedWithAttributeType.CLRName)
+                if (attribute.AttributeType != null && 
+                    attribute.AttributeType.GetTypeElement() != null && 
+                    attribute.AttributeType.GetTypeElement().CLRName == _markedWithAttributeType.CLRName)
                 {
                     return true;
                 }
