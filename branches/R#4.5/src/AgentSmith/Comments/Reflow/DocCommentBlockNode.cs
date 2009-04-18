@@ -215,8 +215,8 @@ namespace AgentSmith.Comments.Reflow
         {
             get { throw new NotImplementedException(); }
         }
-
-        public IEnumerable<IReference> GetSecondClassReferences(string name)
+        
+        public IEnumerable<IReference> GetSecondClassReferences(ICollection<string> names)
         {
             throw new NotImplementedException();
         }

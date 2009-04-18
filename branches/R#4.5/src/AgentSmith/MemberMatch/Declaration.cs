@@ -8,6 +8,7 @@ namespace AgentSmith.MemberMatch
         Class,
         Interface,
         Parameter,
+        LocalConstant,
         Constant,
         Delegate,
         Enum,
