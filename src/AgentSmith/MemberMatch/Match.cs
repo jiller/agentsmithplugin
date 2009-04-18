@@ -346,8 +346,7 @@ namespace AgentSmith.MemberMatch
             ITypeOwner typeOwner = declaration.DeclaredElement as ITypeOwner;
             if (typeOwner != null)
             {
-                string longPresentableName = typeOwner.Type.GetLongPresentableName(typeOwner.Language);
-                MessageBox.Show(longPresentableName);
+                string longPresentableName = typeOwner.Type.GetLongPresentableName(typeOwner.Language);                
                 return _isOfType == longPresentableName;                
             }
            
@@ -472,7 +471,7 @@ namespace AgentSmith.MemberMatch
                 
                 return _declaration == Declaration.Any ||
                        !(declaration is ILocalConstantDeclaration) && _declMap.ContainsKey(type) && _declMap[type] == _declaration ||
-                       declaration is ILocalConstantDeclaration && _declaration == Declaration.Constant;
+                       declaration is ILocalConstantDeclaration && _declaration == Declaration.LocalConstant;
             }
             else
             {

@@ -23,6 +23,7 @@ namespace AgentSmith.MemberMatch
             _dict.Add(Declaration.Any, new DeclarationDescription(Declaration.Any, "Any Member", true, false, false, false, false, false, false));
             _dict.Add(Declaration.Class, new DeclarationDescription(Declaration.Class, "Class", true, true, true, true, false, false, true));
             _dict.Add(Declaration.Constant, new DeclarationDescription(Declaration.Constant, "Constant", true, false, true, false, false, true, false));
+            _dict.Add(Declaration.LocalConstant, new DeclarationDescription(Declaration.LocalConstant, "Local constant", false, false, false, false, false, true, false));
             _dict.Add(Declaration.Delegate, new DeclarationDescription(Declaration.Delegate, "Delegate", true, false, true, false, false, false, true));
             _dict.Add(Declaration.Enum, new DeclarationDescription(Declaration.Enum, "Enumeration", true, false, true, false, false, false, true));
             _dict.Add(Declaration.EnumerationMember, new DeclarationDescription(Declaration.EnumerationMember, "Enumeration member", true, false, true, false, false, false, false));
