@@ -9,6 +9,7 @@ using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
@@ -181,14 +182,18 @@ namespace AgentSmith.Comments
 
             if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
-                Match match = ComplexMatchEvaluator.IsMatch(declaration,
-                                                            _settings.CommentMatch, _settings.CommentNotMatch, true);
-
-                if (match != null)
+                if (declaration.DeclaredElement == null ||
+                    declaration.DeclaredElement.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
                 {
-                    FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
-                    highlightings.Add(suggestion);
-                    return;
+                    Match match = ComplexMatchEvaluator.IsMatch(declaration,
+                                                                _settings.CommentMatch, _settings.CommentNotMatch, true);
+
+                    if (match != null)
+                    {
+                        FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
+                        highlightings.Add(suggestion);
+                        return;
+                    }
                 }
             }
         }
