@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Intentions;
 using JetBrains.Util;
 
 namespace AgentSmith.ResX

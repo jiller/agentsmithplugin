@@ -2,7 +2,7 @@ using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
-using JetBrains.Util;
+using JetBrains.Text;
 
 namespace AgentSmith.SpellCheck
 {
@@ -32,7 +32,17 @@ namespace AgentSmith.SpellCheck
             get { throw new NotImplementedException(); }
         }
 
-        public override LeafElement Create(IBuffer buffer, int startOffset, int endOffset)
+        public override bool IsIdentifier
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public override bool IsKeyword
+        {
+            get { return false; }
+        }
+
+        public override LeafElementBase Create(IBuffer buffer, int startOffset, int endOffset)
         {
             throw new NotImplementedException();
         }
