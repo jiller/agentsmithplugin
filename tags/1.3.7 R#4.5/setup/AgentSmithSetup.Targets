@@ -1,0 +1,68 @@
+﻿<Project InitialTargets="CheckAgentSmithHomeDir" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!-- The AgentSmithDir and AgentSmithBinariesDir properties must be defined externally. -->
+
+	<!-- WiX Paths. -->
+	<PropertyGroup>
+		<!-- Path for the WiX build tasks to locate the DLLs and EXEs. -->
+		<!-- If you're building on machines with WiX installed by an installer, and its EXEs are added to the %PATH%, you may delete the following line. -->
+		<WixToolPath>C:\Program Files\Windows Installer XML v3\bin</WixToolPath>
+		<!-- Path for the WiX Targets file to locate the tasks and their DLLs. -->
+		<!-- If you're building on machines with WiX installed by an installer, and its tasks are added to the system MSBuild Extensions folder, delete the following line. -->
+		<!--MSBuildExtensionsPath>$(AgentSmithHomeDir)\tools\</MSBuildExtensionsPath>-->
+	</PropertyGroup>
+
+	<!-- Outputs. -->
+	<PropertyGroup>
+		<OutputPath>$(AgentSmithBinariesDir)\</OutputPath>
+		<IntermediateOutputPath>$(AgentSmithBinariesDir)\..\Obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+		<SetupFilesDir>$(AgentSmithHomeDir)/Setup</SetupFilesDir>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+		<ProductVersion>1.3.7</ProductVersion>
+		<ProjectGuid>{9564249A-37F6-45fb-8B32-5D708AA64A4E}</ProjectGuid>
+		<SchemaVersion>2.0</SchemaVersion>
+		<OutputName>$(ProductName) $(ProductVersion) Setup (R# $(ReSharperVersion2))</OutputName>
+		<OutputType>Package</OutputType>
+		<DefineConstants Condition=" '$(Configuration)' == 'Debug' ">Debug</DefineConstants>
+		<Cultures>en-us</Cultures>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Source files. -->
+		<Compile Include="$(SetupFilesDir)/AgentSmithSetup.Main.wxs" />
+		<Compile Include="$(SetupFilesDir)/AgentSmithSetup.Property.wxs" />
+		<!-- Support for the Wizard dialogs. -->
+		<WixExtension Include="WixUIExtension" />
+	</ItemGroup>
+
+	<!-- Set the external properties for use in the Wxs source files. -->
+	<PropertyGroup>
+		<DefineConstants>
+			$(DefineConstants);
+			DynProductName=$(ProductName);
+			DynProductVersion=$(ProductVersion);
+			DynCompanyName=$(CompanyName);
+			DynUpgradeCode=$(UpgradeCode);
+			DynVsVersion=$(VsVersion);
+			DynSetupFilesDir=$(SetupFilesDir);
+			DynAssemblyFile=$(AssemblyFile);
+			DynPdbFile=$(AgentSmithBinariesDir)/AgentSmith.pdb;
+                        DynDicDirectory=$(AgentSmithHomeDir)/dic;
+			DynReSharperVersion2=$(ReSharperVersion2);
+			DynMsiComponentGuid00=$(MsiComponentGuid00);
+			DynMsiComponentGuid01=$(MsiComponentGuid01);
+		</DefineConstants>
+
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildExtensionsPath)\Microsoft\wix\v3.0\Wix.targets" />
+
+	<!-- Checks for the mandatory properties. -->
+	<Target Name="CheckAgentSmithHomeDir">
+		<Error Condition="'$(AgentSmithHomeDir)'==''" Text="The “AgentSmithHomeDir” property must be defined, pointing to the root AgentSmith folder."/>
+		<Error Condition="'$(AgentSmithBinariesDir)'==''" Text="The “AgentSmithBinariesDir” property must be defined, pointing to the AgentSmith Bin folder."/>
+	</Target>
+
+</Project>
