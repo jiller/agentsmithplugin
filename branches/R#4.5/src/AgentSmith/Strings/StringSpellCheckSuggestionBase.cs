@@ -21,7 +21,7 @@ namespace AgentSmith.Strings
         {
             _word = word;            
             _misspelledRange = misspelledRange;
-            int ampersandIndex = misspelledWord.IndexOf("&");
+            int ampersandIndex = misspelledWord.IndexOf("&", StringComparison.Ordinal);
             
             if (ampersandIndex >=0 && ampersandIndex < misspelledWord.Length - 1)
             {

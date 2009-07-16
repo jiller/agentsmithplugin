@@ -174,11 +174,11 @@ namespace AgentSmith.SpellCheck.NetSpell
                 string key = replacementChars[i].Substring(0, split);
                 string replacement = replacementChars[i].Substring(split + 1);
 
-                int pos = word.IndexOf(key);
+                int pos = word.IndexOf(key, StringComparison.Ordinal);
                 while (pos > -1)
                 {
                     string tempWord = word.Substring(0, pos);
-                    tempWord += replacement;
+                    tempWord += replacement;                    
                     tempWord += word.Substring(pos + key.Length);
 
                     if (TestWord(tempWord, true))

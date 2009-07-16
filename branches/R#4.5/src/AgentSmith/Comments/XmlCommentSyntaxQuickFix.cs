@@ -46,7 +46,11 @@ namespace AgentSmith.Comments
                     }
                 }
 
-                items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
+                if (_suggestion.AddCTag)
+                {
+                    items.Add(new ReplaceWordWithBulbItem(_suggestion.Range,
+                                                          String.Format("<c>{0}</c>", _suggestion.Word)));
+                }
                 if (spellChecker != null)
                 {
                     foreach (CustomDictionary customDict in spellChecker.CustomDictionaries)

@@ -36,14 +36,34 @@ namespace AgentSmith.Comments.Reflow
                 if (ownerNode != null)
                 {
                     Regex regex = new Regex("[ \t]*///");
-                    string text = "///" + regex.Replace(blockNode.GetText(), "");
+
+                    string text = blockNode.GetText();
+
+                    // Calculate line offset where /// starts and add 3 for each
+                    // slash.
+                    int startPos = CalcLineOffset(ownerNode) + 3;
+                    text = "///" + regex.Replace( text , "");
                     DocCommentBlockNode myBlockNode =
                         new DocCommentBlockNode(new DocCommentNode(new MyNodeType(), new StringBuffer(text),
                                                                    0, text.Length));
-                    string reflownText = new XmlCommentReflower().Reflow(myBlockNode, maxLength);
+                    string reflownText = new XmlCommentReflower().Reflow(myBlockNode, maxLength - startPos);
                     XmlUtil.SetDocComment(ownerNode, reflownText, Provider.Solution);
                 }
             }            
+        }
+
+        private int CalcLineOffset( IDocCommentBlockOwnerNode node )
+        {
+            ITreeNode prev = node.PrevSibling;
+            if ( prev != null && prev is IWhitespaceNode &&
+                 !( (IWhitespaceNode)prev ).IsNewLine )
+            {
+                return prev.GetTextLength();
+            }
+            else
+            {
+                return 0;
+            }
         }
 
         protected override object[] ExecuteBeforeTransaction(object[] data, out bool needContinue)

@@ -7,9 +7,7 @@ using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
@@ -17,7 +15,7 @@ using JetBrains.Util;
 using Match=AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Comments
-{
+{      
     public class CommentAnalyzer : IDeclarationAnalyzer
     {
         private readonly CommentsSettings _settings;
@@ -30,7 +28,10 @@ namespace AgentSmith.Comments
             _settings = settings;
             _solution = solution;
             _patternsToIgnore = patternsToIgnore;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution,
+                                                              _settings.DictionaryName == null
+                                                                  ? null
+                                                                  : _settings.DictionaryName.Split(','));
 
             ComplexMatchEvaluator.Prepare(solution, _settings.CommentMatch, _settings.CommentNotMatch);
         }
@@ -47,7 +48,7 @@ namespace AgentSmith.Comments
 
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
 
-            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings, spellCheck);
+            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings, spellCheck);
             checkMembersHaveComments((IClassMemberDeclaration) declaration, highlightings);
 
             return highlightings.ToArray();
@@ -78,30 +79,45 @@ namespace AgentSmith.Comments
 
             foreach (Range wordRange in getWordsFromXmlComment(getDocBlock(decl)))
             {
-                if (!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
-                    _spellChecker.TestWord(wordRange.Word, true))
-                {
+                bool keyword = isKeyword(wordRange.Word);
+                if ((!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
+                    _spellChecker.TestWord(wordRange.Word, true)) && 
+                    !isKeyword(wordRange.Word))
+                {                    
                     continue;
                 }
 
                 DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
                 if (decl.DeclaredName != wordRange.Word)
                 {
-                    if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                    bool isIdentifier = IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word);
+                    if (isIdentifier || keyword)
                     {
                         highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
-                                                                                range, decl, _solution));
+                                                                                    range, decl, _solution));
                     }
-                    else if (spellCheck)
+                
+                    if (spellCheck)
                     {
-                        checkWordSpelling(decl, wordRange, highlightings, range);
+                        checkWordSpelling(decl, wordRange, highlightings, range, !(isIdentifier || keyword));
                     }
-               }
+                }
             }
         }
 
+        private static readonly HashSet<string> keywords = new HashSet<string>
+                                    {
+                                        "foreach", "null", "true", "false"
+                                    };
+
+        private bool isKeyword(string word)
+        {
+            
+            return keywords.Contains(word);
+        }
+
         private void checkWordSpelling(IClassMemberDeclaration decl, Range wordRange,
-                                       ICollection<SuggestionBase> highlightings, DocumentRange range)
+                                       ICollection<SuggestionBase> highlightings, DocumentRange range, bool addCTag)
         {
             CamelHumpLexer camelHumpLexer = new CamelHumpLexer(wordRange.Word, 0, wordRange.Word.Length);
             foreach (LexerToken humpToken in camelHumpLexer)
@@ -112,7 +128,7 @@ namespace AgentSmith.Comments
                     DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
 
                     highlightings.Add(new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange,
-                                                                          humpToken, _solution, _spellChecker));
+                                                                          humpToken, _solution, _spellChecker, addCTag));
 
                     break;
                 }
@@ -135,11 +151,12 @@ namespace AgentSmith.Comments
                             (lexer.TokenText == "code" || lexer.TokenText == "c"))
                         {
                             inCode++;
-                        }
-                        lexer.Advance();
-                        if (lexer.TokenType == lexer.XmlTokenType.TAG_END1)
-                        {
-                            inCode--;
+
+                            lexer.Advance();
+                            if (lexer.TokenType == lexer.XmlTokenType.TAG_END1)
+                            {
+                                inCode--;
+                            }
                         }
                     }
                     if (lexer.TokenType == lexer.XmlTokenType.TAG_START1)
