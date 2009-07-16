@@ -38,7 +38,7 @@ namespace AgentSmith.Identifiers
                 {
                     foreach (string newWord in spellChecker.Suggest(_suggestion.LexerToken.Value, MAX_SUGGESTION_COUNT))
                     {
-                        if (newWord.IndexOf(" ") > 0)
+                        if (newWord.IndexOf(" ", StringComparison.Ordinal) > 0)
                         {
                             continue;
                         }

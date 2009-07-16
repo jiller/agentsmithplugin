@@ -118,6 +118,18 @@ word
             doTest(unreflownBlock, reflownBlock, 40);
         }
 
+        [Test]
+        public void TestNewLineAfterBr()
+        {
+            string unreflownBlock = @"/// <returns>Item corresponding <br/>to 
+  requested path.</returns>";
+  
+            string reflownBlock = @" <returns>Item corresponding <br/>
+ to  requested path.</returns>";
+
+            doTest(unreflownBlock, reflownBlock, 40);
+        }
+
         private void doTest(string unreflownBlock, string reflownBlock, int n)
         {
             StringBuffer buffer = new StringBuffer(unreflownBlock);            

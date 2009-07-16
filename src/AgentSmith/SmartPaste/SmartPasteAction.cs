@@ -84,7 +84,7 @@ namespace AgentSmith.SmartPaste
             {
                 int currentLineNumber = editor.Document.GetCoordsByOffset(editor.CaretModel.Offset).Line;
                 string currentLine = editor.Document.GetLine(currentLineNumber);
-                int index = currentLine.IndexOf("///");
+                int index = currentLine.IndexOf("///", StringComparison.Ordinal);
                 if (index < 0)
                 {
                     return;
