@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using JetBrains.ActionManagement;
-using JetBrains.UI.Shell.PluginSupport;
+using JetBrains.UI.Application.PluginSupport;
 
 //
 // General Information about an assembly is controlled through the following 
@@ -29,7 +29,7 @@ using JetBrains.UI.Shell.PluginSupport;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly : AssemblyVersion("1.2.0.*")]
+[assembly : AssemblyVersion("1.3.7.*")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

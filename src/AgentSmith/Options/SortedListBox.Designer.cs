@@ -35,6 +35,7 @@ namespace AgentSmith.Options
             // 
             // _btnVisDown
             // 
+            this._btnVisDown.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._btnVisDown.Location = new System.Drawing.Point(150, 29);
             this._btnVisDown.Name = "_btnVisDown";
             this._btnVisDown.Size = new System.Drawing.Size(49, 23);
@@ -45,6 +46,7 @@ namespace AgentSmith.Options
             // 
             // _btnVisUp
             // 
+            this._btnVisUp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._btnVisUp.Location = new System.Drawing.Point(150, 3);
             this._btnVisUp.Name = "_btnVisUp";
             this._btnVisUp.Size = new System.Drawing.Size(49, 23);
@@ -55,6 +57,9 @@ namespace AgentSmith.Options
             // 
             // _lbVisibility
             // 
+            this._lbVisibility.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this._lbVisibility.FormattingEnabled = true;
             this._lbVisibility.Location = new System.Drawing.Point(3, 3);
             this._lbVisibility.Name = "_lbVisibility";
@@ -69,7 +74,7 @@ namespace AgentSmith.Options
             this.Controls.Add(this._btnVisUp);
             this.Controls.Add(this._lbVisibility);
             this.Name = "SortedListBox";
-            this.Size = new System.Drawing.Size(204, 212);
+            this.Size = new System.Drawing.Size(204, 194);
             this.ResumeLayout(false);
 
         }
