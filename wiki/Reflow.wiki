@@ -151,3 +151,19 @@ This includes:
 ///        indentation.
 /// <summary>
 }}}
+
+  * It will be possible to configure after/before which elements line break shall be added or removed. If line shall be inserted after open and before closing matching tags, they can be optionally aligned.
+
+*Original comment*
+{{{
+/// <summary> Line breaks shall be added after/before 'summary' tags <c>but removed
+/// inside 'c' tags </c> <summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// Line breaks shall be added after/before
+//  'summary' tags <c>but removed inside 'c' tags </c>
+/// <summary>
+}}}
