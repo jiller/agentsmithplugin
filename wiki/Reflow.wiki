@@ -3,7 +3,7 @@
 Agent Smith can reflow comments for you.
 
 This includes:
-  * The comment is reflown in such way so each line takes not more than configurable number     of characters. If line is less than this amount, words from next line are brought to this line.
+  * The comment is reflown in such way so each line takes not more than configurable number of characters. If line is less than this amount, words from next line are brought to this line.
 *Original comment*
 {{{
 /// <summary>
@@ -50,8 +50,7 @@ This includes:
 /// </summary>
 }}}
 
-  * Line which starts with XML element is also considered as first line of paragraph.
-    If a line ends with XML element then next line starts new paragraph.
+  * Line which starts with XML element is also considered as first line of paragraph. If a line ends with XML element then next line starts new paragraph.
 
 *Original comment*
 {{{
