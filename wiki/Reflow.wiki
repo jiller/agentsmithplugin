@@ -22,5 +22,30 @@ This includes:
 /// Very short line.
 /// </summary>
 }}}
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * Text is reflown inside paragraphs only. New paragraph starts after empty line or with
+line with different indentation.
+*Original comment*
+{{{
+/// <summary>
+/// This text belongs to first paragraph so it won't be mixed with text from second
+/// paragraph.
+/// 
+/// This is second paragraph which starts after blank line.
+///      This is third paragraph because this line is indented differently.
+/// </summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// This text belongs to first paragraph so it
+/// won't be mixed with text from second paragraph.
+/// 
+/// This is second paragraph which starts after
+/// blank line.
+///      This is third paragraph because this line
+///      is indented differently.
+/// </summary>
+}}}
+
+  * 
