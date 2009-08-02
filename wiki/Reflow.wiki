@@ -93,3 +93,38 @@ This includes:
 /// <c> code block which shall not be reflown although it is quite long</c>
 /// </summary>
 }}}
+
+  * Space between XML elements is not reflown.
+
+*Original comment*
+{{{
+/// <summary>
+/// <p>something</p>                                             <list>
+/// </list>
+/// <summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// <p>something</p>                                             <list>
+/// </list>
+/// <summary>
+}}}
+
+  * Text after `<br/>` tag is reflown to a new line.
+
+*Original comment*
+{{{
+/// <summary>
+/// This text shall <br/> take two lines.
+/// <summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// This text shall <br/>
+/// take two lines.
+/// <summary>
+}}}
