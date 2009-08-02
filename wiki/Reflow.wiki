@@ -128,3 +128,26 @@ This includes:
 /// take two lines.
 /// <summary>
 }}}
+
+
+=Future Version=
+  * It will be possible to specify in options number of tabs (or spaces) left-most paragraph shall start with. Relative paragraph indentation will be preserved.
+
+*Original comment*
+{{{
+/// <summary>
+/// Paragraph shall start with 3 spaces.
+///
+///     This is another paragraph with different indentation.
+/// <summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+///   Paragraph shall start with 3 spaces.
+///
+///        This is another paragraph with different
+///        indentation.
+/// <summary>
+}}}
