@@ -76,3 +76,20 @@ This includes:
 /// previous line.
 /// </summary>
 }}}
+
+  * Text inside <code> </code> and <c> </c> tags is not reflown.
+
+*Original comment*
+{{{
+/// <summary>
+/// This is line with a <c> code block which shall not be reflown although it is quite long</c>
+/// </summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// This is line with a
+/// <c> code block which shall not be reflown although it is quite long</c>
+/// </summary>
+}}}
