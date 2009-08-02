@@ -77,7 +77,7 @@ This includes:
 /// </summary>
 }}}
 
-  * Text inside <code> </code> and <c> </c> tags is not reflown.
+  * Text inside `<code>` `</code>` and `<c>` `</c>` tags is not reflown.
 
 *Original comment*
 {{{
