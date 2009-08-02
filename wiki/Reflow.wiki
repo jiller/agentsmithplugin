@@ -22,8 +22,8 @@ This includes:
 /// Very short line.
 /// </summary>
 }}}
-  * Text is reflown inside paragraphs only. New paragraph starts after empty line or with
-line with different indentation.
+  * Text is reflown inside paragraphs only. New paragraph starts after empty line. Paragraph lines become indented the same number of characters as its first line.
+
 *Original comment*
 {{{
 /// <summary>
@@ -31,7 +31,8 @@ line with different indentation.
 /// paragraph.
 /// 
 /// This is second paragraph which starts after blank line.
-///      This is third paragraph because this line is indented differently.
+///
+///      This is third paragraph and it is indented differently.
 /// </summary>
 }}}
 
@@ -43,9 +44,36 @@ line with different indentation.
 /// 
 /// This is second paragraph which starts after
 /// blank line.
-///      This is third paragraph because this line
-///      is indented differently.
+///
+///      This is third paragraph and it is indented
+///      differently.
 /// </summary>
 }}}
 
-  * 
+  * Line which starts with XML element is also considered as first line of paragraph.
+    If a line ends with XML element then next line starts new paragraph.
+
+*Original comment*
+{{{
+/// <summary>
+/// <list>
+///     <ul>Xml elements on start of
+///        line start new paragraph.
+///     </ul>
+/// </list>
+/// This is new paragraph so it won't be added to previous line.
+/// </summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// <list>
+///     <ul>Xml elements on start of a line start
+///     new paragraph.
+///     </ul>
+/// </list>
+/// This is new paragraph so it won't be added to
+/// previous line.
+/// </summary>
+}}}
