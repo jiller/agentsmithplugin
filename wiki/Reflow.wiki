@@ -1,0 +1,26 @@
+= Comments Reflowing =
+
+Agent Smith can reflow comments for you.
+
+This includes:
+  * The comment is reflown in such way so each line takes not more than configurable number     of characters. If line is less than this amount, words from next line are brought to this line.
+*Original comment*
+{{{
+/// <summary>
+/// Very long line. Very long line. Very long line. Very long line. Very long line.
+/// Very short line. Very short line.
+/// Very short line. Very short line.
+/// </summary>
+}}}
+
+*Reflown comment*
+{{{
+/// <summary>
+/// Very long line. Very long line. Very long 
+/// line. Very long line. Very long line. Very
+/// short line. Very short line. Very short line.
+/// Very short line.
+/// </summary>
+}}}
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
