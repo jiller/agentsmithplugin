@@ -1,5 +1,6 @@
 using System;
 using System.Web;
+using System.Windows.Forms;
 using AgentSmith.Comments;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
@@ -74,8 +75,8 @@ namespace AgentSmith.SmartPaste
 
         private static void handleElement(ITextControl editor, IElement element, int offset)
         {
-            string stringToInsert = ClipboardManager.Instance.ClipboardEntries.RecentItem;
-            if (stringToInsert == null)
+            string stringToInsert = Clipboard.GetText();
+            if (string.IsNullOrEmpty(stringToInsert))
             {
                 return;
             }

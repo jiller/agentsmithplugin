@@ -37,6 +37,10 @@ namespace AgentSmith.Comments
                     items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, replacement));
                 }
 
+                if (KeywordUtil.IsKeyword(_suggestion.Word))
+                {
+                    items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<see langword=\"{0}\"/>", _suggestion.Word)));
+                }
                 items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
                 
                 return items.ToArray();
