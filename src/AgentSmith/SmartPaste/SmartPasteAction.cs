@@ -3,17 +3,18 @@ using System.Web;
 using System.Windows.Forms;
 using AgentSmith.Comments;
 using JetBrains.ActionManagement;
+using JetBrains.Application;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper;
-using JetBrains.ReSharper.ClipboardManager;
-using JetBrains.ReSharper.Editor;
+using JetBrains.ReSharper.Features.Environment.Clipboard;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.TextControl;
-using JetBrains.Shell;
+using JetBrains.TextControl;
 using JetBrains.Util;
+using MessageBox=JetBrains.Util.MessageBox;
 
 namespace AgentSmith.SmartPaste
 {
@@ -51,10 +52,12 @@ namespace AgentSmith.SmartPaste
 
         public void ExecuteEx(IDataContext context)
         {
-            ITextControl editor = context.GetData(DataConstants.TEXT_CONTROL);
+            ITextControl editor = context.GetData(TextControlDataConstants.TEXT_CONTROL);
             Logger.Assert(editor != null, "Condition (editor != null) is false");
-            ISolution solution = context.GetData(DataConstants.SOLUTION);
-            IDocument document = context.GetData(DataConstants.DOCUMENT);
+            if (editor == null)
+                throw new ArgumentException("context");
+            ISolution solution = context.GetData(JetBrains.IDE.DataConstants.SOLUTION);
+            IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
 
             ICSharpFile file = PsiManager.GetInstance(solution).GetPsiFile(document) as ICSharpFile;
             if (file != null && editor != null)
@@ -72,8 +75,8 @@ namespace AgentSmith.SmartPaste
 
         private static void handleElement(ITextControl editor, IElement element, int offset)
         {
-            string stringToInsert = ClipboardManager.Instance.ClipboardEntries.RecentItem;
-            if (stringToInsert == null)
+            string stringToInsert = Clipboard.GetText();
+            if (string.IsNullOrEmpty(stringToInsert))
             {
                 return;
             }
@@ -82,7 +85,7 @@ namespace AgentSmith.SmartPaste
             {
                 int currentLineNumber = editor.Document.GetCoordsByOffset(editor.CaretModel.Offset).Line;
                 string currentLine = editor.Document.GetLine(currentLineNumber);
-                int index = currentLine.IndexOf("///");
+                int index = currentLine.IndexOf("///", StringComparison.Ordinal);
                 if (index < 0)
                 {
                     return;
@@ -91,8 +94,7 @@ namespace AgentSmith.SmartPaste
 
                 if (shallEscape((IDocCommentNode)element, editor.CaretModel.Offset) &&
                     HttpUtility.HtmlEncode(stringToInsert) != stringToInsert &&
-                    MessageBox.Show("Do you want the text to be escaped?", "Confirm", MessageBoxButtons.YesNo) ==
-                    DialogResult.Yes)
+                    MessageBox.ShowYesNo("Do you want the text to be escaped?"))
                 {
                     stringToInsert = HttpUtility.HtmlEncode(stringToInsert);
                 }
@@ -187,8 +189,8 @@ namespace AgentSmith.SmartPaste
 
         private static bool isAvailable(IDataContext context)
         {
-            ISolution solution = context.GetData(DataConstants.SOLUTION);
-            IDocument document = context.GetData(DataConstants.DOCUMENT);
+            ISolution solution = context.GetData(JetBrains.IDE.DataConstants.SOLUTION);
+            IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
             PsiLanguageType languageType = context.GetData(DataConstants.PSI_LANGUAGE_TYPE);
 
             return solution != null && document != null && languageType != null && languageType.Name == "CSHARP";

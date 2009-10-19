@@ -7,7 +7,8 @@ namespace AgentSmith
 {
     internal class GeneratedCodeRegionDetector
     {
-        private readonly string[] _skipRegions = CodeStyleSettingsManager.Instance.CodeStyleSettings.SkipRegions;
+        private readonly string[] _skipRegions = CodeStyleSettingsManager.Instance.CodeStyleSettings.GeneratedCodeRegions;
+
         private int _inGeneratedCode;
 
         public bool InGeneratedCode
