@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AgentSmith.Options;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.NamingConventions
