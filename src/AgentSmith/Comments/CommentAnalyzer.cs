@@ -1,33 +1,41 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using AgentSmith.MemberMatch;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Editor;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using Match=AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Comments
-{
+{      
     public class CommentAnalyzer : IDeclarationAnalyzer
     {
         private readonly CommentsSettings _settings;
+        private readonly IList<Regex> _patternsToIgnore;
         private readonly ISolution _solution;
         private readonly ISpellChecker _spellChecker;
-        
-        public CommentAnalyzer(CommentsSettings settings, ISolution solution)
+
+        public CommentAnalyzer(CommentsSettings settings, ISolution solution, IList<Regex> patternsToIgnore)
         {
             _settings = settings;
             _solution = solution;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
+            _patternsToIgnore = patternsToIgnore;
+            _spellChecker = SpellCheckManager.GetSpellChecker(solution,
+                                                              _settings.DictionaryName == null
+                                                                  ? null
+                                                                  : _settings.DictionaryName.Split(','));
 
             ComplexMatchEvaluator.Prepare(solution, _settings.CommentMatch, _settings.CommentNotMatch);
-        }        
+        }
 
         #region IDeclarationAnalyzer Members
 
@@ -41,8 +49,8 @@ namespace AgentSmith.Comments
 
             List<SuggestionBase> highlightings = new List<SuggestionBase>();
 
-            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings, spellCheck);
-            checkMembersHaveComments((IClassMemberDeclaration)declaration, highlightings);
+            checkCommentSpelling((IClassMemberDeclaration) declaration, highlightings, spellCheck);
+            checkMembersHaveComments((IClassMemberDeclaration) declaration, highlightings);
 
             return highlightings.ToArray();
         }
@@ -72,41 +80,59 @@ namespace AgentSmith.Comments
 
             foreach (Range wordRange in getWordsFromXmlComment(getDocBlock(decl)))
             {
-                if (!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
-                    _spellChecker.TestWord(wordRange.Word, true))
-                {
+                bool keyword = isKeyword(wordRange.Word);
+                if ((!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
+                    _spellChecker.TestWord(wordRange.Word, true)) && 
+                    !isKeyword(wordRange.Word))
+                {                    
                     continue;
                 }
 
-                DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
+                DocumentRange range = decl.GetContainingFile().GetDocumentRange(
+                    new TreeTextRange(new TreeOffset(wordRange.TextRange.StartOffset),
+                        new TreeOffset(wordRange.TextRange.EndOffset)));
                 if (decl.DeclaredName != wordRange.Word)
                 {
-                    if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
+                    bool isIdentifier = IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word);
+                    if (isIdentifier || keyword)
                     {
                         highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
-                            range, decl, _solution));
+                                                                                    range, decl, _solution));
                     }
-                    else if (spellCheck)
+                
+                    if (spellCheck)
                     {
-                        checkWordSpelling(decl, wordRange, highlightings, range);
+                        checkWordSpelling(decl, wordRange, highlightings, range, !(isIdentifier || keyword));
                     }
                 }
             }
         }
 
+        private static readonly HashSet<string> keywords = new HashSet<string>
+                                    {
+                                        "foreach", "null", "true", "false"
+                                    };
+
+        private bool isKeyword(string word)
+        {
+            
+            return keywords.Contains(word);
+        }
+
         private void checkWordSpelling(IClassMemberDeclaration decl, Range wordRange,
-                                       ICollection<SuggestionBase> highlightings, DocumentRange range)
+                                       ICollection<SuggestionBase> highlightings, DocumentRange range, bool addCTag)
         {
             CamelHumpLexer camelHumpLexer = new CamelHumpLexer(wordRange.Word, 0, wordRange.Word.Length);
             foreach (LexerToken humpToken in camelHumpLexer)
             {
                 if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
                     !_spellChecker.TestWord(humpToken.Value, true))
-                {
-                    DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
+                {                    
+                    DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(
+                        new TreeTextRange(new TreeOffset(range.TextRange.StartOffset), new TreeOffset(range.TextRange.EndOffset)));
 
                     highlightings.Add(new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange,
-                                                                          humpToken, _solution, _spellChecker));
+                                                                          humpToken, _solution, _spellChecker, addCTag));
 
                     break;
                 }
@@ -129,11 +155,12 @@ namespace AgentSmith.Comments
                             (lexer.TokenText == "code" || lexer.TokenText == "c"))
                         {
                             inCode++;
-                        }
-                        lexer.Advance();
-                        if (lexer.TokenType == lexer.XmlTokenType.TAG_END1)
-                        {
-                            inCode--;
+
+                            lexer.Advance();
+                            if (lexer.TokenType == lexer.XmlTokenType.TAG_END1)
+                            {
+                                inCode--;
+                            }
                         }
                     }
                     if (lexer.TokenType == lexer.XmlTokenType.TAG_START1)
@@ -147,13 +174,14 @@ namespace AgentSmith.Comments
                     }
                     if (lexer.TokenType == lexer.XmlTokenType.TEXT && inCode == 0)
                     {
-                        ILexer wordLexer = new WordLexer(lexer.TokenText);
+                        string textWithoutPatterns = PatternRemover.RemovePatterns(lexer.TokenText, _patternsToIgnore);
+                        ILexer wordLexer = new WordLexer(textWithoutPatterns);
                         wordLexer.Start();
                         while (wordLexer.TokenType != null)
                         {
                             int start = lexer.TokenLocalRange.StartOffset + wordLexer.TokenStart;
-                            int end = start + wordLexer.TokenText.Length;
-                            yield return new Range(wordLexer.TokenText, new TextRange(start, end));
+                            int end = start + wordLexer.GetCurrTokenText().Length;
+                            yield return new Range(wordLexer.GetCurrTokenText(), new TextRange(start, end));
 
                             wordLexer.Advance();
                         }
@@ -175,22 +203,26 @@ namespace AgentSmith.Comments
 
             if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
             {
-                Match match = ComplexMatchEvaluator.IsMatch(declaration,
-                    _settings.CommentMatch, _settings.CommentNotMatch, true);
-
-                if (match != null)
+                if (declaration.DeclaredElement == null ||
+                    declaration.DeclaredElement.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
                 {
-                    FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
-                    highlightings.Add(suggestion);
-                    return;
+                    Match match = ComplexMatchEvaluator.IsMatch(declaration,
+                                                                _settings.CommentMatch, _settings.CommentNotMatch, true);
+
+                    if (match != null)
+                    {
+                        FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
+                        highlightings.Add(suggestion);
+                        return;
+                    }
                 }
-            }            
+            }
         }
 
         #region Nested type: Range
 
         private struct Range
-        {            
+        {
             public readonly TextRange TextRange;
             public readonly string Word;
 

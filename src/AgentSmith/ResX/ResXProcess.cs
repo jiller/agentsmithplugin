@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.Resources;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Impl.Caches2;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Xml.Tree;
 using JetBrains.Util;
+using System.Resources;
 
 namespace AgentSmith.ResX
 {
@@ -24,26 +26,30 @@ namespace AgentSmith.ResX
 
         #region IDaemonStageProcess Members
 
-        public DaemonStageProcessResult Execute()
-        {
-            DaemonStageProcessResult result = new DaemonStageProcessResult();
+        public void Execute(Action<DaemonStageResult> action)
+        {            
             CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_file.GetSolution());
             if (styleSettings == null)
             {
                 //TODO:This might happen if plugin is activated manually
-                return result;
+                //return result;
+                return;
             }
 
-            List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
-            IModuleAttributes moduleAttributes = PsiManager.GetInstance(_file.GetSolution()).GetModuleAttributes(_file.GetProject());
+            List<HighlightingInfo> highlightings = new List<HighlightingInfo>();            
+            IFile psiFile = PsiManager.GetInstance(_file.GetSolution()).GetPsiFile(_file);
+            if (psiFile == null)
+                return;
+            IPsiModule module = psiFile.GetPsiModule();
+            IModuleAttributes moduleAttributes = CacheManagerEx.GetInstance(_file.GetSolution()).GetModuleAttributes(module);
             string defaultResXDic = "en-US";
             IList<IAttributeInstance> attributes = moduleAttributes
                 .GetAttributeInstances(new CLRTypeName(typeof (NeutralResourcesLanguageAttribute).FullName));
             if (attributes != null &&
                 attributes.Count > 0 &&
-                attributes[0].PositionParameter(0).Value != null)
+                attributes[0].PositionParameter(0).ConstantValue.Value != null)
             {
-                defaultResXDic = attributes[0].PositionParameter(0).Value.ToString();
+                defaultResXDic = attributes[0].PositionParameter(0).ConstantValue.Value.ToString();
             }
 
             ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file, defaultResXDic);
@@ -72,9 +78,7 @@ namespace AgentSmith.ResX
                     }
                 }
             }
-            result.Highlightings = highlightings.ToArray();
-            result.FullyRehighlighted = result.Highlightings.Length > 0;
-            return result;
+            action(new DaemonStageResult(highlightings.ToArray()));            
         }
 
         #endregion
@@ -85,16 +89,16 @@ namespace AgentSmith.ResX
             IXmlFile xmlFile = PsiManager.GetInstance(_file.GetSolution()).GetPsiFile(_file) as IXmlFile;
             if (xmlFile != null)
             {
-                IXmlTag root = xmlFile.GetTag(delegate(IXmlTag tag) { return tag.TagName == "root"; });
+                IXmlTag root = xmlFile.GetTag(delegate(IXmlTag tag) { return tag.GetTagName() == "root"; });
 
                 if (root != null)
                 {
-                    IList<IXmlTag> datas = root.GetTags(delegate(IXmlTag tag) { return tag.TagName == "data"; });
+                    IEnumerable<IXmlTag> datas = root.GetTags<IXmlTag>(delegate(IXmlTag tag) { return tag.GetTagName() == "data"; });
                     foreach (IXmlTag data in datas)
                     {
                         if (data.GetAttribute("type") == null)
                         {
-                            IXmlTag val = data.GetTag(delegate(IXmlTag tag) { return tag.TagName == "value"; });
+                            IXmlTag val = data.GetTag(delegate(IXmlTag tag) { return tag.GetTagName() == "value"; });
                             if (val != null)
                             {
                                 IXmlTagNode node = val.ToTreeNode();

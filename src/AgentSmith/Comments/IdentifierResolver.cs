@@ -11,7 +11,7 @@ namespace AgentSmith.Comments
     {               
         private static bool isParameter(IClassMemberDeclaration decl, string word)
         {
-            IDeclarationWithParameters methodDecl = decl as IDeclarationWithParameters;
+            ICSharpParametersOwnerDeclaration methodDecl = decl as ICSharpParametersOwnerDeclaration;
 
             if (methodDecl != null)
             {
@@ -29,7 +29,7 @@ namespace AgentSmith.Comments
 
         private static bool isClassMemberDeclaration(IClassMemberDeclaration declaration, string word)
         {
-            IMemberOwnerDeclaration containingType = declaration.GetContainingTypeDeclaration();
+            ICSharpTypeDeclaration containingType = declaration.GetContainingTypeDeclaration();
             if (containingType != null)
             {
                 string withDot = "." + word;
@@ -58,7 +58,7 @@ namespace AgentSmith.Comments
                 }
             }
 
-            IMemberOwnerDeclaration containingType = declaration.GetContainingTypeDeclaration();
+            ICSharpTypeDeclaration containingType = declaration.GetContainingTypeDeclaration();
             if (containingType != null)
             {
                 IClassLikeDeclaration classDecl = containingType as IClassLikeDeclaration;
@@ -79,7 +79,7 @@ namespace AgentSmith.Comments
         private static bool isADeclaredElement(string word, ISolution solution)
         {
             PsiManager manager = PsiManager.GetInstance(solution);
-            DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
+            IDeclarationsScope scope = DeclarationsScopeFactory.SolutionScope(solution, true);
             IDeclarationsCache declarationsCache = manager.GetDeclarationsCache(scope, true);
             IDeclaredElement[] declaredElements = declarationsCache.GetElementsByShortName(word);
             return declaredElements != null && declaredElements.Length > 0;
