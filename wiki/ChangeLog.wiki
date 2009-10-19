@@ -1,6 +1,6 @@
 ==1.4.0 (10/19/2009) ==
  * Ported for R#5.0
- * Added surround with <see langword="..."/>.
+ * Added surround with '<see langword="..."/>'.
  * Fixed SmartPaste
 
 ==1.3.8 (07/16/2009) ==
