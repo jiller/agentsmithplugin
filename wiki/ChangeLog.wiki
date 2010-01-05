@@ -1,5 +1,8 @@
+==1.4.1 (01/05/2010) ==
+ * Ported for R#5.0 beta
+
 ==1.4.0 (10/19/2009) ==
- * Ported for R#5.0
+ * Ported for R#5.0 EAP
  * Added surround with `<see langword="..."/>`.
  * Fixed SmartPaste
 
