@@ -160,10 +160,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.Psi.Xml.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.ReSharper.VSI, Version=4.5.1231.7, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\ReSharper\JetBrains.ReSharper.VSI.dll</HintPath>
-    </Reference>
     <Reference Include="System">
       <Name>System</Name>
     </Reference>

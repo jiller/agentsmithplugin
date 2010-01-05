@@ -27,7 +27,7 @@
  
 
         <Upgrade Id="$(var.DynUpgradeCode)">
-           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" IncludeMaximum='no' Minimum="1.0.9" Maximum="$(var.DynProductVersion)" />
+           <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" IncludeMaximum='no' Minimum="1.0.9" Maximum="$(var.DynProductVersion)" OnlyDetect='yes'/>
            <UpgradeVersion Property="CANNOTUPGRADENEWER" IncludeMaximum="yes" Minimum="$(var.DynProductVersion)" Maximum="127.0.0" OnlyDetect='yes' />
         </Upgrade>
 
