@@ -17,7 +17,7 @@ using MessageBox=JetBrains.Util.MessageBox;
 
 namespace AgentSmith.SmartPaste
 {
-    [ActionHandler(new string[] { "AgentSmith.SmartPaste" })]
+    [ActionHandler(new[] { "AgentSmith.SmartPaste" })]
     internal class SmartInsertAction : IActionHandler
     {
         #region IActionHandler Members
@@ -191,9 +191,11 @@ namespace AgentSmith.SmartPaste
         {
             ISolution solution = context.GetData(JetBrains.IDE.DataConstants.SOLUTION);
             IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
-            PsiLanguageType languageType = context.GetData(DataConstants.PSI_LANGUAGE_TYPE);
+            IProjectFile file = null;
+            if (solution != null && document != null)
+                file = document.GetProjectFile(solution);
 
-            return solution != null && document != null && languageType != null && languageType.Name == "CSHARP";
+            return solution != null && document != null && file != null && file.LanguageType == ProjectFileType.CSHARP;
         }
     }
 }

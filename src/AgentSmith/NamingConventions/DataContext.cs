@@ -37,10 +37,10 @@ namespace AgentSmith.NamingConventions
             {
                 return _declaredElement;
             }
-            if (dataConstant == DataConstants.PSI_LANGUAGE_TYPE)
-            {
-                return _declaredElement.Language;
-            }
+            //if (dataConstant == DataConstants.PSI_LANGUAGE_TYPE)
+            //{
+            //    return _declaredElement.Language;
+            //}
             if (dataConstant == TextControlDataConstants.TEXT_CONTROL)
             {
                 return _textControl;
