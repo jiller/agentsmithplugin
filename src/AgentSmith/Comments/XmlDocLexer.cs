@@ -4,10 +4,11 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Text;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
-{
+{    
     public class XmlDocLexer : ILexer
     {
         public readonly XmlTokenTypes XmlTokenType = XmlTokenTypeFactory.GetTokenTypes(PsiLanguageType.UNKNOWN);
@@ -34,9 +35,9 @@ namespace AgentSmith.Comments
                 {
                     return TextRange.InvalidRange;
                 }
-                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
-                int offset = leaf.Offset - leaf.GetDocumentRange().TextRange.StartOffset;
-                return new TextRange(TokenStart - offset, TokenEnd - offset);
+                var leaf = (ICSharpCommentNode)_myCurrentCommentNode;
+                int offset = leaf.GetTreeStartOffset().Offset;// -leaf.GetDocumentRange().TextRange.StartOffset;
+                return new TextRange(TokenStart + offset, TokenEnd + offset);
             }
         }
 
@@ -47,12 +48,11 @@ namespace AgentSmith.Comments
             if (_myCurrentCommentNode != null)
             {
                 uint state = _myLexer.LexerState;
-                _myLexer.Advance();
+                _myLexer.Advance();                
                 if (_myLexer.TokenType == null)
                 {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);
-                    Logger.LogMessage("TokenStart=" + TokenStart);
-                }
+                    restartLexer(_myCurrentCommentNode.NextSibling, state);                    
+                }                
             }
         }
 
@@ -114,7 +114,7 @@ namespace AgentSmith.Comments
             {
                 if (_myLexer != null)
                 {
-                    return _myLexer.TokenText;
+                    return _myLexer.GetCurrTokenText();
                 }
                 return null;
             }
@@ -148,9 +148,8 @@ namespace AgentSmith.Comments
             }
             if (_myCurrentCommentNode != null)
             {
-                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
-                _myLexer = new XmlLexerGenerated(leaf.Buffer);
-                _myLexer.Start(leaf.Offset + 3, leaf.Offset + leaf.Length, state);
+                _myLexer = new XmlLexerGenerated(new StringBuffer(_myCurrentCommentNode.GetText()));
+                _myLexer.Start(3, _myCurrentCommentNode.GetTextLength(), state);
                 if (_myLexer.TokenType == null)
                 {
                     restartLexer(_myCurrentCommentNode.NextSibling, state);
