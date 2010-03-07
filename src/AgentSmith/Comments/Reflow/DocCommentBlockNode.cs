@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Comments.Reflow
-{
+{    
     public class DocCommentBlockNode :  IDocCommentBlockNode
     {
         private readonly DocCommentNode _commentNode;
