@@ -53,6 +53,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         private readonly Dictionary<string, AffixRule> _prefixRules = new Dictionary<string, AffixRule>();
         private readonly List<string> _replaceCharacters = new List<string>();
         private readonly Dictionary<string, AffixRule> _suffixRules = new Dictionary<string, AffixRule>();
+        private readonly SharedStringCollection _sharedStringsCollection = new SharedStringCollection();
 
         private readonly byte[] _encodeTable = new byte[65536];
         private readonly char[] _decodeTable = new char[256];
@@ -179,12 +180,12 @@ namespace AgentSmith.SpellCheck.NetSpell
                                     // part 2 = affix keys
                                     if (parts.Length >= 2)
                                     {
-                                        tempWord.AffixKeys = parts[1];
+                                        tempWord.AffixKeysIndex = SharedStrings.GetWordIndex(parts[1]);
                                     }
                                     // part 3 = phonetic code
                                     if (parts.Length >= 3)
                                     {
-                                        tempWord.PhoneticCode = parts[2];
+                                        tempWord.PhoneticCode = SharedStrings.GetWordIndex(parts[2]);
                                     }
 
                                     _baseWords[tempWord.Text] = tempWord;
@@ -224,6 +225,11 @@ namespace AgentSmith.SpellCheck.NetSpell
         {
             get { return decode(_tryCharacters); }
             set { _tryCharacters = encode(value); }
+        }
+
+        public SharedStringCollection SharedStrings
+        {
+            get { return _sharedStringsCollection; }
         }
 
         /// <summary>
@@ -339,7 +345,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             string prefixKeys = "";
 
             // check suffix keys first
-            foreach (char key in word.AffixKeys)
+            foreach (char key in SharedStrings.GetWord(word.AffixKeysIndex))
             {
                 if (_suffixRules.ContainsKey(key.ToString(CultureInfo.CurrentUICulture)))
                 {
@@ -523,8 +529,34 @@ namespace AgentSmith.SpellCheck.NetSpell
         {
             // make sure base word has this affix key
             Word baseWord = _baseWords[word];
-            List<char> keys = new List<char>(baseWord.AffixKeys.ToCharArray());
+            List<char> keys =
+                new List<char>(SharedStrings.GetWord(baseWord.AffixKeysIndex).ToCharArray());
             return keys.Contains(affixKey);
+        }
+    }
+
+    public class SharedStringCollection
+    {
+        private readonly List<string> _words = new List<string>();
+        private readonly Dictionary<string, int> _wordIndexes = new Dictionary<string, int>();
+
+        public int GetWordIndex(string word)
+        {
+            if (_wordIndexes.ContainsKey(word))
+                return _wordIndexes[word];
+            _words.Add(word);
+            int index = _words.Count - 1;
+            _wordIndexes[word] = index;
+
+            return index;
+        }
+
+        public string GetWord(int index)
+        {
+            if (index < 0)
+                return string.Empty;
+
+            return _words[index];
         }
     }
 }

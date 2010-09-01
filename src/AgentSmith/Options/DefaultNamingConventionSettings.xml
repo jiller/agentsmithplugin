@@ -24,6 +24,7 @@
             <MustHavePrefixes />
             <MustNotHavePrefixes>
               <string>_</string>
+              <string>m_</string>
             </MustNotHavePrefixes>
             <Rule>Pascal</Rule>
             <MustHaveSuffixes />
@@ -53,6 +54,7 @@
             <MustHavePrefixes />
             <MustNotHavePrefixes>
               <string>_</string>
+              <string>m_</string>
             </MustNotHavePrefixes>
             <Rule>Pascal</Rule>
             <MustHaveSuffixes />
@@ -81,7 +83,8 @@
             <Description>Private properties, methods, events should be in camel.</Description>
             <MustHavePrefixes />
             <MustNotHavePrefixes>
-                <string>_</string>
+              <string>_</string>
+              <string>m_</string>
             </MustNotHavePrefixes>
             <Rule>Camel</Rule>
             <MustHaveSuffixes />
@@ -99,9 +102,11 @@
             <NotMatches />
             <Description>Fields should be underscore camel.</Description>
             <MustHavePrefixes>
-                <string>_</string>
-            </MustHavePrefixes>
-            <MustNotHavePrefixes />
+                <string>_</string>              
+            </MustHavePrefixes>                
+            <MustNotHavePrefixes>
+              <string>m_</string>
+            </MustNotHavePrefixes>
             <Rule>Camel</Rule>
             <MustHaveSuffixes />
             <MustNotHaveSuffixes />
@@ -118,6 +123,7 @@
             <MustHavePrefixes />
             <MustNotHavePrefixes>
               <string>_</string>
+              <string>m_</string>
             </MustNotHavePrefixes>            
             <Rule>Camel</Rule>
             <MustHaveSuffixes />
@@ -135,6 +141,7 @@
             <MustHavePrefixes />
             <MustNotHavePrefixes>
               <string>_</string>
+              <string>m_</string>
             </MustNotHavePrefixes>
             <Rule>Camel</Rule>
             <MustHaveSuffixes />
@@ -152,6 +159,7 @@
             <MustHavePrefixes />
             <MustNotHavePrefixes>
               <string>_</string>
+              <string>m_</string>
             </MustNotHavePrefixes>
             <Rule>Pascal</Rule>
             <MustHaveSuffixes />

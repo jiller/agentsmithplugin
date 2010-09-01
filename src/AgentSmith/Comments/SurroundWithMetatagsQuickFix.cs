@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Intentions;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
@@ -17,7 +18,7 @@ namespace AgentSmith.Comments
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return true;
+            return _suggestion.Range.IsValid();
         }
 
         public IBulbItem[] Items
@@ -36,6 +37,10 @@ namespace AgentSmith.Comments
                     items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, replacement));
                 }
 
+                if (KeywordUtil.IsKeyword(_suggestion.Word))
+                {
+                    items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<see langword=\"{0}\"/>", _suggestion.Word)));
+                }
                 items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
                 
                 return items.ToArray();

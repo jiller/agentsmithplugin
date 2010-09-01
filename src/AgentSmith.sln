@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentSmith", "AgentSmith\AgentSmith.csproj", "{F45E9F9E-48E5-4A1E-8730-64A9E05483D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentSmith.Test", "AgentSmith.Test\AgentSmith.Test.csproj", "{4CB16EA9-9392-46C5-A82C-0FE5E72746B0}"
