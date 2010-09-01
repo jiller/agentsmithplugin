@@ -12,14 +12,14 @@
 		<ProductName>Agent Smith</ProductName>
 		
 		<!-- Version of R# (two components only) that the plugin is targeting. -->
-		<ReSharperVersion2>5.0</ReSharperVersion2>
+		<ReSharperVersion2>5.1</ReSharperVersion2>
 		
 		<!-- Plugin vendor name. -->
 		<CompanyName>Sergey Zyuzin</CompanyName>
 		
 		<!-- Upgrade code for the plugin. -->
 		<!-- Should be unique for each of the plugins, but should not change within the plugin lifetime. All of the plugin versions should feature the same Upgrade Code. -->
-		<UpgradeCode>{1B98838A-6409-4ac7-847D-4501BF4BDD4B}</UpgradeCode>
+		<UpgradeCode>{1B98838A-6409-4ac7-847D-4501BF4BDD4C}</UpgradeCode>
 		
 		<!-- Version of Visual Studio we're installing for. -->
 		<!-- Can be overridden on the command line when running the installation. -->
