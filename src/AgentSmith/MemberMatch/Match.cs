@@ -205,9 +205,9 @@ namespace AgentSmith.MemberMatch
             IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
             if (!string.IsNullOrEmpty(_markedWithAttribute))
             {
-                _markedWithAttributeType = cache.GetElementsAtQualifiedName(_markedWithAttribute) as ITypeElement;
+                _markedWithAttributeType = cache.GetTypeElementByCLRName(_markedWithAttribute) as ITypeElement;
             }
-
+            
             /*if (!string.IsNullOrEmpty(_isOfType))
             {
                 _isOfTypeType = cache.GetTypeElementByCLRName(_isOfType);             
