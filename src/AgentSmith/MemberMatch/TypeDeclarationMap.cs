@@ -12,6 +12,7 @@ namespace AgentSmith.MemberMatch
         static TypeDeclarationMap()
         {
             _typeDeclMap.Add(typeof(IConstantDeclaration), Declaration.Constant);
+            _typeDeclMap.Add(typeof(ILocalConstantDeclaration), Declaration.LocalConstant);
             _typeDeclMap.Add(typeof(IEnumDeclaration), Declaration.Enum);
             _typeDeclMap.Add(typeof(IInterfaceDeclaration), Declaration.Interface);
             _typeDeclMap.Add(typeof(IStructDeclaration), Declaration.Struct);

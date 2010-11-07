@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using AgentSmith.NamingConventions;
-using JetBrains.ReSharper.OptionPages.CodeStyle;
+using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.UI.Options;
 
 namespace AgentSmith.Options
@@ -16,7 +16,7 @@ namespace AgentSmith.Options
         )]
     public partial class NamingConventionsSettingsPage : UserControl, IOptionsPage
     {
-        private readonly IOptionsDialog _optionsDialog;        
+        private readonly IOptionsDialog _optionsDialog;
 
         public NamingConventionsSettingsPage(IOptionsDialog optionsDialog)
         {
@@ -43,7 +43,7 @@ namespace AgentSmith.Options
         private void initializeUI()
         {
             bindView();
-            _sceExclusions.Strings = Settings.NamingConventionSettings.Exclusions;
+            _sceExclusions.Items = Settings.NamingConventionSettings.Exclusions;
         }
 
         private void bindView()
@@ -69,7 +69,7 @@ namespace AgentSmith.Options
 
         public bool OnOk()
         {
-            Settings.NamingConventionSettings.Exclusions = _sceExclusions.Strings;
+            Settings.NamingConventionSettings.Exclusions = _sceExclusions.Items;
             return true;
         }
 
@@ -172,7 +172,7 @@ namespace AgentSmith.Options
             }
         }
 
-        private void btnImport_Click(object sender, EventArgs e)
+        /*private void btnImport_Click(object sender, EventArgs e)
         {
             JetBrains.ReSharper.Psi.CodeStyle.CodeStyleSettings codeStyleSettings =
                 ((CodeStyleSharingPage) _optionsDialog.GetPage("CodeStyleSharing")).CodeStyleSettings;
@@ -188,7 +188,7 @@ namespace AgentSmith.Options
                                                    codeStyleSettings.GetNamingSettings());
 
             bindView();
-        }
+        }*/
 
         private void lvRules_ItemChecked(object sender, ItemCheckedEventArgs e)
         {

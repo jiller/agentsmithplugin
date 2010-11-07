@@ -10,6 +10,7 @@ namespace AgentSmith.Options
         private Match[] _commentNotMatch;
         private string _dictionaryName = "en-US";
         private bool _suppressIfBaseHasComment;
+        private int _maxLineLength = 80;
         
         public string DictionaryName
         {
@@ -33,6 +34,12 @@ namespace AgentSmith.Options
         {
             get { return _suppressIfBaseHasComment; }
             set { _suppressIfBaseHasComment = value; }
+        }
+
+        public int MaxLineLength
+        {
+            get { return _maxLineLength; }
+            set { _maxLineLength = value;}
         }
     }
 }
