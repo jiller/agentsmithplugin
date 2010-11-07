@@ -1,3 +1,6 @@
+==1.4.3 (11/07/2010) ==
+ * Fixed bug with rules matching by attribute name.
+
 ==1.4.2 (03/07/2010) ==
  * Ported for R#5.0 beta 2
 
