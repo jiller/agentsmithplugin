@@ -1,9 +1,10 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Comments
 {
@@ -11,7 +12,7 @@ namespace AgentSmith.Comments
     {               
         private static bool isParameter(IClassMemberDeclaration decl, string word)
         {
-            ICSharpParametersOwnerDeclaration methodDecl = decl as ICSharpParametersOwnerDeclaration;
+            IParametersOwnerDeclaration methodDecl = decl as IParametersOwnerDeclaration;
 
             if (methodDecl != null)
             {
@@ -76,21 +77,25 @@ namespace AgentSmith.Comments
             return false;
         }
 
-        private static bool isADeclaredElement(string word, ISolution solution)
+        private static bool isADeclaredElement(string word, ISolution solution, DeclarationCacheLibraryScope scope = DeclarationCacheLibraryScope.FULL)
         {
-            PsiManager manager = PsiManager.GetInstance(solution);
-            IDeclarationsScope scope = DeclarationsScopeFactory.SolutionScope(solution, true);
-            IDeclarationsCache declarationsCache = manager.GetDeclarationsCache(scope, true);
+            CacheManager cacheManager = solution.GetPsiServices().CacheManager;
+            IDeclarationsCache declarationsCache = cacheManager.GetDeclarationsCache(scope, true);
             IDeclaredElement[] declaredElements = declarationsCache.GetElementsByShortName(word);
             return declaredElements != null && declaredElements.Length > 0;
         }
 
-        public static bool IsIdentifier(IClassMemberDeclaration declaration, ISolution solution, string word)
+        public static bool IsIdentifier(IClassMemberDeclaration declaration, ISolution solution, string word, DeclarationCacheLibraryScope scope = DeclarationCacheLibraryScope.FULL)
         {
             return isParameter(declaration, word) ||
                    isTypeParameter(declaration, word) ||
                    isClassMemberDeclaration(declaration, word) ||
-                   isADeclaredElement(word, solution);
+                   isADeclaredElement(word, solution, scope);
+        }
+
+        public static bool IsKeyword(IClassMemberDeclaration declaration, ISolution solution, string word)
+        {
+            return KeywordUtil.IsKeyword(word);
         }
 
         public static IList<string> GetReplaceFormats(IClassMemberDeclaration declaration, ISolution solution,
@@ -112,6 +117,11 @@ namespace AgentSmith.Comments
                 isADeclaredElement(word, solution))
             {
                 replaceFormats.Add("<see cref=\"{0}\"/>");
+            }
+
+            if (IsKeyword(declaration, solution, word))
+            {
+                replaceFormats.Add("<see langword=\"{0}\"/>");
             }
 
             return replaceFormats;

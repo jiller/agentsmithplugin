@@ -1,7 +1,7 @@
 using System;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ProjectModel;
 
 namespace AgentSmith.MemberMatch
 {

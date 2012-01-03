@@ -49,7 +49,7 @@ namespace AgentSmith.SpellCheck.NetSpell
         private readonly WordDictionary _dictionary;
 
         private readonly Suggestion _suggestionMode = Suggestion.PhoneticNearMiss;
-        private readonly OrderedHashSet<string> _userWords = new OrderedHashSet<string>();
+        private readonly HashSet<string> _userWords = new HashSet<string>();
         private int _customDictionaryVersion;
 
         public SpellChecker(WordDictionary dictionary, CustomDictionary customDictionary)
@@ -73,13 +73,13 @@ namespace AgentSmith.SpellCheck.NetSpell
             {
                 _customDictionaryVersion = _customDictionary.Version;
                 _userWords.Clear();
-                if (_customDictionary.UserWords != null)
+                if (_customDictionary.DecodedUserWords != null)
                 {
                     string[] words = _customDictionary.CaseSensitive
-                                         ? _customDictionary.UserWords.Split('\n')
+                                         ? _customDictionary.DecodedUserWords.Split('\n')
                                          :
-                                             _customDictionary.UserWords.ToLower().Split('\n');
-                    _userWords.AddAll(words);
+                                             _customDictionary.DecodedUserWords.ToLower().Split('\n');
+                    _userWords.AddRange(words);
                 }
             }
         }
@@ -174,11 +174,11 @@ namespace AgentSmith.SpellCheck.NetSpell
                 string key = replacementChars[i].Substring(0, split);
                 string replacement = replacementChars[i].Substring(split + 1);
 
-                int pos = word.IndexOf(key, StringComparison.Ordinal);
+                int pos = word.IndexOf(key);
                 while (pos > -1)
                 {
                     string tempWord = word.Substring(0, pos);
-                    tempWord += replacement;                    
+                    tempWord += replacement;
                     tempWord += word.Substring(pos + key.Length);
 
                     if (TestWord(tempWord, true))
@@ -262,7 +262,7 @@ namespace AgentSmith.SpellCheck.NetSpell
             {
                 word = char.ToUpper(word[0]) + word.Substring(1);
             }
-            return testWord(word).Contains;
+            return testWord(word).Contains;            
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                     // search root words for phonetic codes
                     foreach (Word word in _dictionary.BaseWords)
                     {
-                        if (codes.ContainsKey(_dictionary.SharedStrings.GetWord(word.PhoneticCode)))
+                        if (codes.ContainsKey(word.PhoneticCode))
                         {
                             IList<string> words = _dictionary.ExpandWord(word);
                             // add expanded words

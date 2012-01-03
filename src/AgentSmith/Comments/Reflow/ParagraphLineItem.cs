@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace AgentSmith.Comments.Reflow
 {
@@ -14,6 +15,40 @@ namespace AgentSmith.Comments.Reflow
     {
         public string Text;
         public ItemType ItemType;
+
+        public string Tag
+        {
+            get
+            {
+                if (ItemType != ItemType.XmlElement) return null;
+
+                Regex re = new Regex(@"^\s*<[/]?(\w+).*>\s*$");
+
+                Match match = re.Match(Text);
+
+                if (match.Success)
+                {
+                    return match.Groups[1].Value;
+                }
+                return null;
+            }
+        }
+
+        public bool IsEndTag
+        {
+            get
+            {
+                if (ItemType != ItemType.XmlElement) return false;
+                Regex re = new Regex(@"^\s*</(\w+).*>\s*$");
+
+                Match match = re.Match(Text);
+                if (match.Success)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         public string FirstLine
         {

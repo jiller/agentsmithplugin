@@ -4,22 +4,30 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Xml.XmlDocComments;
 using JetBrains.Text;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
-{    
+{
     public class XmlDocLexer : ILexer
     {
-        public readonly XmlTokenTypes XmlTokenType = XmlTokenTypeFactory.GetTokenTypes(PsiLanguageType.UNKNOWN);
+        public readonly XmlTokenTypes XmlTokenType = XmlTokenTypes.GetInstance(XmlDocLanguage.Instance);
         private readonly IDocCommentBlockNode _myDocCommentBlock;
+        private ITreeNode _myCurrentNode;
         private IDocCommentNode _myCurrentCommentNode;
         private XmlLexerGenerated _myLexer;
 
         public XmlDocLexer(IDocCommentBlockNode docCommentBlock)
         {
+            
             _myDocCommentBlock = docCommentBlock;
             Start();
+        }
+
+        public ITreeNode CurrentNode
+        {
+            get { return _myCurrentNode; }
         }
 
         public IDocCommentNode CurrentCommentNode
@@ -31,13 +39,13 @@ namespace AgentSmith.Comments
         {
             get
             {
-                if (_myCurrentCommentNode == null)
+                if (_myCurrentNode == null)
                 {
                     return TextRange.InvalidRange;
                 }
-                var leaf = (ICSharpCommentNode)_myCurrentCommentNode;
-                int offset = leaf.GetTreeStartOffset().Offset;// -leaf.GetDocumentRange().TextRange.StartOffset;
-                return new TextRange(TokenStart + offset, TokenEnd + offset);
+                LeafElementBase leaf = (LeafElementBase)_myCurrentNode;
+                int offset = leaf.GetTreeStartOffset().Offset - leaf.GetDocumentRange().TextRange.StartOffset;
+                return new TextRange(TokenStart - offset, TokenEnd - offset);
             }
         }
 
@@ -45,16 +53,20 @@ namespace AgentSmith.Comments
 
         public void Advance()
         {
-            if (_myCurrentCommentNode != null)
+            if (_myCurrentNode != null)
             {
-                uint state = _myLexer.LexerState;
-                _myLexer.Advance();                
+                uint state = _myLexer.LexerStateEx;
+
+                _myLexer.Advance();
                 if (_myLexer.TokenType == null)
                 {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);                    
-                }                
+                    restartLexer(_myCurrentNode.NextSibling, state);
+                    Logger.LogMessage("TokenStart=" + TokenStart);
+                }
             }
         }
+
+        public object CurrentPosition { get { return _myLexer.CurrentPosition; } set { _myLexer.CurrentPosition = (XmlLexerState)value; } }
 
         public void RestoreState(object state)
         {
@@ -68,6 +80,7 @@ namespace AgentSmith.Comments
 
         public void Start()
         {
+            _myCurrentNode = null;
             _myCurrentCommentNode = null;
             restartLexer(_myDocCommentBlock.FirstChild, 0);
         }
@@ -136,29 +149,38 @@ namespace AgentSmith.Comments
 
         private void restartLexer(ITreeNode child, uint state)
         {
+            _myCurrentNode = null;
             _myCurrentCommentNode = null;
             while (child != null)
             {
+                _myCurrentNode = child;
                 _myCurrentCommentNode = child as IDocCommentNode;
                 if (_myCurrentCommentNode != null)
                 {
-                    break;
+                    LeafElementBase leaf = (LeafElementBase)_myCurrentCommentNode;
+
+                    _myLexer = new XmlLexerGenerated(leaf.GetTextAsBuffer(), XmlTokenType);
+                    //_myLexer.Start(leaf.GetTreeStartOffset().Offset + 3, leaf.GetTreeStartOffset().Offset + leaf.GetTextLength(), state);
+                    _myLexer.Start(3, leaf.GetTextLength(), state);
+                    if (_myLexer.TokenType == null)
+                    {
+                        restartLexer(_myCurrentCommentNode.NextSibling, state);
+                    }
+                    return;
                 }
+
+                IWhitespaceNode whitespaceNode = child as IWhitespaceNode;
+                if (whitespaceNode != null && whitespaceNode.IsNewLine)
+                {
+                    _myLexer = new XmlLexerGenerated(new StringBuffer("\n"), XmlTokenType);
+                    //_myLexer.Start(leaf.GetTreeStartOffset().Offset + 3, leaf.GetTreeStartOffset().Offset + leaf.GetTextLength(), state);
+                    _myLexer.Start(0, 1, state);
+                    return;
+                }
+
                 child = child.NextSibling;
             }
-            if (_myCurrentCommentNode != null)
-            {
-                _myLexer = new XmlLexerGenerated(new StringBuffer(_myCurrentCommentNode.GetText()));
-                _myLexer.Start(3, _myCurrentCommentNode.GetTextLength(), state);
-                if (_myLexer.TokenType == null)
-                {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);
-                }
-            }
-            else
-            {
-                _myLexer = null;
-            }
+            _myLexer = null;
         }
     }
 }

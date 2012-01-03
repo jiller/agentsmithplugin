@@ -5,9 +5,6 @@ using JetBrains.Util;
 
 namespace AgentSmith.SpellCheck
 {
-    /// <summary>
-    /// Finds words in a string. Implements ReSharper's interface <see cref="ILexer"/>.
-    /// </summary>
     public class WordLexer : ILexer
     {
         private readonly string _data;
@@ -15,16 +12,10 @@ namespace AgentSmith.SpellCheck
         private int _tokenEnd = 0;
         private int _tokenStart = 0;
         private TokenNodeType _tokenType;
-        private readonly StringBuffer _buffer;
 
-        /// <summary>
-        /// Initializes new instance.
-        /// </summary>
-        /// <param name="data">String to be tokenized.</param>
         public WordLexer(string data)
         {
             _data = data;
-            _buffer = new StringBuffer(data);
         }
 
         #region ILexer Members
@@ -61,6 +52,8 @@ namespace AgentSmith.SpellCheck
             }
         }
 
+        public object CurrentPosition { get { return _tokenStart; } set { _tokenStart = (int)value; } }
+
         public object SaveState()
         {
             throw new NotImplementedException();
@@ -90,17 +83,17 @@ namespace AgentSmith.SpellCheck
         {
             get { return _data.Substring(_tokenStart, TokenEnd - TokenStart); }
         }
-        
+
         public IBuffer Buffer
         {
-            get { return _buffer; }
+            get { return new StringBuffer(_data); }
         }
 
         #endregion
 
         private bool isSeparator(int i)
         {
-            return !(char.IsLetterOrDigit(_data, i) || _data[i] == '_' || _data[i] == '\'' || _data[i] == '&') || _data[i] == '-';
+            return !(char.IsLetterOrDigit(_data, i) || _data[i] == '_') || _data[i] == '-';
         }
 
         #region Nested type: WordTokenType

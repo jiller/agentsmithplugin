@@ -37,7 +37,11 @@ namespace AgentSmith.Comments.Reflow
 
                     currentTagIsCode = false;
                     if (_docLexer.TokenType == _docLexer.XmlTokenType.IDENTIFIER &&
-                        (_docLexer.TokenText == "code" || _docLexer.TokenText == "c"))
+                        (_docLexer.TokenText == "code" ||
+                         _docLexer.TokenText == "c" ||
+                         _docLexer.TokenText == "see" ||
+                         _docLexer.TokenText == "typeparamref" ||
+                         _docLexer.TokenText == "paramref"))
                     {
                         inCode++;
                         currentTagIsCode = true;
@@ -58,7 +62,11 @@ namespace AgentSmith.Comments.Reflow
                     blockBuilder.Append(_docLexer.TokenText);
                     _docLexer.Advance();
                     if (_docLexer.TokenType == _docLexer.XmlTokenType.IDENTIFIER &&
-                        (_docLexer.TokenText == "code" || _docLexer.TokenText == "c"))
+                        (_docLexer.TokenText == "code" ||
+                         _docLexer.TokenText == "c" ||
+                         _docLexer.TokenText == "see" ||
+                         _docLexer.TokenText == "typeparamref" ||
+                         _docLexer.TokenText == "paramref"))
                     {
                         inCode--;
                     }

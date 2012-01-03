@@ -20,6 +20,15 @@ namespace AgentSmith.Comments.Reflow
             }
         }
 
+        public ParagraphLineItem LastItem
+        {
+            get
+            {
+                if (_items.Count == 0) return null;
+                return _items[_items.Count - 1];
+            }
+        }
+
         public ParagraphLine TrimStart()
         {
             ParagraphLine newLine = new ParagraphLine();
