@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using AgentSmith.NamingConventions;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Intentions;
 using JetBrains.Util;
 
 namespace AgentSmith.Identifiers
@@ -14,16 +11,16 @@ namespace AgentSmith.Identifiers
     {
         private const uint MAX_SUGGESTION_COUNT = 5;
 
-        private readonly IdentifierSpellCheckSuggestion _suggestion;
+        private readonly IdentifierSpellCheckHighlighting _highlighting;
 
-        public IdentifierSpellCheckQuickFix(IdentifierSpellCheckSuggestion suggestion)
+        public IdentifierSpellCheckQuickFix(IdentifierSpellCheckHighlighting highlighting)
         {
-            _suggestion = suggestion;
+            this._highlighting = highlighting;
         }
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return _suggestion.Declaration.IsValid();
+            return true;
         }
 
         public IBulbItem[] Items
@@ -31,32 +28,32 @@ namespace AgentSmith.Identifiers
             get
             {
                 List<IBulbItem> items = new List<IBulbItem>();
-                
-                ISpellChecker spellChecker = _suggestion.SpellChecker;
+
+                ISpellChecker spellChecker = this._highlighting.SpellChecker;
 
                 if (spellChecker != null)
                 {
-                    foreach (string newWord in spellChecker.Suggest(_suggestion.LexerToken.Value, MAX_SUGGESTION_COUNT))
+                    foreach (string newWord in spellChecker.Suggest(this._highlighting.LexerToken.Value, MAX_SUGGESTION_COUNT))
                     {
-                        if (newWord.IndexOf(" ", StringComparison.Ordinal) > 0)
+                        if (newWord.IndexOf(" ") > 0)
                         {
                             continue;
                         }
-                        string declaredName = _suggestion.Declaration.DeclaredName;
-                        string nameWithMisspelledWordDeleted = declaredName.Remove(_suggestion.LexerToken.Start,
-                            _suggestion.LexerToken.Length);
-                        string newName = nameWithMisspelledWordDeleted.Insert(_suggestion.LexerToken.Start, newWord);
+                        string declaredName = this._highlighting.Declaration.DeclaredName;
+                        string nameWithMisspelledWordDeleted = declaredName.Remove(this._highlighting.LexerToken.Start,
+                            this._highlighting.LexerToken.Length);
+                        string newName = nameWithMisspelledWordDeleted.Insert(this._highlighting.LexerToken.Start, newWord);
 
-                        items.Add(new NamingConventionsBulbItem(_suggestion.Declaration, newName));
+                        items.Add(new RenameBulbItem(this._highlighting.Declaration, newName));
                     }
                 }
-                items.Add(new RenameBulbItem(_suggestion.Declaration));
+                items.Add(new RenameBulbItem(this._highlighting.Declaration));
 
                 if (spellChecker != null)
                 {
                     foreach (CustomDictionary dict in spellChecker.CustomDictionaries)
                     {
-                        items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, dict, _suggestion.Range));
+                        items.Add(new AddToDictionaryBulbItem(this._highlighting.MisspelledWord, dict.Name, this._highlighting.DocumentRange, _highlighting.SettingsStore ));
                     }
                 }
                 return items.ToArray();

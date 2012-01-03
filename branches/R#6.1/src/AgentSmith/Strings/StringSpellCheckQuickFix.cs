@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Intentions;
 using JetBrains.Util;
 
 namespace AgentSmith.Strings
@@ -13,18 +13,18 @@ namespace AgentSmith.Strings
     {
         private const uint MAX_SUGGESTION_COUNT = 5;
 
-        private readonly StringSpellCheckSuggestion _suggestion;
+        private readonly StringSpellCheckHighlighting _highlighting;
 
-        public StringSpellCheckQuickFix(StringSpellCheckSuggestion suggestion)
+        public StringSpellCheckQuickFix(StringSpellCheckHighlighting highlighting)
         {
-            _suggestion = suggestion;
+            this._highlighting = highlighting;
         }
 
         #region IQuickFix Members
 
         public bool IsAvailable(IUserDataHolder cache)
         {
-            return _suggestion.Range.IsValid();
+            return true;
         }
 
         public IBulbItem[] Items
@@ -33,32 +33,25 @@ namespace AgentSmith.Strings
             {
                 List<IBulbItem> items = new List<IBulbItem>();
 
-                ISpellChecker spellChecker = _suggestion.SpellChecker;
-
+                ISpellChecker spellChecker = this._highlighting.SpellChecker;
+                
                 if (spellChecker != null)
-                {                                                           
-
-                    foreach (string newWord in spellChecker.Suggest(_suggestion.MisspelledWord, MAX_SUGGESTION_COUNT))
+                {
+                    foreach (string newWord in spellChecker.Suggest(this._highlighting.MisspelledWord, MAX_SUGGESTION_COUNT))
                     {
                         string wordWithMisspelledWordDeleted =
-                            _suggestion.Word.Remove(_suggestion.MisspelledRange.StartOffset,
-                                                    _suggestion.MisspelledRange.Length);
+                            this._highlighting.Word.Remove(this._highlighting.MisspelledRange.StartOffset,
+                            this._highlighting.MisspelledRange.Length);
 
                         string newString = wordWithMisspelledWordDeleted.Insert(
-                            _suggestion.MisspelledRange.StartOffset, newWord);
+                            this._highlighting.MisspelledRange.StartOffset, newWord);
 
-                        int ampersandPosition = newString.IndexOf(_suggestion.AmpersandChar);
-                        if (ampersandPosition>=0)
-                        {
-                            newString = newString.Insert(ampersandPosition, "&");
-                        }
-
-                        items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newString));
+                        items.Add(new ReplaceWordWithBulbItem(this._highlighting.DocumentRange, newString));
                     }
 
                     foreach (CustomDictionary dict in spellChecker.CustomDictionaries)
                     {
-                        items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, dict, _suggestion.Range));
+                        items.Add(new AddToDictionaryBulbItem(this._highlighting.MisspelledWord, dict.Name, this._highlighting.DocumentRange, _highlighting.SettingsStore));
                     }
                 }
                 return items.ToArray();

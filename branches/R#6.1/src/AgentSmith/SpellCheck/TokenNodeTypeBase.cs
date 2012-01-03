@@ -12,11 +12,6 @@ namespace AgentSmith.SpellCheck
         {
         }
 
-        public override LeafElementBase Create(IBuffer buffer, TreeOffset startOffset, TreeOffset endOffset)
-        {
-            throw new NotImplementedException();
-        }
-
         public override bool IsWhitespace
         {
             get { throw new NotImplementedException(); }
@@ -32,24 +27,20 @@ namespace AgentSmith.SpellCheck
             get { throw new NotImplementedException(); }
         }
 
-        public override bool IsConstantLiteral
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public override bool IsConstantLiteral { get { throw new NotImplementedException(); } }
+
+        public override bool IsIdentifier { get { throw new NotImplementedException(); } }
+
+        public override bool IsKeyword { get { throw new NotImplementedException(); } }
 
         public override PsiLanguageType LanguageType
         {
             get { throw new NotImplementedException(); }
         }
 
-        public override bool IsIdentifier
+        public override LeafElementBase Create(IBuffer buffer, TreeOffset startOffset, TreeOffset endOffset)
         {
-            get { throw new NotImplementedException(); }
+            throw new NotImplementedException();
         }
-
-        public override bool IsKeyword
-        {
-            get { return false; }
-        }       
     }
 }

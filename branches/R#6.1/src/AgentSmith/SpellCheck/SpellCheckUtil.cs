@@ -1,19 +1,22 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AgentSmith.SpellCheck
 {
-    /// <summary>
-    /// Contains common methods used during spell checking of different elements.
-    /// </summary>
     public static class SpellCheckUtil
     {
-        /// <summary>
-        /// We don't spell check words that are uppercase or contain digits.
-        /// </summary>
-        /// <param name="word">Word to check/</param>
-        /// <returns>true, if word shall be spell checked.</returns>
-        public static bool ShouldSpellCheck(string word)
+        public static bool ShouldSpellCheck(string word, List<Regex> ignoreRegexes = null)
         {
+
+            if (ignoreRegexes != null)
+            {
+                foreach (Regex re in ignoreRegexes)
+                {
+                    if (re.IsMatch(word)) return false;
+                }
+            }
+
             return word != word.ToUpper() && !containsDigit(word);
         }
 

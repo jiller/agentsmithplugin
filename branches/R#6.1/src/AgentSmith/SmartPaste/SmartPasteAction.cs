@@ -1,15 +1,15 @@
 using System;
-using System.Web;
 using System.Windows.Forms;
 using AgentSmith.Comments;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
+using JetBrains.Application.DataContext;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.Util;
@@ -24,7 +24,7 @@ namespace AgentSmith.SmartPaste
         
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
-            if (!isAvailable(context))
+            if (!IsAvailable(context))
             {
                 return nextUpdate();
             }
@@ -33,7 +33,7 @@ namespace AgentSmith.SmartPaste
 
         public void Execute(IDataContext context, DelegateExecute nextExecute)
         {
-            if (!isAvailable(context))
+            if (!IsAvailable(context))
             {
                 nextExecute();
             }
@@ -51,28 +51,27 @@ namespace AgentSmith.SmartPaste
 
         public void ExecuteEx(IDataContext context)
         {
-            ITextControl editor = context.GetData(TextControlDataConstants.TEXT_CONTROL);
+            ITextControl editor = context.GetData(JetBrains.TextControl.DataContext.DataConstants.TEXT_CONTROL);
             Logger.Assert(editor != null, "Condition (editor != null) is false");
-            if (editor == null)
-                throw new ArgumentException("context");
-            ISolution solution = context.GetData(JetBrains.IDE.DataConstants.SOLUTION);
+
+            ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
             IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
 
-            ICSharpFile file = PsiManager.GetInstance(solution).GetPsiFile(document) as ICSharpFile;
-            if (file != null && editor != null)
-            {
-                using (ModificationCookie cookie = editor.Document.EnsureWritable())
-                {
-                    if (cookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
+            if (editor == null || solution == null || document == null) throw new ArgumentException("context");
+
+            ICSharpFile file = PsiManager.GetInstance(solution).GetPsiFile<CSharpLanguage>(document) as ICSharpFile;
+            if (file == null) return;
+            
+            PsiManager manager = PsiManager.GetInstance(solution);
+            manager.DoTransaction(
+                () =>
                     {
-                        IElement element = file.FindElementAt(new TreeTextRange(new TreeOffset(editor.Caret.Offset())));
-                        handleElement(editor, element, editor.Caret.Offset());
-                    }
-                }
-            }
+                        ITreeNode element = file.FindNodeAt(new TreeTextRange(new TreeOffset(editor.Caret.Offset())));
+                        HandleElement(editor, element, editor.Caret.Offset());
+                    }, "SmartPaste");
         }
 
-        private static void handleElement(ITextControl editor, IElement element, int offset)
+        private static void HandleElement(ITextControl editor, ITreeNode element, int offset)
         {
             string stringToInsert = Clipboard.GetText();
             if (string.IsNullOrEmpty(stringToInsert))
@@ -80,7 +79,8 @@ namespace AgentSmith.SmartPaste
                 return;
             }
 
-            if (element is IDocCommentNode)
+            IDocCommentNode docCommentNode = element as IDocCommentNode;
+            if (docCommentNode != null)
             {
                 JetBrains.Util.dataStructures.TypedIntrinsics.Int32<DocLine> currentLineNumber =
                     editor.Document.GetCoordsByOffset(editor.Caret.Offset()).Line;
@@ -92,19 +92,19 @@ namespace AgentSmith.SmartPaste
                 }
                 string prefix = currentLine.Substring(0, index);
 
-                if (shallEscape((IDocCommentNode)element, editor.Caret.Offset()) &&
-                    HttpUtility.HtmlEncode(stringToInsert) != stringToInsert &&
+                if (ShallEscape(docCommentNode, editor.Caret.Offset()) &&
+                    JetBrains.UI.RichText.RichTextBlockToHtml.HtmlEncode(stringToInsert) != stringToInsert &&
                     MessageBox.ShowYesNo("Do you want the text to be escaped?"))
                 {
-                    stringToInsert = HttpUtility.HtmlEncode(stringToInsert);
+                    stringToInsert = JetBrains.UI.RichText.RichTextBlockToHtml.HtmlEncode(stringToInsert);
                 }
 
                 stringToInsert = stringToInsert.Replace("\n", "\n" + prefix + "///");
             }
 
-            if (element is ITokenNode)
+            ITokenNode token = element as ITokenNode;
+            if (token != null)
             {
-                ITokenNode token = (ITokenNode)element;
                 if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL &&
                     offset < token.GetTreeTextRange().EndOffset.Offset)
                 {
@@ -133,9 +133,9 @@ namespace AgentSmith.SmartPaste
             editor.Document.InsertText(editor.Caret.Offset(), stringToInsert);
         }
 
-        private static bool shallEscape(IDocCommentNode node, int offset)
+        private static bool ShallEscape(IDocCommentNode node, int offset)
         {
-            IDocCommentBlockNode docBlock = node.GetContainingElement<IDocCommentBlockNode>(true);
+            IDocCommentBlockNode docBlock = node.GetContainingNode<IDocCommentBlockNode>(true);
             if (docBlock == null)
             {
                 return false;
@@ -187,15 +187,13 @@ namespace AgentSmith.SmartPaste
 
         #endregion
 
-        private static bool isAvailable(IDataContext context)
+        private static bool IsAvailable(IDataContext context)
         {
-            ISolution solution = context.GetData(JetBrains.IDE.DataConstants.SOLUTION);
+            ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
             IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
-            IProjectFile file = null;
-            if (solution != null && document != null)
-                file = document.GetProjectFile(solution);
-
-            return solution != null && document != null && file != null && file.LanguageType == ProjectFileType.CSHARP;
+            IPsiSourceFile file = null;
+            if (solution != null && document != null) file = document.GetPsiSourceFile(solution);
+            return solution != null && document != null && file != null && file.PrimaryPsiLanguage.Is<CSharpLanguage>() ;
         }
     }
 }

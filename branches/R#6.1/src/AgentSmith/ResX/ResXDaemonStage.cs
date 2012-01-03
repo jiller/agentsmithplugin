@@ -1,7 +1,12 @@
 using System;
+
+using AgentSmith.Options;
+
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Psi;
 
 namespace AgentSmith.ResX
 {
@@ -10,17 +15,20 @@ namespace AgentSmith.ResX
     {
         #region IDaemonStage Members
 
-        public IDaemonStageProcess CreateProcess(IDaemonProcess process, DaemonProcessKind kind)
+        public IDaemonStageProcess CreateProcess(
+            IDaemonProcess process,
+            IContextBoundSettingsStore settingsStore,
+            DaemonProcessKind processKind)
         {
-            if (process.ProjectFile.Name.ToLower().EndsWith(".resx"))
+            if (process.SourceFile.Name.ToLower().EndsWith(".resx"))
             {
-                return new ResXProcess(process.ProjectFile);
+                return new ResXProcess(process, settingsStore, process.SourceFile);
             }
 
             return null;
         }
 
-        public ErrorStripeRequest NeedsErrorStripe(IProjectFile projectFile)
+        public ErrorStripeRequest NeedsErrorStripe(IPsiSourceFile sourceFile, IContextBoundSettingsStore settingsStore)
         {
             return ErrorStripeRequest.STRIPE_AND_ERRORS;
         }
