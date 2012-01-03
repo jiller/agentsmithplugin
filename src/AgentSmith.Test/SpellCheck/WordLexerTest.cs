@@ -23,7 +23,7 @@ namespace AgentSmith.SpellCheck
             int i = 0;
             while (lexer.TokenType != null)
             {
-                Assert.AreEqual(tokens[i], lexer.TokenText);
+                Assert.AreEqual(tokens[i], lexer.GetCurrTokenText());
                 lexer.Advance();
                 i++;
             }

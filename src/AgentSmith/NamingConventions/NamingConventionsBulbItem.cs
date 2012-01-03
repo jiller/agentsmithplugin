@@ -1,15 +1,15 @@
 using System;
-using System.Windows.Forms;
+using System.Collections.Generic;
+using JetBrains.Application;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Refactorings.PostRename.PostRenameModel;
 using JetBrains.ReSharper.Refactorings.Rename;
-using JetBrains.ReSharper.Refactorings.RenameNamespace;
+using JetBrains.ReSharper.Refactorings.RenameModel;
 using JetBrains.ReSharper.Refactorings.Workflow;
-using JetBrains.ReSharper.TextControl;
-using JetBrains.Shell;
-using JetBrains.Shell.Progress;
+using JetBrains.TextControl;
 using JetBrains.Util;
 
 namespace AgentSmith.NamingConventions
@@ -34,7 +34,7 @@ namespace AgentSmith.NamingConventions
             lock (_syncObj)
             {
                 PsiManager psiManager = PsiManager.GetInstance(solution);
-                if (psiManager.WaitForCaches())
+                if (psiManager.WaitForCaches("Agent Smith", "Cancel"))
                 {
                     using (CommandCookie.Create("QuickFix: " + GetText()))
                     {
@@ -42,12 +42,7 @@ namespace AgentSmith.NamingConventions
                         {
                             if (modificationCookie.EnsureWritableResult == EnsureWritableResult.SUCCESS)
                             {
-                                IRefactoringWorkflow workflow = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
-                                if (workflow != null)
-                                {                                    
-                                    PsiManager manager = PsiManager.GetInstance(solution);
-                                    manager.DoTransaction(delegate { workflow.Execute(NullProgressIndicator.INSTANCE); });                                    
-                                }
+                                ExecuteEx(solution, textControl);                                
                             }
                         }
                     }
@@ -62,49 +57,51 @@ namespace AgentSmith.NamingConventions
 
         #endregion
 
-        private static IRefactoringWorkflow getRefactoringWorkflow(IDeclaredElement declaredElement, string newName,
-                                                                   ITextControl textControl)
+        private class RenameDataProvider : IRenameDataProvider
         {
-            if (declaredElement is INamespace)
+            private readonly IDeclaredElement _oldElement;
+            private readonly string _newName;
+            public RenameDataProvider(IDeclaredElement oldElement, string newName)
             {
-                RenameNamespaceRefactoringWorkflow wf = new RenameNamespaceRefactoringWorkflow();
-                if (wf.Initialize(new DataContext(null, declaredElement, textControl), null))
-                {
-                    wf.InitializeRefactoring(newName, NullProgressIndicator.INSTANCE, false);                    
-                    return wf;
-                }
-                return null;
+                _oldElement = oldElement;
+                _newName = newName;
             }
-            else
+            public IList<AtomicRenameBase> GetBaseNameChange()
             {
-                RenameRefactoringWorkflow wf = new RenameRefactoringWorkflow();
-                if (wf.Initialize(new DataContext(null, declaredElement, textControl), null))
-                {
-                    wf.SetName(newName, NullProgressIndicator.INSTANCE, false);
-                    if (wf.ConflictSearcher.SearchConflicts(NullProgressIndicator.INSTANCE).Conflicts.Count > 0)
-                    {
-                        MessageBox.Show("Conflicts were found. Can not rename.");
-                        return null;
-                    }
-                    return wf;
-                }
-                return null;
-            }            
-        }
+                return new List<AtomicRenameBase> { new AtomicRename(_oldElement, _newName) };
+            }
+            
+            public string NewName
+            {
+                get { return _newName; }
+            }
+
+            public bool DoRenameFile
+            {
+                get { return true; }
+            }
+
+            public bool ChangeText
+            {
+                get { return false; }
+            }
+        }       
 
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
-            IRefactoringWorkflow wf = getRefactoringWorkflow(_declaration.DeclaredElement, _newName, textControl);
-            if (wf != null)
+            IDeclaredElement declaredElement = _declaration.DeclaredElement;
+            if (declaredElement != null)
             {                
-                wf.Execute(NullProgressIndicator.INSTANCE);                
+                RenameDataProvider provider = new RenameDataProvider(declaredElement, _newName);
+                DataContext context = new DataContext(null, declaredElement, textControl, solution, provider);               
+                RenameWorkflow.ExcuteRename(context);
             }
         }
 
         private ModificationCookie ensureWritable()
         {
-            HashSet<IProjectFile> set = new HashSet<IProjectFile>();
-            IProjectFile projectFile = _declaration.GetContainingFile().ProjectItem;
+            OrderedHashSet<IProjectFile> set = new OrderedHashSet<IProjectFile>();
+            IProjectFile projectFile = _declaration.GetContainingFile().ProjectFile;
             set.Add(projectFile);
             ISolution solution = projectFile.GetSolution();
 

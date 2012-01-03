@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
@@ -24,9 +26,10 @@ namespace AgentSmith.MemberMatch
 
         private ITypeElement _markedWithAttributeType;
         private ITypeElement _inheritedFromType;
-        private ITypeElement _isOfTypeType;
+        //private ITypeElement _isOfTypeType;
         private ParamDirection _paramDirection = ParamDirection.Any;
         private static readonly Dictionary<RightsPair, AccessRights> _rightsMap;
+        private Regex _namespaceRegex;
 
         static Match()
         {
@@ -38,7 +41,7 @@ namespace AgentSmith.MemberMatch
             _declMap.Add(CLRDeclaredElementType.EVENT, Declaration.Event);
             _declMap.Add(CLRDeclaredElementType.FIELD, Declaration.Field);
             _declMap.Add(CLRDeclaredElementType.INTERFACE, Declaration.Interface);
-            //_declMap.Add(CSharpDeclaredElementType. LOCAL_CONSTANT, Declaration.Constant);
+            //_declMap.Add(DeclaredElementType. LOCAL_CONSTANT_DECLARATION, Declaration.Constant);
             _declMap.Add(CLRDeclaredElementType.LOCAL_VARIABLE, Declaration.Variable);
             _declMap.Add(CLRDeclaredElementType.METHOD, Declaration.Method);
             _declMap.Add(CLRDeclaredElementType.NAMESPACE, Declaration.Namespace);
@@ -189,26 +192,36 @@ namespace AgentSmith.MemberMatch
             set { _paramDirection = value; }
         }
 
+        public string Namespace { get; set; }
+
         public void Prepare(ISolution solution, PsiManager manager)
         {
             _markedWithAttributeType = null;
             _inheritedFromType = null;
-            _isOfTypeType = null;
-            DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
+            //_isOfTypeType = null;
+            _namespaceRegex = null;
+
+            IDeclarationsScope scope = DeclarationsScopeFactory.SolutionScope(solution, true);
             IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
             if (!string.IsNullOrEmpty(_markedWithAttribute))
             {
-                _markedWithAttributeType = cache[_markedWithAttribute] as ITypeElement;
+                _markedWithAttributeType = cache.GetTypeElementByCLRName(_markedWithAttribute) as ITypeElement;
             }
+            
+            /*if (!string.IsNullOrEmpty(_isOfType))
+            {
+                _isOfTypeType = cache.GetTypeElementByCLRName(_isOfType);             
+            }*/
 
             if (!string.IsNullOrEmpty(_inheritedFrom))
             {
-                _inheritedFromType = cache[_inheritedFrom] as ITypeElement;
+                _inheritedFromType = cache.GetTypeElementByCLRName(_inheritedFrom);
             }
 
-            if (!string.IsNullOrEmpty(_isOfType))
+            
+            if (Namespace!= null && !string.IsNullOrEmpty(Namespace))
             {
-                _isOfTypeType = cache[_isOfType] as ITypeElement;
+                _namespaceRegex = new Regex(Namespace, RegexOptions.Compiled);
             }
         }
 
@@ -231,8 +244,21 @@ namespace AgentSmith.MemberMatch
                        ownsTypeMatch(declaration) &&
                        isReadOnlyMatch(declaration) &&
                        isStaticMatch(declaration) && 
-                       paramDirectionMatch(declaration);
+                       paramDirectionMatch(declaration) &&
+                       namespaceMatch(declaration);
             }
+        }
+
+        private bool namespaceMatch(IDeclaration declaration)
+        {
+            if (_namespaceRegex == null)
+            {
+                return true;
+            }
+
+            IClassLikeDeclaration decl = declaration as IClassLikeDeclaration;
+            return (decl != null && decl.OwnerNamespaceDeclaration != null &&
+                    _namespaceRegex.IsMatch(decl.OwnerNamespaceDeclaration.QualifiedName));
         }
 
         private bool paramDirectionMatch(IDeclaration declaration)
@@ -281,6 +307,10 @@ namespace AgentSmith.MemberMatch
             {
                 sb.AppendFormat("marked with '{0}' ", _markedWithAttribute);
             }
+            if (description.HasNamespace && !string.IsNullOrEmpty(Namespace))
+            {
+                sb.AppendFormat("in namespace '{0}' ", Namespace);
+            }
             return sb.ToString();
         }
 
@@ -307,35 +337,22 @@ namespace AgentSmith.MemberMatch
         }
 
         private bool ownsTypeMatch(IDeclaration declaration)
-        {
+        {            
             if (string.IsNullOrEmpty(_isOfType))
             {
                 return true;
             }
-
-            if (_isOfTypeType == null)
-            {                
-                return false;
+           
+            ITypeOwner typeOwner = declaration.DeclaredElement as ITypeOwner;
+            if (typeOwner != null)
+            {
+                string longPresentableName = typeOwner.Type.GetLongPresentableName(typeOwner.Language);                
+                return _isOfType == longPresentableName;                
             }
-            
-            if (declaration is ITypeOwner)
-            {                
-                IDeclaredType declaredType = ((ITypeOwner)declaration).Type as IDeclaredType;
-                if (declaredType == null)
-                {
-                    return false;
-                }
-                ITypeElement typeElement = declaredType.GetTypeElement();
-                if (typeElement == null)
-                {
-                    return false;
-                }                
-                return typeElement.IsDescendantOf(_isOfTypeType);
-            } 
-            else
-            {                
-                return false;
-            }      
+           
+
+            return false;
+                                   
         }
 
         private bool inheritsMatch(IDeclaration declaration)
@@ -344,18 +361,20 @@ namespace AgentSmith.MemberMatch
             {
                 return true;
             }
-            
+
             if (_inheritedFromType == null)
             {
                 return false;
             }
-
+            
             ITypeElement typeElement = declaration.DeclaredElement as ITypeElement;
-            if (typeElement == null)
+            if (typeElement != null)
             {
-                return false;                
+                return typeElement.CLRName != _inheritedFromType.CLRName &&
+                    typeElement.IsDescendantOf(_inheritedFromType);
             }
-            return typeElement.IsDescendantOf(_inheritedFromType);
+
+            return false;
         }
 
         private bool markedWithAttributeMatch(IDeclaration declaration)
@@ -378,7 +397,9 @@ namespace AgentSmith.MemberMatch
 
             foreach (IAttributeInstance attribute in attributesOwner.GetAttributeInstances(false))
             {
-                if (attribute.AttributeType.GetTypeElement() == _markedWithAttributeType)
+                if (attribute.AttributeType != null && 
+                    attribute.AttributeType.GetTypeElement() != null && 
+                    attribute.AttributeType.GetTypeElement().CLRName == _markedWithAttributeType.CLRName)
                 {
                     return true;
                 }
@@ -401,7 +422,7 @@ namespace AgentSmith.MemberMatch
 
             if (declaration is IParameterDeclaration)
             {
-                declaration = ((IParameterDeclaration) declaration).GetContainingTypeMemberDeclaration();
+                declaration = declaration.GetContainingElement<ITypeMemberDeclaration>(false);
             }
             
             if (!(declaration is IModifiersOwner))
@@ -409,7 +430,7 @@ namespace AgentSmith.MemberMatch
                 return false;
             }
             rights = getRights((IModifiersOwner)declaration, useEffectiveRights);
-            
+
             return AccessLevelMap.Map.ContainsKey(rights) && ((AccessLevelMap.Map[rights] & _accessLevel) != 0);
         }
 
@@ -447,8 +468,10 @@ namespace AgentSmith.MemberMatch
             if (declaration.DeclaredElement != null)
             {
                 DeclaredElementType type = declaration.DeclaredElement.GetElementType();
+                
                 return _declaration == Declaration.Any ||
-                       _declMap.ContainsKey(type) && _declMap[type] == _declaration;
+                       !(declaration is ILocalConstantDeclaration) && _declMap.ContainsKey(type) && _declMap[type] == _declaration ||
+                       declaration is ILocalConstantDeclaration && _declaration == Declaration.LocalConstant;
             }
             else
             {

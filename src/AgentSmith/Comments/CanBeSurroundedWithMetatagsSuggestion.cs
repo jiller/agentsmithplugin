@@ -1,7 +1,7 @@
 using System;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace AgentSmith.Comments
@@ -12,7 +12,7 @@ namespace AgentSmith.Comments
         public const string NAME = "WordCanBeSurroundedWithMetaTags";
 
         private const string SUGGESTION_TEXT =
-            "Word '{0}' appears to be an identifier and can be surrounded with metatag.";
+            "Word '{0}' appears to be an identifier or a keyword and can be surrounded with metatag.";
 
         private readonly IClassMemberDeclaration _declaration;
         private readonly ISolution _solution;

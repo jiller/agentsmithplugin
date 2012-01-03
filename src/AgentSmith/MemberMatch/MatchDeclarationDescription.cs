@@ -13,6 +13,7 @@ namespace AgentSmith.MemberMatch
             add(Declaration.Any);
             add(Declaration.Class);
             add(Declaration.Constant);
+            add(Declaration.LocalConstant);
             add(Declaration.Delegate);
             add(Declaration.Enum);
             add(Declaration.EnumerationMember);
