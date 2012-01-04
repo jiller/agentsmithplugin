@@ -14,12 +14,12 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.5.0.0")]
+[assembly: AssemblyFileVersion("1.5.0.0")]
 
 [assembly: ActionsXml("AgentSmith.Actions.xml")]
 
 // The following information is displayed by ReSharper in the Plugins dialog
 [assembly: PluginTitle("AgentSmith")]
 [assembly: PluginDescription("Comment assistance and Spell Checking")]
-[assembly: PluginVendor("")]
+[assembly: PluginVendor("http://code.google.com/p/agentsmithplugin/")]
