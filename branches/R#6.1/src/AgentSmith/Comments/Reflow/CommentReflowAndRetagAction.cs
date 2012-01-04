@@ -16,25 +16,24 @@ using JetBrains.Util;
 
 namespace AgentSmith.Comments.Reflow
 {
-        
-    [ContextAction(Group = "C#", Name = "Reflow comment", Description = "Reflow comment.")]
-    internal class CommentReflowAction : BulbItemImpl, IContextAction
+    [ContextAction(Group = "C#", Name = "Reflow & Retag Comment", Description = "Reflow & Retag Comment.")]
+    internal class CommentReflowAndRetagAction : BulbItemImpl, IContextAction
     {
 
         protected readonly IContextActionDataProvider Provider;
         private IDocCommentNode _selectedDocCommentNode;
 
 
-        public CommentReflowAction(ICSharpContextActionDataProvider provider)
+        public CommentReflowAndRetagAction(ICSharpContextActionDataProvider provider)
         {
-            Provider = provider;
+            this.Provider = provider;
         }
 
-        private int CalcLineOffset( IDocCommentBlockOwnerNode node )
+        private int CalcLineOffset(IDocCommentBlockOwnerNode node)
         {
             ITreeNode prev = node.PrevSibling;
-            if ( prev != null && prev is IWhitespaceNode &&
-                 !( (IWhitespaceNode)prev ).IsNewLine )
+            if (prev != null && prev is IWhitespaceNode &&
+                !((IWhitespaceNode)prev).IsNewLine)
             {
                 return prev.GetTextLength();
             }
@@ -43,8 +42,7 @@ namespace AgentSmith.Comments.Reflow
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            IDocCommentNode docCommentNode = _selectedDocCommentNode;
-
+            IDocCommentNode docCommentNode = this._selectedDocCommentNode;
             // Get the settings.
             IContextBoundSettingsStore settingsStore = Shell.Instance.GetComponent<ISettingsStore>().BindToContextTransient(ContextRange.ApplicationWide);
             XmlDocumentationSettings settings =
@@ -66,46 +64,38 @@ namespace AgentSmith.Comments.Reflow
                 // Get a factory which can create elements in the C# docs
                 CSharpElementFactory factory = CSharpElementFactory.GetInstance(ownerNode.GetPsiModule());
 
-                // Calculate line offset where /// starts and add 3 for each
-                // slash.
-                int startPos = this.CalcLineOffset(ownerNode) + 3;
-
-                //text = regex.Replace( text , "");
-                /*DocCommentBlockNode myBlockNode =
-                    new DocCommentBlockNode(new DocCommentNode(new MyNodeType(), new StringBuffer(text),
-                        TreeOffset.Zero, new TreeOffset(text.Length)));
-
-                 * */
+                // Calculate line offset where /// starts and add 4 for the slashes and space
+                int startPos = this.CalcLineOffset(ownerNode) + 4;
 
                 // Create a new comment block with the adjusted text
                 IDocCommentBlockNode comment = blockNode; //factory.CreateDocCommentBlock(text);
 
-                // Work out if we have a space between the /// and <summary>
-                string reflownText = new XmlCommentReflower(settings).Reflow(comment, maxLength - startPos);
+                string reflownText = new XmlCommentReflower(settings).ReflowAndRetag(comment, maxLength - startPos);
 
                 comment = factory.CreateDocCommentBlock(reflownText);
 
                 // And set the comment on the declaration.
                 ownerNode.SetDocCommentBlockNode(comment);
             }
+
             return null;
         }
 
         public override string Text
         {
-            get { return "Reflow Comment [Agent Smith]"; }
+            get { return "Reflow & Retag Comment [Agent Smith]"; }
         }
 
-        private T GetSelectedExpression<T>() where T: class, ITreeNode
+        private T GetSelectedExpression<T>() where T : class, ITreeNode
         {
-            return Provider.GetSelectedElement<T>(true, true);
+            return this.Provider.GetSelectedElement<T>(true, true);
         }
 
         public bool IsAvailable(IUserDataHolder cache)
         {
             using (ReadLockCookie.Create())
             {
-                this._selectedDocCommentNode = GetSelectedExpression<IDocCommentNode>();
+                this._selectedDocCommentNode = this.GetSelectedExpression<IDocCommentNode>();
 
                 return this._selectedDocCommentNode != null;
             }

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -126,5 +128,16 @@ namespace AgentSmith.Comments
 
             return replaceFormats;
         }
+
+        public static bool AnalyzeForMetaTagging(string word, IEnumerable<Regex> patternsToIgnore)
+        {
+            foreach (Regex re in patternsToIgnore)
+            {
+                if (re.IsMatch(word)) return false;
+            }
+            return true;
+        }
+
+
     }
 }

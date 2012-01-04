@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Xml;
 
@@ -63,14 +60,7 @@ namespace AgentSmith.Comments
 
         #endregion
 
-        public bool AnalyzeForMetaTagging(string word)
-        {
-            foreach (Regex re in _xmlDocumentationSettings.CompiledWordsToIgnoreForMetatagging)
-            {
-                if (re.IsMatch(word)) return false;
-            }
-            return true;
-        }
+
 
         public void CheckCommentSpelling(IClassMemberDeclaration decl, IDocCommentBlockNode docNode,
                                   List<HighlightingInfo> highlightings, bool spellCheck)
@@ -90,7 +80,7 @@ namespace AgentSmith.Comments
                 {
                     if ((IdentifierResolver.IsIdentifier(decl, _solution, word, _identifierSettings.DeclarationCacheLibraryScope) ||
                          IdentifierResolver.IsKeyword(decl, _solution, word)) &&
-                        this.AnalyzeForMetaTagging(word))
+                        IdentifierResolver.AnalyzeForMetaTagging(word, _xmlDocumentationSettings.CompiledWordsToIgnoreForMetatagging))
                     {
                         highlightings.Add(
                             new HighlightingInfo(

@@ -66,7 +66,7 @@ namespace AgentSmith.Options
                 if (_wordsToIgnoreChanged)
                 {
                     _cachedWordsToIgnore = new List<Regex>();
-                    string[] regexPatterns = _wordsToIgnore.Split('\n');
+                    string[] regexPatterns = _wordsToIgnore.Replace("\r", "").Split('\n');
 
                     foreach (string regexPattern in regexPatterns)
                     {
@@ -74,6 +74,8 @@ namespace AgentSmith.Options
                         Regex re = new Regex(regexPattern);
                         _cachedWordsToIgnore.Add(re);
                     }
+                    _wordsToIgnoreChanged = false;
+
                 }
                 return _cachedWordsToIgnore;
             }
@@ -97,7 +99,7 @@ namespace AgentSmith.Options
                 if (_wordsToIgnoreForMetataggingChanged)
                 {
                     _cachedWordsToIgnoreForMetatagging = new List<Regex>();
-                    string[] regexPatterns = this._wordsToIgnoreForMetatagging.Split('\n');
+                    string[] regexPatterns = _wordsToIgnoreForMetatagging.Replace("\r", "").Split('\n');
 
                     foreach (string regexPattern in regexPatterns)
                     {
@@ -105,6 +107,7 @@ namespace AgentSmith.Options
                         Regex re = new Regex(regexPattern);
                         _cachedWordsToIgnoreForMetatagging.Add(re);
                     }
+                    _wordsToIgnoreForMetataggingChanged = false;
                 }
                 return this._cachedWordsToIgnoreForMetatagging;
             }
@@ -174,7 +177,7 @@ namespace AgentSmith.Options
                 if (_wordsToIgnoreChanged)
                 {
                     _cachedWordsToIgnore = new List<Regex>();
-                    string[] regexPatterns = _wordsToIgnore.Split('\n');
+                    string[] regexPatterns = _wordsToIgnore.Replace("\r", "").Split('\n');
 
                     foreach (string regexPattern in regexPatterns)
                     {
@@ -182,6 +185,7 @@ namespace AgentSmith.Options
                         Regex re = new Regex(regexPattern);
                         _cachedWordsToIgnore.Add(re);
                     }
+                    _wordsToIgnoreChanged = false;
                 }
                 return _cachedWordsToIgnore;
             }
@@ -228,7 +232,7 @@ namespace AgentSmith.Options
                 if (_wordsToIgnoreChanged)
                 {
                     _cachedWordsToIgnore = new List<Regex>();
-                    string[] regexPatterns = _wordsToIgnore.Split('\n');
+                    string[] regexPatterns = _wordsToIgnore.Replace("\r", "").Split('\n');
 
                     foreach (string regexPattern in regexPatterns)
                     {
@@ -236,6 +240,7 @@ namespace AgentSmith.Options
                         Regex re = new Regex(regexPattern);
                         _cachedWordsToIgnore.Add(re);
                     }
+                    _wordsToIgnoreChanged = false;
                 }
                 return _cachedWordsToIgnore;
             }
@@ -277,7 +282,7 @@ namespace AgentSmith.Options
                 if (_wordsToIgnoreChanged)
                 {
                     _cachedWordsToIgnore = new List<Regex>();
-                    string[] regexPatterns = _wordsToIgnore.Split('\n');
+                    string[] regexPatterns = _wordsToIgnore.Replace("\r", "").Split('\n');
                     
                     foreach (string regexPattern in regexPatterns)
                     {
@@ -286,6 +291,7 @@ namespace AgentSmith.Options
                         Regex re = new Regex(regexPattern);
                         _cachedWordsToIgnore.Add(re);
                     }
+                    _wordsToIgnoreChanged = false;
                 }
                 return _cachedWordsToIgnore;
             }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
+using AgentSmith.Options;
+
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Caches;
@@ -26,6 +28,13 @@ namespace AgentSmith.Comments.Reflow
         private readonly Regex _numberItemRegex = new Regex(@"^\s*\d+\.?\s+(.*)$");
         private readonly Regex _paramRegex = new Regex(@"^\s*<\s*(?:type)?param\s+name\s*=\s*""([_a-zA-Z0-9]+)""");
         private readonly Regex _endParamRegex = new Regex(@"^\s*</\s*(?:type)?param\s*>");
+
+        private readonly XmlDocumentationSettings _settings;
+
+        public XmlCommentReflower(XmlDocumentationSettings settings)
+        {
+            _settings = settings;
+        }
 
         public IEnumerable<Paragraph> Parse(IDocCommentBlockNode blockNode)
         {
@@ -132,8 +141,9 @@ namespace AgentSmith.Comments.Reflow
                                 if (replaceIdentifiers != null)
                                 {
                                     ISolution solution = replaceIdentifiers.GetSolution();
-                                    if (IdentifierResolver.IsIdentifier(replaceIdentifiers, solution, word, DeclarationCacheLibraryScope.NONE) ||
-                                        IdentifierResolver.IsKeyword(replaceIdentifiers, solution, word))
+                                    if ((IdentifierResolver.IsIdentifier(replaceIdentifiers, solution, word, DeclarationCacheLibraryScope.NONE) ||
+                                         IdentifierResolver.IsKeyword(replaceIdentifiers, solution, word)) &&
+                                        IdentifierResolver.AnalyzeForMetaTagging(word, _settings.CompiledWordsToIgnoreForMetatagging))
                                     {
                                         IList<string> replaceFormats = 
                                             IdentifierResolver.GetReplaceFormats(replaceIdentifiers, solution, word);
@@ -648,8 +658,9 @@ namespace AgentSmith.Comments.Reflow
                                         {
                                             string matchWord = match.Captures[0].Value;
 
-                                            if (IdentifierResolver.IsIdentifier(declaration, solution, matchWord, DeclarationCacheLibraryScope.NONE) ||
-                                                IdentifierResolver.IsKeyword(declaration, solution, matchWord))
+                                            if ((IdentifierResolver.IsIdentifier(declaration, solution, matchWord, DeclarationCacheLibraryScope.NONE) ||
+                                                 IdentifierResolver.IsKeyword(declaration, solution, matchWord)) &&
+                                                IdentifierResolver.AnalyzeForMetaTagging(matchWord, _settings.CompiledWordsToIgnoreForMetatagging))
                                             {
                                                 // There are a few exceptions for auto tagging:
                                                 switch (matchWord.ToLower())

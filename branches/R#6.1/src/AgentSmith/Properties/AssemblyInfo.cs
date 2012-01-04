@@ -10,12 +10,12 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AgentSmith")]
-[assembly: AssemblyCopyright("Copyright © ., 2011")]
+[assembly: AssemblyCopyright("Copyright © ., 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.5.0.0")]
-[assembly: AssemblyFileVersion("1.5.0.0")]
+[assembly: AssemblyVersion("1.5.0.1")]
+[assembly: AssemblyFileVersion("1.5.0.1")]
 
 [assembly: ActionsXml("AgentSmith.Actions.xml")]
 

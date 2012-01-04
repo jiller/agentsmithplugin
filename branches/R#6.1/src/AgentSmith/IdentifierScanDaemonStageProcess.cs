@@ -5,19 +5,14 @@ using System.Xml;
 using AgentSmith.Comments;
 using AgentSmith.Identifiers;
 using AgentSmith.Options;
-using AgentSmith.SpellCheck;
-using AgentSmith.SpellCheck.NetSpell;
-using AgentSmith.Strings;
 
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
-using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith
@@ -44,7 +39,7 @@ namespace AgentSmith
     /// </item>
     /// </list>
     /// </remarks>
-    internal class AgentSmithDaemonProcess : IDaemonStageProcess
+    internal class IdentifierScanDaemonStageProcess : IDaemonStageProcess
     {
         /// <summary>
         /// Internal storage for the process that this stage is a part of
@@ -59,7 +54,7 @@ namespace AgentSmith
         /// </summary>
         /// <param name="daemonProcess">The current instance process that this stage will be a part of</param>
         /// <param name="settingsStore"> </param>
-        public AgentSmithDaemonProcess(IDaemonProcess daemonProcess, IContextBoundSettingsStore settingsStore)
+        public IdentifierScanDaemonStageProcess(IDaemonProcess daemonProcess, IContextBoundSettingsStore settingsStore)
         {
             _daemonProcess = daemonProcess;
             _solution = daemonProcess.Solution;
@@ -134,16 +129,12 @@ namespace AgentSmith
             StringSettings stringSettings = _settingsStore.GetKey<StringSettings>(SettingsOptimization.OptimizeDefault);
 
 
-            file.ProcessChildren<ICSharpLiteralExpression>(literalExpression => this.CheckString(literalExpression, highlightings, stringSettings));
+            if (!_daemonProcess.FullRehighlightingRequired) return;
 
-            if (_daemonProcess.FullRehighlightingRequired)
-            {
-                CommentAnalyzer commentAnalyzer = new CommentAnalyzer(_solution, _settingsStore);
-                IdentifierSpellCheckAnalyzer identifierAnalyzer = new IdentifierSpellCheckAnalyzer(_solution, _settingsStore, _daemonProcess.SourceFile);
+            CommentAnalyzer commentAnalyzer = new CommentAnalyzer(_solution, _settingsStore);
+            IdentifierSpellCheckAnalyzer identifierAnalyzer = new IdentifierSpellCheckAnalyzer(_solution, _settingsStore, _daemonProcess.SourceFile);
 
-                file.ProcessChildren<IClassMemberDeclaration>(declaration => this.CheckMember(declaration, highlightings, commentAnalyzer, identifierAnalyzer));
-            }
-
+            file.ProcessChildren<IClassMemberDeclaration>(declaration => this.CheckMember(declaration, highlightings, commentAnalyzer, identifierAnalyzer));
 
             try
             {
@@ -155,34 +146,6 @@ namespace AgentSmith
         }
 
 
-        public void CheckString(ICSharpLiteralExpression literalExpression,
-                                                List<HighlightingInfo> highlightings, StringSettings settings)
-        {
-            //ConstantValue val = literalExpression.ConstantValue;
-
-            // Ignore it unless it's something we're re-evalutating
-            if (!_daemonProcess.IsRangeInvalidated(literalExpression.GetDocumentRange())) return;
-
-
-
-            // Ignore verbatim strings.
-            if (settings.IgnoreVerbatimStrings &&
-                LiteralService.Get(CSharpLanguage.Instance).IsVerbatimStringLiteral(literalExpression)) return;
-
-            ITokenNode tokenNode = literalExpression.Literal;
-            if (tokenNode == null) return;
-
-            if (tokenNode.GetTokenType() == CSharpTokenType.STRING_LITERAL)
-            {
-                 ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_settingsStore, _solution, settings.DictionaryNames);
-
-                StringSpellChecker.SpellCheck(
-                    literalExpression.GetDocumentRange().Document,
-                    tokenNode,
-                    spellChecker,
-                    _solution, highlightings, _settingsStore, settings);
-            }
-        }
 
         #endregion
     }
