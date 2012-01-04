@@ -1,7 +1,7 @@
 using System;
-using JetBrains.ReSharper.Psi;
+using System.Text.RegularExpressions;
+
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Xml.XmlDocComments;
@@ -17,6 +17,8 @@ namespace AgentSmith.Comments
         private ITreeNode _myCurrentNode;
         private IDocCommentNode _myCurrentCommentNode;
         private XmlLexerGenerated _myLexer;
+
+        private int _commentStartLength = -1;
 
         public XmlDocLexer(IDocCommentBlockNode docCommentBlock)
         {
@@ -43,8 +45,7 @@ namespace AgentSmith.Comments
                 {
                     return TextRange.InvalidRange;
                 }
-                LeafElementBase leaf = (LeafElementBase)_myCurrentNode;
-                int offset = leaf.GetTreeStartOffset().Offset - leaf.GetDocumentRange().TextRange.StartOffset;
+                int offset = _myCurrentNode.GetTreeStartOffset().Offset;// - leaf.GetDocumentRange().TextRange.StartOffset;
                 return new TextRange(TokenStart - offset, TokenEnd - offset);
             }
         }
@@ -82,6 +83,20 @@ namespace AgentSmith.Comments
         {
             _myCurrentNode = null;
             _myCurrentCommentNode = null;
+
+            // Work out the basse indent for the comment
+            Regex re = new Regex(@"^\s*///\s*");
+            int minLength = -1;
+            foreach (IDocCommentNode node in _myDocCommentBlock.Children<IDocCommentNode>())
+            {
+                Match m = re.Match(node.GetText());
+                if (!m.Success) continue;
+
+                int len = m.Groups[0].Value.Length;
+                if (minLength < 0 || len < minLength) minLength = len;
+            }
+            _commentStartLength = minLength;
+
             restartLexer(_myDocCommentBlock.FirstChild, 0);
         }
 
@@ -154,14 +169,15 @@ namespace AgentSmith.Comments
             while (child != null)
             {
                 _myCurrentNode = child;
+
                 _myCurrentCommentNode = child as IDocCommentNode;
                 if (_myCurrentCommentNode != null)
                 {
-                    LeafElementBase leaf = (LeafElementBase)_myCurrentCommentNode;
+                    //LeafElementBase leaf = (LeafElementBase)_myCurrentCommentNode;
 
-                    _myLexer = new XmlLexerGenerated(leaf.GetTextAsBuffer(), XmlTokenType);
+                    _myLexer = new XmlLexerGenerated(_myCurrentCommentNode.GetTextAsBuffer(), XmlTokenType);
                     //_myLexer.Start(leaf.GetTreeStartOffset().Offset + 3, leaf.GetTreeStartOffset().Offset + leaf.GetTextLength(), state);
-                    _myLexer.Start(3, leaf.GetTextLength(), state);
+                    _myLexer.Start(_commentStartLength, _myCurrentCommentNode.GetTextLength(), state);
                     if (_myLexer.TokenType == null)
                     {
                         restartLexer(_myCurrentCommentNode.NextSibling, state);

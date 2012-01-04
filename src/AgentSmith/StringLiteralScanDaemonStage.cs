@@ -7,10 +7,10 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace AgentSmith
 {
     /// <summary>
-    /// A stage (process stage factory) which creates process stages for detecting declarations without comments
+    /// A stage (process stage factory) which creates process stages for scanning string literals
     /// </summary>
     [DaemonStage(StagesBefore = new[] { typeof(LanguageSpecificDaemonStage) })]
-    internal class AgentSmithDaemonStage : IDaemonStage
+    internal class StringLiteralScanDaemonStage : IDaemonStage
     {
         /// <summary>
         /// Check the error stripe indicator necessity for this stage after processing given <paramref name="sourceFile"/>
@@ -35,7 +35,7 @@ namespace AgentSmith
                 return null;
             }
 
-            return new AgentSmithDaemonProcess(process, settings);
+            return new StringLiteralScanDaemonStageProcess(process, settings);
         }
     }
 }
