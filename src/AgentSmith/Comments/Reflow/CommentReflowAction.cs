@@ -8,6 +8,7 @@ using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.CSharp.Bulbs;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -84,12 +85,25 @@ namespace AgentSmith.Comments.Reflow
                 string reflownText = new XmlCommentReflower(settings).Reflow(comment, maxLength - startPos);
 
                 comment = factory.CreateDocCommentBlock(reflownText);
+                
+                SetDocComment(ownerNode, reflownText, solution);
 
                 // And set the comment on the declaration.
-                ownerNode.SetDocCommentBlockNode(comment);
+                //ownerNode.SetDocCommentBlockNode(comment);
             }
             return null;
         }
+
+        public static void SetDocComment(IDocCommentBlockOwnerNode docCommentBlockOwnerNode, string text, ISolution solution)
+        {
+            text = String.Format("///{0}\r\nclass Tmp {{}}", text.Replace("\n", "\n///"));
+
+            ICSharpTypeMemberDeclaration declaration =
+                CSharpElementFactory.GetInstance(docCommentBlockOwnerNode.GetPsiModule()).CreateTypeMemberDeclaration(text, new object[0]);
+            docCommentBlockOwnerNode.SetDocCommentBlockNode(
+                ((IDocCommentBlockOwnerNode)declaration).GetDocCommentBlockNode());
+        }
+
 
         public override string Text
         {

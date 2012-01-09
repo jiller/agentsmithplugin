@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 
 [assembly: RegisterConfigurableSeverity(
-    PublicMemberMissingXmlCommentHighlighting.SEVERITY_ID,
+    PrivateMemberMissingXmlCommentHighlighting.SEVERITY_ID,
     null,
     HighlightingGroupIds.CodeSmell,
     "Private members should have XML documentation",

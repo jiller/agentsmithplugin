@@ -21,7 +21,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>JET_MODE_ASSERT;DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-	<WarningLevel>4</WarningLevel>
+    <WarningLevel>4</WarningLevel>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE\devenv.exe</StartProgram>
     <StartArguments>/ReSharper.Plugin AgentSmith.dll /ReSharper.Internal</StartArguments>
@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comments\CanBeSurroundedWithMetatagsHighlight.cs" />
+    <Compile Include="Comments\Reflow\XmlComments\XmlCommentNodeBase.cs" />
     <Compile Include="IdentifierScanDaemonStageProcess.cs" />
     <Compile Include="IdentifierScanDaemonStage.cs" />
     <Compile Include="Comments\CommentAnalyzer.cs" />
