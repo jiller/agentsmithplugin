@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <actions>
-  <insert group-id="VS#Code Window" position="last">
+<!--  <insert group-id="VS#Code Window" position="last">
     <separator/>
     <action id="AgentSmith.SmartPaste" text="Smart Paste" shortcut="Shift+Alt+Insert">
       <vs-shortcut>Control+S P</vs-shortcut>
     </action>
-  </insert>
+  </insert>-->
 </actions>

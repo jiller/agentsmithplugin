@@ -84,19 +84,26 @@ namespace AgentSmith.Comments
             _myCurrentNode = null;
             _myCurrentCommentNode = null;
 
-            // Work out the basse indent for the comment
-            Regex re = new Regex(@"^\s*///\s*");
+            // Our technique for inserting the comment requires extra space at the start so we only chop off the actual ///
+
+            // Work out the base indent for the comment
+            // Regex re = new Regex(@"^\s*///\s*");
+            /*
             int minLength = -1;
             foreach (IDocCommentNode node in _myDocCommentBlock.Children<IDocCommentNode>())
             {
-                Match m = re.Match(node.GetText());
+                string text = node.GetText();
+                Match m = re.Match(text);
                 if (!m.Success) continue;
 
                 int len = m.Groups[0].Value.Length;
+                if (len == text.Length) continue; // Ignore short empty lines.
+
                 if (minLength < 0 || len < minLength) minLength = len;
             }
             _commentStartLength = minLength;
-
+            */
+            _commentStartLength = 3;
             restartLexer(_myDocCommentBlock.FirstChild, 0);
         }
 

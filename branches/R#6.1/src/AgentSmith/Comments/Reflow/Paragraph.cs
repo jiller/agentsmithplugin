@@ -33,5 +33,41 @@ namespace AgentSmith.Comments.Reflow
         {
             _lines.Add(line);
         }
+
+        public void AddTagStartLine(string tagName)
+        {
+            ParagraphLine resultLine = new ParagraphLine();
+            resultLine.AddItem(
+                new ParagraphLineItem
+                {
+                    Text = string.Format("<{0}>", tagName),
+                    ItemType = ItemType.XmlElement
+                });
+            Add(resultLine);
+        }
+
+        public void AddCustomTagStartLine(string text)
+        {
+            ParagraphLine resultLine = new ParagraphLine();
+            resultLine.AddItem(
+                new ParagraphLineItem
+                {
+                    Text = text,
+                    ItemType = ItemType.XmlElement
+                });
+            Add(resultLine);
+        }
+
+        public void AddTagEndLine(string tagName)
+        {
+            ParagraphLine resultLine = new ParagraphLine();
+            resultLine.AddItem(
+                new ParagraphLineItem
+                {
+                    Text = string.Format("</{0}>", tagName),
+                    ItemType = ItemType.XmlElement
+                });
+            Add(resultLine);
+        }
     }
 }

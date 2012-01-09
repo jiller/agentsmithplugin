@@ -18,6 +18,7 @@
         <TextBox Margin="14,140,10,12" Name="txtWordsToIgnore" AcceptsReturn="True" />
         <ComboBox Height="23" Margin="190,75,10,0" Name="cmbLookupScope" VerticalAlignment="Top" SelectedIndex="0">
             <ComboBoxItem Content="Project Only" />
+            <ComboBoxItem Content="Project &amp; Usings" />
             <ComboBoxItem Content="Project &amp; Referenced Libraries" />
             <ComboBoxItem Content="Project &amp; All Libraries" />
         </ComboBox>

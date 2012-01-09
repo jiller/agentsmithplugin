@@ -118,8 +118,28 @@ namespace AgentSmith.Options
     public enum IdentifierLookupScopes
     {
         ProjectOnly,
+        ProjectAndUsings,
         ProjectAndReferencedLibraries,
         ProjectAndAllLibraries
+    }
+
+    public static class IdentifierLookupScopesEx
+    {
+        public static DeclarationCacheLibraryScope AsLibraryScope(this IdentifierLookupScopes scope)
+        {
+            switch (scope)
+            {
+                case IdentifierLookupScopes.ProjectOnly:
+                    return DeclarationCacheLibraryScope.NONE;
+                case IdentifierLookupScopes.ProjectAndUsings:
+                    return DeclarationCacheLibraryScope.TRANSITIVE;
+                case IdentifierLookupScopes.ProjectAndReferencedLibraries:
+                    return DeclarationCacheLibraryScope.REFERENCED;
+                case IdentifierLookupScopes.ProjectAndAllLibraries:
+                    return DeclarationCacheLibraryScope.FULL;
+            }
+            return DeclarationCacheLibraryScope.NONE;
+        }
     }
 
     [SettingsKey(typeof(AgentSmithSettings), "Identifier Settings")]
@@ -142,20 +162,22 @@ namespace AgentSmith.Options
         [SettingsEntry(1, "Scope for searching for identifiers")]
         public int LookupScope { get; set; }
 
-        public DeclarationCacheLibraryScope DeclarationCacheLibraryScope
+        public IdentifierLookupScopes IdentifierLookupScope
         {
             get
             {
                 switch (LookupScope)
                 {
                     case 0:
-                        return DeclarationCacheLibraryScope.NONE;
+                        return IdentifierLookupScopes.ProjectOnly;
                     case 1:
-                        return DeclarationCacheLibraryScope.REFERENCED;
+                        return IdentifierLookupScopes.ProjectAndUsings;
                     case 2:
-                        return DeclarationCacheLibraryScope.FULL;
+                        return IdentifierLookupScopes.ProjectAndReferencedLibraries;
+                    case 3:
+                        return IdentifierLookupScopes.ProjectAndAllLibraries;
                 }
-                return DeclarationCacheLibraryScope.NONE;
+                return IdentifierLookupScopes.ProjectAndUsings;
             }
         }
 

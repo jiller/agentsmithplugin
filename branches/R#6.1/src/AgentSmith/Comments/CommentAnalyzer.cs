@@ -78,7 +78,7 @@ namespace AgentSmith.Comments
 
                 if (decl.DeclaredName != word)
                 {
-                    if ((IdentifierResolver.IsIdentifier(decl, _solution, word, _identifierSettings.DeclarationCacheLibraryScope) ||
+                    if ((IdentifierResolver.IsIdentifier(decl, _solution, word, _identifierSettings.IdentifierLookupScope) ||
                          IdentifierResolver.IsKeyword(decl, _solution, word)) &&
                         IdentifierResolver.AnalyzeForMetaTagging(word, _xmlDocumentationSettings.CompiledWordsToIgnoreForMetatagging))
                     {

@@ -37,7 +37,7 @@ namespace AgentSmith.Comments.Reflow
                     if (paragraph.Lines.Count > 0)
                         yield return paragraph;
                     paragraph = new Paragraph();
-                    paragraph.Add(trimmedLine);
+                    paragraph.Add(line); // trimmedLine
                 }
                 //Anythyng after empty line starts new paragraph.
                 else if (previousLine != null && previousTrimmedLine.Items.Count == 0)
@@ -92,22 +92,25 @@ namespace AgentSmith.Comments.Reflow
                 // If the block is some other xml tag then treat it as a line (we may compress these again later).
                 else if (block.StartsWith("<"))
                 {
+                    /*
                     // Yield the previous line
                     yield return paragraphLine;
 
                     // Create a new line
                     paragraphLine = new ParagraphLine();
-
+                    */
                     // And add the new tag into it
                     item.Text = block;
                     item.ItemType = ItemType.XmlElement;
                     paragraphLine.AddItem(item);
 
+                    /*
                     // Yield that
                     yield return paragraphLine;
 
                     // Create a new line
                     paragraphLine = new ParagraphLine();
+                     */
                 }
                 // Otherwise it must be a text block so deal with that.
                 else

@@ -72,14 +72,27 @@ namespace AgentSmith.Comments.Reflow
 
                 string reflownText = new XmlCommentReflower(settings).ReflowAndRetag(comment, maxLength - startPos);
 
-                comment = factory.CreateDocCommentBlock(reflownText);
+                /*comment = factory.CreateDocCommentBlock(reflownText);
 
                 // And set the comment on the declaration.
-                ownerNode.SetDocCommentBlockNode(comment);
+                ownerNode.SetDocCommentBlockNode(comment);*/
+
+                SetDocComment(ownerNode, reflownText, solution);
             }
 
             return null;
         }
+
+        public static void SetDocComment(IDocCommentBlockOwnerNode docCommentBlockOwnerNode, string text, ISolution solution)
+        {
+            text = String.Format("/// {0}\r\nclass Tmp {{}}", text.Replace("\n", "\n/// "));
+
+            ICSharpTypeMemberDeclaration declaration =
+                CSharpElementFactory.GetInstance(docCommentBlockOwnerNode.GetPsiModule()).CreateTypeMemberDeclaration(text, new object[0]);
+            docCommentBlockOwnerNode.SetDocCommentBlockNode(
+                ((IDocCommentBlockOwnerNode)declaration).GetDocCommentBlockNode());
+        }
+
 
         public override string Text
         {
