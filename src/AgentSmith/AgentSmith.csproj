@@ -50,6 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comments\CanBeSurroundedWithMetatagsHighlight.cs" />
+    <Compile Include="Comments\Reflow\ReflowAndRetagCodeCleanup.cs" />
+    <Compile Include="Comments\Reflow\ReflowAndRetagMenuAction.cs" />
+    <Compile Include="Comments\Reflow\ReflowCodeCleanup.cs" />
+    <Compile Include="Comments\Reflow\ReflowMenuAction.cs" />
     <Compile Include="Comments\Reflow\XmlComments\XmlCommentNodeBase.cs" />
     <Compile Include="IdentifierScanDaemonStageProcess.cs" />
     <Compile Include="IdentifierScanDaemonStage.cs" />
@@ -93,6 +97,9 @@
     <Compile Include="Options\AgentSmithOptionsUI.xaml.cs">
       <DependentUpon>AgentSmithOptionsUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Options\ReflowAndRetagOptionsUI.xaml.cs">
+      <DependentUpon>ReflowAndRetagOptionsUI.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Options\ResXOptionsUI.xaml.cs">
       <DependentUpon>ResXOptionsUI.xaml</DependentUpon>
     </Compile>
@@ -103,6 +110,7 @@
       <DependentUpon>IdentifierOptionsUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="Options\IntegerTextBox.cs" />
+    <Compile Include="Options\WhitespaceOptionsList.cs" />
     <Compile Include="Options\XmlDocumentationOptionsUI.xaml.cs">
       <DependentUpon>XmlDocumentationOptionsUI.xaml</DependentUpon>
     </Compile>
@@ -164,6 +172,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Options\AgentSmithOptionsUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Options\ReflowAndRetagOptionsUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

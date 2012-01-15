@@ -30,10 +30,12 @@ namespace AgentSmith.Comments.Reflow
         private readonly Regex _endParamRegex = new Regex(@"^\s*</\s*(?:type)?param\s*>");
 
         private readonly XmlDocumentationSettings _settings;
+        private readonly ReflowAndRetagSettings _reflowSettings;
 
-        public XmlCommentReflower(XmlDocumentationSettings settings)
+        public XmlCommentReflower(XmlDocumentationSettings settings, ReflowAndRetagSettings reflowAndRetagSettings)
         {
             _settings = settings;
+            _reflowSettings = reflowAndRetagSettings;
         }
 
         public IEnumerable<Paragraph> Parse(IDocCommentBlockNode blockNode)
@@ -175,7 +177,7 @@ namespace AgentSmith.Comments.Reflow
         public string ReflowAndRetag(IDocCommentBlockNode blockNode, int maxLineLength)
         {
             ITreeNode parent = blockNode.Parent;
-            IClassMemberDeclaration parentDeclaration = parent as IClassMemberDeclaration;
+            ICSharpTypeMemberDeclaration parentDeclaration = parent as IClassMemberDeclaration;
             if (parentDeclaration == null)
             {
                 IMultipleFieldDeclaration multipleFieldDeclaration = parent as IMultipleFieldDeclaration;
@@ -187,6 +189,13 @@ namespace AgentSmith.Comments.Reflow
                         break;
                     }
                 }
+
+                IEnumMemberDeclaration enumMemberDeclaration = parent as IEnumMemberDeclaration;
+                if (enumMemberDeclaration != null)
+                {
+                    parentDeclaration = enumMemberDeclaration;
+                }
+
             }
 
             // get the xml from the comment
@@ -212,10 +221,12 @@ namespace AgentSmith.Comments.Reflow
 
             options.IdentifiersToIgnoreForMetaTagging = ignoreList;
 
+            options.Settings = _reflowSettings;
+
             XmlComments.XmlComment comment = new XmlComments.XmlComment(options);
             comment.FromXml(node);
             comment.InsertMissingTags();
-            return comment.ToXml(0,maxLineLength);
+            return comment.ToXml(0,maxLineLength, 0);
         }
         
 

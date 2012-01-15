@@ -1,4 +1,4 @@
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using AgentSmith.Options;
@@ -21,7 +21,7 @@ namespace AgentSmith.Comments
                                                                                  "MS.Internal."
                                                                              };
 
-        private static bool isParameter(IClassMemberDeclaration decl, string word)
+        private static bool isParameter(ICSharpTypeMemberDeclaration decl, string word)
         {
             IParametersOwnerDeclaration methodDecl = decl as IParametersOwnerDeclaration;
 
@@ -39,7 +39,7 @@ namespace AgentSmith.Comments
             return false;
         }
 
-        private static bool isClassMemberDeclaration(IClassMemberDeclaration declaration, string word)
+        private static bool isClassMemberDeclaration(ICSharpTypeMemberDeclaration declaration, string word)
         {
             ICSharpTypeDeclaration containingType = declaration.GetContainingTypeDeclaration();
             if (containingType != null)
@@ -56,7 +56,7 @@ namespace AgentSmith.Comments
             return false;
         }
 
-        private static bool isTypeParameter(IClassMemberDeclaration declaration, string word)
+        private static bool isTypeParameter(ICSharpTypeMemberDeclaration declaration, string word)
         {
             IMethodDeclaration method = declaration as IMethodDeclaration;
             if (method != null)
@@ -97,7 +97,7 @@ namespace AgentSmith.Comments
         }
         */
 
-        private static List<TypeAndNamespace> getTypeAndNamespaces(IEnumerable<IClrDeclaredElement> declaredElements, IClassMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
+        private static List<TypeAndNamespace> getTypeAndNamespaces(IEnumerable<IClrDeclaredElement> declaredElements, ICSharpTypeMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
         {
             ICSharpFile file = declaration.GetContainingFile() as ICSharpFile;
 
@@ -125,7 +125,7 @@ namespace AgentSmith.Comments
             return inFileResults;
         }
 
-        private static List<TypeAndNamespace> getDeclaredElements(string word, IClassMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
+        private static List<TypeAndNamespace> getDeclaredElements(string word, ICSharpTypeMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
         {
             CacheManager cacheManager = solution.GetPsiServices().CacheManager;
             IDeclarationsCache declarationsCache = cacheManager.GetDeclarationsCache(scope.AsLibraryScope(), true);
@@ -133,20 +133,28 @@ namespace AgentSmith.Comments
             return getTypeAndNamespaces(declaredElements, declaration, solution, scope);
         }
 
-        public static string ContractCRef(string input, IClassMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
+        public static string ContractCRef(string input, ICSharpTypeMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
         {
+            string methodArgs = null;
+            string methodName = null;
             string crefText = input;
+            if (crefText == null) return null;
             if (crefText.Length > 2 && crefText[1] == ':')
             {
+                if (crefText[0] == 'M' || crefText.Contains("("))
+                {
+                    methodArgs = crefText.Substring(crefText.IndexOf('('));
+                    crefText = crefText.Substring(0, crefText.IndexOf('('));
+                    methodName = crefText.Substring(crefText.LastIndexOf('.') + 1);
+                    crefText = crefText.Substring(0, crefText.LastIndexOf('.'));
+                }
                 crefText = crefText.Substring(2);
+                
             }
-
-            ICSharpFile file = declaration.GetContainingFile() as ICSharpFile;
 
             CacheManager cacheManager = solution.GetPsiServices().CacheManager;
             IDeclarationsCache declarationsCache = cacheManager.GetDeclarationsCache(scope.AsLibraryScope(), true);
             ICollection<IClrDeclaredElement> declaredElements = declarationsCache.GetElementsByQualifiedName(crefText);
-
             if (declaredElements.Count == 0)
             {
                 return crefText;
@@ -155,7 +163,17 @@ namespace AgentSmith.Comments
             List<TypeAndNamespace> typesAndNamespaces = getTypeAndNamespaces(declaredElements, declaration, solution, scope);
             if (typesAndNamespaces.Count > 0)
             {
-                return typesAndNamespaces[0].XmlDocId;
+                TypeAndNamespace first = typesAndNamespaces[0];
+
+                if (methodName == null) return first.XmlDocId;
+
+                IClass cls = first.TypeElement as IClass;
+                if (cls != null && cls.Methods.Count(x => x.ShortName == methodName) == 1)
+                {
+                    return string.Format("{0}.{1}", first.XmlDocId, methodName);
+                }
+                return string.Format("{0}.{1}{2}", first.XmlDocId, methodName, methodArgs);
+                
             }
             return crefText;
         }
@@ -183,7 +201,7 @@ namespace AgentSmith.Comments
         }
 
 
-        private static TypeAndNamespace GetAccessableTypeElementAndNamespace(IClassMemberDeclaration declaration, ISolution solution, ICSharpFile file, IClrDeclaredElement element, IdentifierLookupScopes scope)
+        private static TypeAndNamespace GetAccessableTypeElementAndNamespace(ICSharpTypeMemberDeclaration declaration, ISolution solution, ICSharpFile file, IClrDeclaredElement element, IdentifierLookupScopes scope)
         {
 
             //IPsiModule module = element.Module;
@@ -250,7 +268,7 @@ namespace AgentSmith.Comments
             return result;
         }
 
-        public static bool IsIdentifier(IClassMemberDeclaration declaration, ISolution solution, string word, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
+        public static bool IsIdentifier(ICSharpTypeMemberDeclaration declaration, ISolution solution, string word, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
         {
             return isParameter(declaration, word) ||
                    isTypeParameter(declaration, word) ||
@@ -258,12 +276,12 @@ namespace AgentSmith.Comments
                    getDeclaredElements(word, declaration, solution, scope).Count > 0;
         }
 
-        public static bool IsKeyword(IClassMemberDeclaration declaration, ISolution solution, string word)
+        public static bool IsKeyword(ICSharpTypeMemberDeclaration declaration, ISolution solution, string word)
         {
             return KeywordUtil.IsKeyword(word);
         }
 
-        public static IList<string> GetReplaceFormats(IClassMemberDeclaration declaration, ISolution solution,
+        public static IList<string> GetReplaceFormats(ICSharpTypeMemberDeclaration declaration, ISolution solution,
                                                       string word, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
         {
             List<string> replaceFormats = new List<string>();

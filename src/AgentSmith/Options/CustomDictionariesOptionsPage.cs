@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -206,6 +207,28 @@ namespace AgentSmith.Options
         }
 
   
+    }
+
+    [OptionsPage(PID, "Reflow And Retag", "AgentSmith.Options.samplePage.gif", ParentId = XmlDocumentationOptionsPage.PID)]
+    public class ReflowAndRetagOptionsPage : AOptionsPage
+    {
+
+        public const string PID = "AgentSmithReflowAndRetagId";
+
+        private OptionsSettingsSmartContext _settings;
+
+        private ReflowAndRetagOptionsUI _optionsUI;
+
+        public ReflowAndRetagOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext)
+            : base(lifetime, PID)
+        {
+            _settings = settingsSmartContext;
+            _optionsUI = new ReflowAndRetagOptionsUI(_settings);
+            this.Control = _optionsUI;
+
+        }
+
+
     }
 
     [OptionsPage(PID, "Strings", "AgentSmith.Options.samplePage.gif", ParentId = AgentSmithOptionsPage.PID)]

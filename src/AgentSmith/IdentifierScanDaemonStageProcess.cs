@@ -136,6 +136,7 @@ namespace AgentSmith
 
             file.ProcessChildren<IClassMemberDeclaration>(declaration => this.CheckMember(declaration, highlightings, commentAnalyzer, identifierAnalyzer));
 
+            if (_daemonProcess.InterruptFlag) return;
             try
             {
                 commiter(new DaemonStageResult(highlightings));

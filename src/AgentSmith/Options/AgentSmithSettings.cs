@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 using AgentSmith.SpellCheck.NetSpell;
@@ -111,6 +112,154 @@ namespace AgentSmith.Options
                 }
                 return this._cachedWordsToIgnoreForMetatagging;
             }
+        }
+
+    }
+
+    public enum WhitespaceTriState
+    {
+        Always = 0,
+        WhenMultiLine,
+        Never
+    }
+
+    [SettingsKey(typeof(XmlDocumentationSettings), "Reflow And Retag Settings")]
+    public class ReflowAndRetagSettings
+    {
+        [SettingsIndexedEntry("Whitespace newline settings")]
+        public IIndexedEntry<string, int> WhitespaceNewlineSettings;
+
+        [SettingsIndexedEntry("Whitespace indent settings")]
+        public IIndexedEntry<string, bool> WhitespaceIndentSettings;
+
+        private int GetWhitespaceSetting(string settingName, int defaultValue = 0)
+        {
+            int result;
+
+            return WhitespaceNewlineSettings.TryGet(settingName, out result) ? result : defaultValue;
+        }
+
+        public WhitespaceTriState SummaryTagOnNewLine
+        {
+            get { return (WhitespaceTriState) GetWhitespaceSetting("SummaryTagOnNewLine"); }
+        }
+        public WhitespaceTriState RemarksTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("RemarksTagOnNewLine"); }
+        }
+        public WhitespaceTriState ExampleTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ExampleTagOnNewLine"); }
+        }
+        public WhitespaceTriState ReturnsTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ReturnsTagOnNewLine"); }
+        }
+        public WhitespaceTriState ParaTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ParaTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState ParamTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ParamTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState TypeParamTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("TypeParamTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState ListTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ListTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState ListHeaderTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ListHeaderTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState ItemTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ItemTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState TermTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("TermTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState DescriptionTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("DescriptionTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState ExceptionTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("ExceptionTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+        public WhitespaceTriState PermissionTagOnNewLine
+        {
+            get { return (WhitespaceTriState)GetWhitespaceSetting("PermissionTagOnNewLine", (int)WhitespaceTriState.WhenMultiLine); }
+        }
+
+
+
+        private bool GetIndentSetting(string settingName, bool defaultValue = false)
+        {
+            bool result;
+
+            return WhitespaceIndentSettings.TryGet(settingName, out result) ? result : defaultValue;
+        }
+
+        public bool SummaryTagIndent
+        {
+            get { return GetIndentSetting("SummaryTagIndent"); }
+        }
+        public bool RemarksTagIndent
+        {
+            get { return GetIndentSetting("RemarksTagIndent"); }
+        }
+        public bool ExampleTagIndent
+        {
+            get { return GetIndentSetting("ExampleTagIndent"); }
+        }
+        public bool ReturnsTagIndent
+        {
+            get { return GetIndentSetting("ReturnsTagIndent"); }
+        }
+        public bool ParaTagIndent
+        {
+            get { return GetIndentSetting("ParaTagIndent"); }
+        }
+        public bool ParamTagIndent
+        {
+            get { return GetIndentSetting("ParamTagIndent"); }
+        }
+        public bool TypeParamTagIndent
+        {
+            get { return GetIndentSetting("TypeParamTagIndent"); }
+        }
+        public bool ListTagIndent
+        {
+            get { return GetIndentSetting("ListTagIndent"); }
+        }
+        public bool ListHeaderTagIndent
+        {
+            get { return GetIndentSetting("ListHeaderTagIndent"); }
+        }
+        public bool ItemTagIndent
+        {
+            get { return GetIndentSetting("ItemTagIndent"); }
+        }
+        public bool TermTagIndent
+        {
+            get { return GetIndentSetting("TermTagIndent"); }
+        }
+        public bool DescriptionTagIndent
+        {
+            get { return GetIndentSetting("DescriptionTagIndent"); }
+        }
+        public bool ExceptionTagIndent
+        {
+            get { return GetIndentSetting("ExceptionTagIndent"); }
+        }
+        public bool PermissionTagIndnent
+        {
+            get { return GetIndentSetting("PermissionTagIndnent"); }
         }
 
     }

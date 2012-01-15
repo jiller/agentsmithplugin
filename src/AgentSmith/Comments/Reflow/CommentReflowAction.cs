@@ -1,7 +1,7 @@
 using System;
 
 using AgentSmith.Options;
-
+using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.Application.Settings;
@@ -31,7 +31,7 @@ namespace AgentSmith.Comments.Reflow
             Provider = provider;
         }
 
-        private int CalcLineOffset( IDocCommentBlockOwnerNode node )
+        private static int CalcLineOffset( IDocCommentBlockOwnerNode node )
         {
             ITreeNode prev = node.PrevSibling;
             if ( prev != null && prev is IWhitespaceNode &&
@@ -46,53 +46,60 @@ namespace AgentSmith.Comments.Reflow
         {
             IDocCommentNode docCommentNode = _selectedDocCommentNode;
 
+            ReFlowCommentNode(solution, progress, docCommentNode);
+            return null;
+        }
+
+        public static void ReFlowCommentNode(ISolution solution, IProgressIndicator progress, [NotNull] IDocCommentNode docCommentNode)
+        {
+            // Get the comment block owner (ie the part of the declaration which will own the comment).
+            IDocCommentBlockNode blockNode =
+                docCommentNode.GetContainingNode<IDocCommentBlockNode>();
+            if (blockNode == null) return;
+
+            ReFlowCommentBlockNode(solution, progress, blockNode);
+        }
+
+        public static void ReFlowCommentBlockNode(ISolution solution, IProgressIndicator progress, IDocCommentBlockNode docCommentBlockNode)
+        {
+            if (docCommentBlockNode == null) return;
+
             // Get the settings.
             IContextBoundSettingsStore settingsStore = Shell.Instance.GetComponent<ISettingsStore>().BindToContextTransient(ContextRange.ApplicationWide);
             XmlDocumentationSettings settings =
                 settingsStore.GetKey<XmlDocumentationSettings>(SettingsOptimization.OptimizeDefault);
+            ReflowAndRetagSettings reflowSettings =
+                settingsStore.GetKey<ReflowAndRetagSettings>(SettingsOptimization.OptimizeDefault);
             int maxLength = settings.MaxCharactersPerLine;
 
-            if (docCommentNode != null)
-            {
-                // Get the comment block owner (ie the part of the declaration which will own the comment).
-                IDocCommentBlockNode blockNode =
-                    docCommentNode.GetContainingNode<IDocCommentBlockNode>();
-                if (blockNode == null) return null;
-                IDocCommentBlockOwnerNode ownerNode =
-                    blockNode.GetContainingNode<IDocCommentBlockOwnerNode>();
+            IDocCommentBlockOwnerNode ownerNode =
+                docCommentBlockNode.GetContainingNode<IDocCommentBlockOwnerNode>();
 
-                // If we didn't get an owner then give up
-                if (ownerNode == null) return null;
+            // If we didn't get an owner then give up
+            if (ownerNode == null) return;
 
-                // Get a factory which can create elements in the C# docs
-                CSharpElementFactory factory = CSharpElementFactory.GetInstance(ownerNode.GetPsiModule());
+            // Get a factory which can create elements in the C# docs
+            //CSharpElementFactory factory = CSharpElementFactory.GetInstance(ownerNode.GetPsiModule());
 
-                // Calculate line offset where /// starts and add 3 for each
-                // slash.
-                int startPos = this.CalcLineOffset(ownerNode) + 3;
+            // Calculate line offset where /// starts and add 3 for each
+            // slash.
+            int startPos = CalcLineOffset(ownerNode) + 3;
 
-                //text = regex.Replace( text , "");
-                /*DocCommentBlockNode myBlockNode =
-                    new DocCommentBlockNode(new DocCommentNode(new MyNodeType(), new StringBuffer(text),
-                        TreeOffset.Zero, new TreeOffset(text.Length)));
+            // Create a new comment block with the adjusted text
+            IDocCommentBlockNode comment = docCommentBlockNode; //factory.CreateDocCommentBlock(text);
 
-                 * */
+            // Work out if we have a space between the /// and <summary>
+            string reflownText = new XmlCommentReflower(settings, reflowSettings).Reflow(comment, maxLength - startPos);
 
-                // Create a new comment block with the adjusted text
-                IDocCommentBlockNode comment = blockNode; //factory.CreateDocCommentBlock(text);
+            //comment = factory.CreateDocCommentBlock(reflownText);
 
-                // Work out if we have a space between the /// and <summary>
-                string reflownText = new XmlCommentReflower(settings).Reflow(comment, maxLength - startPos);
+            SetDocComment(ownerNode, reflownText, solution);
 
-                comment = factory.CreateDocCommentBlock(reflownText);
-                
-                SetDocComment(ownerNode, reflownText, solution);
-
-                // And set the comment on the declaration.
-                //ownerNode.SetDocCommentBlockNode(comment);
-            }
-            return null;
+            // And set the comment on the declaration.
+            //ownerNode.SetDocCommentBlockNode(comment);
+            
         }
+
 
         public static void SetDocComment(IDocCommentBlockOwnerNode docCommentBlockOwnerNode, string text, ISolution solution)
         {

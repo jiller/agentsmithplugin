@@ -15,13 +15,15 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
     public class XmlCommentOptions
     {
-        public IClassMemberDeclaration Declaration;
+        public ICSharpTypeMemberDeclaration Declaration;
 
         public ISolution Solution;
 
         public IdentifierLookupScopes IdentifierLookupScope;
 
         public IEnumerable<Regex> IdentifiersToIgnoreForMetaTagging;
+
+        public ReflowAndRetagSettings Settings;
 
     }
 
@@ -31,7 +33,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         void InsertMissingTags();
 
-        string ToXml(int currentLineLength, int maxLineLength);
+        string ToXml(int currentLineLength, int maxLineLength, int indent);
     }
 
     public abstract class XmlCommentNodeBase : IXmlCommentNode
@@ -45,7 +47,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public abstract void FromXml(XmlNode node);
         public abstract void InsertMissingTags();
-        public abstract string ToXml(int currentLineLength, int maxLineLength);
+        public abstract string ToXml(int currentLineLength, int maxLineLength, int indent);
     }
 
     public class XmlComment : XmlCommentNodeBase
@@ -154,30 +156,32 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             if (Returns != null) Returns.InsertMissingTags();
         }
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             StringBuilder sb = new StringBuilder();
 
+            indent = 0;
+
             if (Summary != null)
             {
-                sb.Append(Summary.ToXml(0, maxLineLength));
+                sb.Append(Summary.ToXml(0, maxLineLength, indent));
                 sb.Append("\n");
             }
             if (Remarks != null)
             {
-                sb.Append(Remarks.ToXml(0, maxLineLength));
+                sb.Append(Remarks.ToXml(0, maxLineLength, indent));
                 sb.Append("\n");
             }
             if (Value != null)
             {
-                sb.Append(Value.ToXml(0, maxLineLength));
+                sb.Append(Value.ToXml(0, maxLineLength, indent));
                 sb.Append("\n");
             }
             if (Examples.Count > 0)
             {
                 foreach (var child in Examples)
                 {
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(0, maxLineLength, indent));
                     sb.Append("\n");
                 }
             }
@@ -185,7 +189,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             {
                 foreach (var child in TypeParams)
                 {
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(0, maxLineLength, indent));
                     sb.Append("\n");
                 }
             }
@@ -193,7 +197,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             {
                 foreach (var child in Params)
                 {
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(0, maxLineLength, indent));
                     sb.Append("\n");
                 }
             }
@@ -201,7 +205,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             {
                 foreach (var child in Exceptions)
                 {
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(0, maxLineLength, indent));
                     sb.Append("\n");
                 }
             }
@@ -209,20 +213,20 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             {
                 foreach (var child in Permissions)
                 {
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(0, maxLineLength, indent));
                     sb.Append("\n");
                 }
             }
             if (Returns != null)
             {
-                sb.Append(Returns.ToXml(0, maxLineLength));
+                sb.Append(Returns.ToXml(0, maxLineLength, indent));
                 sb.Append("\n");
             }
             if (UnknownTagNodes.Count > 0)
             {
                 foreach (var child in UnknownTagNodes)
                 {
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(0, maxLineLength, indent));
                     sb.Append("\n");
                 }
             }
@@ -238,6 +242,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         private readonly Regex _bulletItemRegex = new Regex(@"^[-*]$");
         private readonly Regex _numberItemRegex = new Regex(@"^\d+\.?$");
         private readonly Regex _whitespaceRegex = new Regex(@"\s+");
+        private readonly Regex _endsWithNewline = new Regex("\n\\s*$");
 
         public List<IXmlCommentNode> Contents { get; set; }
 
@@ -249,7 +254,10 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         public abstract string GetStartTag();
         public abstract string GetEndTag();
 
-        public virtual bool AllowLineCollapse { get { return true; } }
+        public virtual WhitespaceTriState NewlineSetting { get { return WhitespaceTriState.Always; } }
+        public virtual bool IndentSetting { get { return false; } }
+
+        public virtual int IndentSize { get { return 4; } }
 
         public virtual IEnumerable<Regex> IdentifiersToIgnore
         {
@@ -259,11 +267,22 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             }
         }
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             StringBuilder sb = new StringBuilder();
             int currentChars = currentLineLength;
-            bool first = currentChars == 0;
+
+            WhitespaceTriState newlineSetting = NewlineSetting;
+
+            bool first = currentChars == indent;
+
+            string lastIndentString = "".PadRight(indent);
+            if (IndentSetting) indent += IndentSize;
+            string indentString = "".PadRight(indent);
+
+
+            if (newlineSetting == WhitespaceTriState.Never) maxLineLength = int.MaxValue;
+
             foreach (var child in Contents)
             {
                 // Is it a word?
@@ -272,7 +291,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                     // Yep
 
                     // Get the word text so we know how long it will be.
-                    string childText = child.ToXml(0, maxLineLength);
+                    string childText = child.ToXml(0, maxLineLength, indent);
 
                     // Are we the first text?
                     if (first)
@@ -298,22 +317,22 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                             // Yes
 
                             // If the word is so big it fills the line then write it anyway
-                            if (currentChars == 0)
+                            if (currentChars == indent)
                             {
                                 sb.Append(childText);
-                                sb.Append("\n");
-                                currentChars = 0;
+                                sb.Append("\n" + indentString);
+                                currentChars = indent;
                                 continue;
                             }
 
                             // Break the line here
-                            sb.Append("\n");
+                            sb.Append("\n" + indentString);
 
                             // And put the text on the next line
                             sb.Append(childText);
 
                             // And reset the length
-                            currentChars = childText.Length;
+                            currentChars = indent + childText.Length;
                         }
                         else
                         {
@@ -353,20 +372,23 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                     {
                         // End the previous line (if there was one).
                         if (first) first = false;
-                        else if (sb[sb.Length - 1] != '\n')
+                        else if (!_endsWithNewline.IsMatch(sb.ToString()))
                         {
-                            sb.Append("\n");
+                            sb.Append("\n" + indentString);
                         }
                     }
 
                     // Write the sub element
-                    sb.Append(child.ToXml(0, maxLineLength));
+                    sb.Append(child.ToXml(indent, maxLineLength, indent));
 
                     // And start a new line
-                    if (para == null || !para.NoTags) sb.Append("\n");
+                    if (para == null || !para.NoTags)
+                    {
+                        sb.Append("\n" + indentString);
+                        // And reset the count
+                        currentChars = indent;
+                    }
                               
-                    // And reset the count
-                    currentChars = 0;
 
                     continue;
                 }
@@ -374,7 +396,16 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                 // It's an inline block
 
                 // Get the text assuming it will be on this line (include extra 1 for space).
-                string inlineText = child.ToXml(currentChars + 1, maxLineLength);
+                ExtendedBlockNode extendedChild = child as ExtendedBlockNode;
+                string inlineText;
+                if (extendedChild != null && extendedChild.NewlineSetting == WhitespaceTriState.Never )
+                {
+                    // They want to always use a single line so make sure we pass in 0 as the current line length.
+                    inlineText = child.ToXml(0, maxLineLength, indent);
+                } else
+                {
+                    inlineText = child.ToXml(currentChars + 1, maxLineLength, indent);
+                }
 
                 // Does it contain newlines?
                 if (inlineText.Contains("\n"))
@@ -399,21 +430,47 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                     continue;
                 }
 
-                // Append space
-                if (first) first = false;
-                else
+                // Make sure it fits on this line.
+                if (currentChars + inlineText.Length + 1 > maxLineLength)
                 {
-                    sb.Append(" ");
-                }
+                    // If the word is so big it fills the line then write it anyway
+                    if (currentChars == indent)
+                    {
+                        sb.Append(inlineText);
+                        sb.Append("\n" + indentString);
+                        currentChars = indent;
+                        first = false;
+                        continue;
+                    }
 
-                // No newlines so its a continuation of the current line
-                sb.Append(inlineText);
-                currentChars += inlineText.Length;
+                    // Break the line here
+                    sb.Append("\n" + indentString);
+
+                    // And put the text on the next line
+                    sb.Append(inlineText);
+
+                    // And reset the length
+                    currentChars = indent + inlineText.Length;
+                } else
+                {
+                    // Append space
+                    if (currentChars != indent) 
+                    {
+                        sb.Append(" ");
+                        currentChars += 1;
+                    }
+
+                    // No newlines so its a continuation of the current line
+                    sb.Append(inlineText);
+                    currentChars += inlineText.Length;
+                }
+                first = false;
             }
 
             // Get the total contents
             string contents = sb.ToString();
-            if (contents.EndsWith("\n"))
+
+            if (_endsWithNewline.IsMatch(contents))
             {
                 contents = contents.TrimEnd();
             }
@@ -425,7 +482,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             // See if it'll all fit on one line
             if (contents.Contains("\n") ||
                 startTag.Length + contents.Length + endTag.Length > maxLineLength - currentLineLength ||
-                !AllowLineCollapse)
+                newlineSetting == WhitespaceTriState.Always)
             {
                 // doesn't fit on one line so split the tags onto separate lines
 
@@ -439,7 +496,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                     return string.Format("{0}", startTag);
                 }
 
-                return string.Format("{0}\n{1}\n{2}", startTag, contents, endTag);
+                return string.Format("{0}\n{1}{2}\n{3}{4}", startTag, indentString, contents, lastIndentString, endTag);
             }
 
             if (contents == "" && endTag == "")
@@ -882,11 +939,14 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
         public SummaryNode(XmlCommentOptions options) : base(options) {}
 
-        public override bool AllowLineCollapse
+        public override WhitespaceTriState NewlineSetting
         {
-            get { return false; }
+            get { return Options.Settings.SummaryTagOnNewLine; }
         }
-
+        public override bool IndentSetting
+        {
+            get { return Options.Settings.SummaryTagIndent; }
+        }
         public override string GetStartTag()
         {
             return "<summary>";
@@ -902,12 +962,14 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
         public RemarksNode(XmlCommentOptions options) : base(options) {}
 
-
-        public override bool AllowLineCollapse
+        public override WhitespaceTriState NewlineSetting
         {
-            get { return false; }
+            get { return Options.Settings.RemarksTagOnNewLine; }
         }
-
+        public override bool IndentSetting
+        {
+            get { return Options.Settings.RemarksTagIndent; }
+        }
         public override string GetStartTag()
         {
             return "<remarks>";
@@ -939,11 +1001,14 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public ExampleNode(XmlCommentOptions options) : base(options) {}
 
-        public override bool AllowLineCollapse
+        public override WhitespaceTriState NewlineSetting
         {
-            get { return false; }
+            get { return Options.Settings.ExampleTagOnNewLine; }
         }
-
+        public override bool IndentSetting
+        {
+            get { return Options.Settings.ExampleTagIndent; }
+        }
         public override string GetStartTag()
         {
             return "<example>";
@@ -957,6 +1022,15 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     public class ReturnsNode : ExtendedBlockNode
     {
         public ReturnsNode(XmlCommentOptions options) : base(options) {}
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.ReturnsTagOnNewLine; }
+        }
+        public override bool IndentSetting
+        {
+            get { return Options.Settings.ReturnsTagIndent; }
+        }
 
         public override string GetStartTag()
         {
@@ -974,6 +1048,19 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         public ParaNode(XmlCommentOptions options) : base(options) {}
 
         public bool NoTags = false;
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.ParaTagOnNewLine; }
+        }
+        public override bool IndentSetting
+        {
+            get
+            {
+                if (NoTags) return false;
+                return Options.Settings.ParaTagIndent;
+            }
+        }
 
         public override string GetStartTag()
         {
@@ -1020,13 +1107,13 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public abstract string GetSingleTag();
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             if (Contents.Count == 0)
             {
                 return GetSingleTag();
             }
-            return base.ToXml(currentLineLength, maxLineLength);
+            return base.ToXml(currentLineLength, maxLineLength, indent);
         }
     }
 
@@ -1034,6 +1121,11 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
 
         public ExceptionNode(XmlCommentOptions options) : base(options) {}
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.ExceptionTagOnNewLine; }
+        }
 
         public override string GetStartTag()
         {
@@ -1054,6 +1146,10 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
         public PermissionNode(XmlCommentOptions options) : base(options) {}
 
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.PermissionTagOnNewLine; }
+        }
 
         public override string GetStartTag()
         {
@@ -1078,6 +1174,11 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         [XmlAttribute("langword")]
         public string LangWord { get; set; }
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return WhitespaceTriState.Never; }
+        }
 
         public override void FromXml(XmlNode node)
         {
@@ -1137,6 +1238,15 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public TermNode(XmlCommentOptions options) : base(options) {}
 
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.TermTagOnNewLine; }
+        }
+        public override bool IndentSetting
+        {
+            get { return Options.Settings.TermTagIndent; }
+        }
+
         public override string GetStartTag()
         {
             return "<term>";
@@ -1152,6 +1262,15 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
 
         public DescriptionNode(XmlCommentOptions options) : base(options) {}
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.DescriptionTagOnNewLine; }
+        }
+        public override bool IndentSetting
+        {
+            get { return Options.Settings.DescriptionTagIndent; }
+        }
 
         public override string GetStartTag()
         {
@@ -1201,6 +1320,12 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public ParamNode(XmlCommentOptions options) : base(options) {}
 
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.ParamTagOnNewLine; }
+        }
+
         public override string GetStartTag()
         {
             return string.Format("<param name=\"{0}\">", Name);
@@ -1217,6 +1342,11 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
 
         public TypeParamNode(XmlCommentOptions options) : base(options) {}
+
+        public override WhitespaceTriState NewlineSetting
+        {
+            get { return Options.Settings.TypeParamTagOnNewLine; }
+        }
 
         public override string GetStartTag()
         {
@@ -1257,7 +1387,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
         public ParamRefNode(XmlCommentOptions options) : base(options) {}
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             return string.Format("<paramref name=\"{0}\" />", Name);
         }
@@ -1267,7 +1397,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public TypeParamRefNode(XmlCommentOptions options) : base(options) {}
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             return string.Format("<typeparamref name=\"{0}\" />", Name);
         }
@@ -1296,6 +1426,10 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             Items = new List<ItemNode>();
         }
 
+        public WhitespaceTriState NewlineSetting { get { return Options.Settings.ListTagOnNewLine; } }
+        public bool IndentSetting { get { return Options.Settings.ListTagIndent; } }
+        public int IndentSize { get { return 4; } }
+
         public override void InsertMissingTags()
         {
             if (ListHeader != null) ListHeader.InsertMissingTags();
@@ -1313,9 +1447,16 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                 if (element.HasAttribute("type", ""))
                 {
                     string typeString = element.GetAttribute("type", "");
-                    if (Enum.IsDefined(typeof(ListTypes), typeString))
+                    switch (typeString.ToLower())
                     {
-                        Type = (ListTypes)Enum.Parse(typeof(ListTypes), typeString, true);
+                        case "ordered":
+                        case "numeric":
+                        case "number":
+                            Type = ListTypes.Number;
+                            break;
+                        case "table":
+                            Type = ListTypes.Table;
+                            break;
                     }
                 }
             }
@@ -1364,7 +1505,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             }
         }
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -1381,17 +1522,22 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                     type = "bullet";
                     break;
             }
-
-            sb.Append(string.Format("<list type=\"{0}\">\n", type));
+            string lastIndentString = "".PadRight(indent);
+            if (IndentSetting) indent += IndentSize;
+            string indentString = "".PadRight(indent);
+            sb.Append(string.Format("<list type=\"{0}\">\n{1}", type, indentString));
             if (ListHeader != null)
             {
-                sb.Append(ListHeader.ToXml(0, maxLineLength));
-                sb.Append("\n");
+                sb.Append(ListHeader.ToXml(indent, maxLineLength, indent));
+                sb.Append("\n" + indentString);
             }
-            foreach (ItemNode itemNode in Items)
+            for (int i = 0; i < Items.Count; i++)
             {
-                sb.Append(itemNode.ToXml(0, maxLineLength));
+                ItemNode itemNode = Items[i];
+                sb.Append(itemNode.ToXml(indent, maxLineLength, indent));
                 sb.Append("\n");
+                if (i == Items.Count - 1) sb.Append(lastIndentString);
+                else sb.Append(indentString);
             }
             sb.Append("</list>");
             return sb.ToString();
@@ -1405,6 +1551,10 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         public TermNode Term { get; set; }
 
         public DescriptionNode Description { get; set; }
+
+        public virtual WhitespaceTriState NewlineSetting { get { return WhitespaceTriState.Always; } }
+        public virtual bool IndentSetting { get { return true; } }
+        public virtual int IndentSize { get { return 4; } }
 
         public override void InsertMissingTags()
         {
@@ -1449,7 +1599,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         public abstract string GetStartTag();
         public abstract string GetEndTag();
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             // Get the various text strings
 
@@ -1459,18 +1609,24 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             // End tag
             string endTag = GetEndTag();
 
+            string lastIndentString = "".PadRight(indent);
+            if (IndentSetting) indent += IndentSize;
+            string indentString = "".PadRight(indent);
+
             // The term section
             string term = "";
-            if (Term != null) term = Term.ToXml(0, maxLineLength);
+            if (Term != null) term = Term.ToXml(indent, maxLineLength, indent);
 
             // The description section
             string desc = "";
-            if (Description != null) desc = Description.ToXml(0, maxLineLength);
+            if (Description != null) desc = Description.ToXml(indent, maxLineLength, indent);
+
 
             // If any of the sections used a new line OR the whole thing is too long to fit on one line then...
             if (term.Contains("\n") ||
                 desc.Contains("\n") ||
-                currentLineLength + startTag.Length + term.Length + desc.Length + endTag.Length > maxLineLength )
+                currentLineLength + startTag.Length + term.Length + desc.Length + endTag.Length > maxLineLength ||
+                NewlineSetting == WhitespaceTriState.Always )
             {
                 StringBuilder sb1 = new StringBuilder();
 
@@ -1478,14 +1634,17 @@ namespace AgentSmith.Comments.Reflow.XmlComments
                 if (term.Length != 0)
                 {
                     sb1.Append("\n");
+                    sb1.Append(indentString);
                     sb1.Append(term);
                 }
                 if (desc.Length != 0)
                 {
                     sb1.Append("\n");
+                    sb1.Append(indentString);
                     sb1.Append(desc);
                 }
                 sb1.Append("\n");
+                sb1.Append(lastIndentString);
                 sb1.Append(endTag);
 
                 return sb1.ToString();
@@ -1500,6 +1659,10 @@ namespace AgentSmith.Comments.Reflow.XmlComments
     {
 
         public ListHeaderNode(XmlCommentOptions options) : base(options) {}
+
+        public override WhitespaceTriState NewlineSetting { get { return Options.Settings.ListHeaderTagOnNewLine; } }
+        public override bool IndentSetting { get { return Options.Settings.ListHeaderTagIndent; } }
+        public override int IndentSize { get { return 4; } }
 
         public override string GetStartTag()
         {
@@ -1516,6 +1679,10 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public ItemNode(XmlCommentOptions options) : base(options) {}
 
+        public override WhitespaceTriState NewlineSetting { get { return Options.Settings.ItemTagOnNewLine; } }
+        public override bool IndentSetting { get { return Options.Settings.ItemTagIndent; } }
+        public override int IndentSize { get { return 4; } }
+
         public override string GetStartTag()
         {
             return "<item>";
@@ -1527,22 +1694,107 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         }
     }
 
-    public enum CodeLanguageTypes
-    {
-        CSharp,
-        VB
-    }
-
     public abstract class CodeNodeBase : XmlCommentNodeBase
     {
         private static readonly Regex _newlineSpace = new Regex("\n ");
         private static readonly Regex _newlineNewline = new Regex("\n\n");
 
-        [XmlAttribute("lang")]
-        public CodeLanguageTypes Lang { get; set; }
+        public string Lang { get; set; }
 
-        [XmlText]
+        /// <summary>
+        /// Sandcastle help file builder attribute
+        /// 
+        /// This attribute allows you to add a title that appears before the code block. An example of its use would be to label the example with a description. If omitted and the defaultTitle attribute on the code block component's colorizer element is true, the language name will appear for the title. If it is set to false, no title will appear. If using default titles and you do not want a title on a particular block, set the title attribute to a single space (" ").
+        /// </summary>
+        public string Title { get; set; }
+
         public string Text { get; set; }
+
+        public string Source { get; set; }
+
+        public string Region { get; set; }
+
+        public bool? RemoveRegionMarkers { get; set; }
+
+        /// <summary>
+        /// Sandcastle help file builder attribute
+        /// 
+        /// This attribute allows you to override the default setting in the component's configuration. For example, if the default setting is false to turn off line numbering, you can add numberLines="true" to enable numbering on a specific code example.
+        /// </summary>
+        public bool? NumberLines { get; set; }
+
+        /// <summary>
+        /// Sandcastle help file builder attribute
+        /// 
+        /// This attribute allows you to override the default setting in the component's configuration. For example, if the default setting is false to not add collapsible regions, you can add outlining="true" to enable collapsible regions on a specific code example. Note that if a code block contains no #region or #if blocks, outlining is automatically disabled and it will not reserve space in the margin for the markers.
+        /// </summary>
+        public bool? Outlining { get; set; }
+
+        /// <summary>
+        /// Sandcastle help file builder attribute
+        /// 
+        /// When set to true, this attribute allows you to tell the code colorizer to preserve <see> tags within the code so that they can be rendered as clickable links to the related topic. If set to false, the default, any <see> tags within the code will be colorized and passed through as literal text. When using this option, you may find that you need to specify inner text for the <see> tag so that the link text appears as you want it. If the self-closing version of the tag is used, Sandcastle will generally set the link text to the name of the item plus any parameters if it is a generic type or takes parameters which may not be appropriate within a code sample.
+        /// </summary>
+        public bool? KeepSeeTags { get; set; }
+
+        /// <summary>
+        /// Sandcastle help file builder attribute
+        /// 
+        /// When the code blocks are formatted, tab characters are replaced with a set number of spaces to preserve formatting. This attribute can be used to override the default setting for a language which is specified in the syntax file. For example, if the default tab size for a language is four, adding tabSize="8" will force it to use eight spaces instead. If set to zero, the syntax file setting is used. This attribute sets the default tab size for unknown languages when used in the component's configuration.
+        /// </summary>
+        public int? TabSize { get; set; }
+
+        /// <summary>
+        /// Sandcastle help file builder attribute
+        /// 
+        /// This attribute allows you to specify whether or not the code block should be connected to the language filter (VS2005 only). If omitted or set to true, the code block will be connected to the appropriate language filter if it is present. If set to false, it is not connected and will remain visible at all times.
+        /// </summary>
+        public bool? Filter { get; set; }
+
+        private static readonly List<string> ValidLanguages = new List<string>()
+                                                                  {
+                                                                      "all",
+                                                                      "cs",
+                                                                      "c#",
+                                                                      "csharp",
+                                                                      "cpp",
+                                                                      "cpp#",
+                                                                      "c++",
+                                                                      "cplusplus",
+                                                                      "c",
+                                                                      "fs",
+                                                                      "f#",
+                                                                      "fsharp",
+                                                                      "fscript",
+                                                                      "ecmascript",
+                                                                      "js",
+                                                                      "javascript",
+                                                                      "jscript",
+                                                                      "jscript#",
+                                                                      "jscriptnet",
+                                                                      "jscript.net",
+                                                                      "vb",
+                                                                      "vb#",
+                                                                      "vbnet",
+                                                                      "vb.net",
+                                                                      "vbs",
+                                                                      "vbscript",
+                                                                      "htm",
+                                                                      "html",
+                                                                      "xml",
+                                                                      "xsl",
+                                                                      "xaml",
+                                                                      "jsharp",
+                                                                      "j#",
+                                                                      "sql",
+                                                                      "sql server",
+                                                                      "sqlserver",
+                                                                      "pshell",
+                                                                      "powershell",
+                                                                      "ps1",
+                                                                      "py",
+                                                                      "python"
+                                                                  };
 
         protected CodeNodeBase(XmlCommentOptions options) : base(options)
         {
@@ -1558,14 +1810,85 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             XmlElement element = node as XmlElement;
             if (element == null) return;
 
-            Lang = CodeLanguageTypes.CSharp;
+            Lang = null;
             if (element.HasAttribute("lang", ""))
             {
-                string langString = element.GetAttribute("lang", "");
-                if (Enum.IsDefined(typeof(CodeLanguageTypes), langString))
-                {
-                    Lang = (CodeLanguageTypes)Enum.Parse(typeof(CodeLanguageTypes), langString, true);
-                }
+                Lang = element.GetAttribute("lang", "");
+            }
+            if (element.HasAttribute("language", ""))
+            {
+                Lang = element.GetAttribute("language", "");
+            }
+            if (Lang != null && !ValidLanguages.Contains(Lang.ToLower()))
+            {
+                Lang = null;
+            }
+
+
+            Title = null;
+            if (element.HasAttribute("title", ""))
+            {
+                Title = element.GetAttribute("title", "");
+            }
+
+            Source = null;
+            if (element.HasAttribute("source", ""))
+            {
+                Source = element.GetAttribute("source", "");
+            }
+
+            Region = null;
+            if (element.HasAttribute("region", ""))
+            {
+                Region = element.GetAttribute("region", "");
+            }
+
+            RemoveRegionMarkers = null;
+            if (element.HasAttribute("removeRegionMarkers", ""))
+            {
+                string txt = element.GetAttribute("removeRegionMarkers", "");
+                bool result;
+                if (bool.TryParse(txt, out result)) RemoveRegionMarkers = result;
+            }
+            
+            NumberLines = null;
+            if (element.HasAttribute("numberLines", ""))
+            {
+                string txt = element.GetAttribute("numberLines", "");
+                bool result;
+                if (bool.TryParse(txt, out result)) NumberLines = result;
+            }
+
+            Outlining = null;
+            if (element.HasAttribute("outlining", ""))
+            {
+                string txt = element.GetAttribute("outlining", "");
+                bool result;
+                if (bool.TryParse(txt, out result)) Outlining = result;
+            }
+
+            KeepSeeTags = null;
+            if (element.HasAttribute("keepSeeTags", ""))
+            {
+                string txt = element.GetAttribute("keepSeeTags", "");
+                bool result;
+                if (bool.TryParse(txt, out result)) KeepSeeTags = result;
+            }
+
+            TabSize = null;
+            if (element.HasAttribute("tabSize", ""))
+            {
+                string txt = element.GetAttribute("tabSize", "");
+                int result;
+                if (int.TryParse(txt, out result)) TabSize = result;
+            }
+
+            Filter = null;
+            if (element.HasAttribute("filter", ""))
+            {
+                string txt = element.GetAttribute("filter", "");
+                bool result;
+                if (bool.TryParse(txt, out result)) Filter = result;
             }
 
             foreach (XmlNode child in node.ChildNodes)
@@ -1603,10 +1926,79 @@ namespace AgentSmith.Comments.Reflow.XmlComments
             }
         }
 
-        public abstract string GetStartTag();
-        public abstract string GetEndTag();
+        public abstract string GetTagName();
 
-        public override string ToXml(int currentLineLength, int maxLineLength)
+        public virtual string GetStartTag()
+        {
+            string tag = GetTagName();
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("<");
+            sb.Append(tag);
+
+            if (Lang != null)
+            {
+                sb.Append(string.Format(" lang=\"{0}\"", Lang));
+            }
+            if (Title != null)
+            {
+                sb.Append(string.Format(" title=\"{0}\"", Title));
+            }
+
+            if (Source != null)
+            {
+                sb.Append(string.Format(" source=\"{0}\"", Source));
+            }
+
+            if (Region != null)
+            {
+                sb.Append(string.Format(" region=\"{0}\"", Region));
+            }
+
+            if (RemoveRegionMarkers != null)
+            {
+                sb.Append(string.Format(" removeRegionMarkers=\"{0}\"", RemoveRegionMarkers));
+            }
+
+            if (NumberLines != null)
+            {
+                sb.Append(string.Format(" numberLines=\"{0}\"", NumberLines));
+            }
+
+            if (Outlining != null)
+            {
+                sb.Append(string.Format(" outlining=\"{0}\"", Outlining));
+            }
+
+            if (KeepSeeTags != null)
+            {
+                sb.Append(string.Format(" keepSeeTags=\"{0}\"", KeepSeeTags));
+            }
+
+            if (TabSize != null)
+            {
+                sb.Append(string.Format(" tabSize=\"{0}\"", TabSize));
+            }
+
+            if (Filter != null)
+            {
+                sb.Append(string.Format(" filter=\"{0}\"", Filter));
+            }
+
+            if (Text.Length == 0) sb.Append(" />");
+            else sb.Append(">");
+            return sb.ToString();
+        }
+
+        public virtual string GetEndTag()
+        {
+            if (Text.Length == 0) return "";
+            string tag = GetTagName();
+            return string.Format("</{0}>", tag);
+        }
+
+
+        public override string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(GetStartTag());
@@ -1643,14 +2035,9 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public CodeNode(XmlCommentOptions options) : base(options) {}
 
-        public override string GetStartTag()
+        public override string GetTagName()
         {
-            return "<code>";
-        }
-
-        public override string GetEndTag()
-        {
-            return "</code>";
+            return "code";
         }
     }
 
@@ -1659,14 +2046,9 @@ namespace AgentSmith.Comments.Reflow.XmlComments
 
         public CNode(XmlCommentOptions options) : base(options) {}
 
-        public override string GetStartTag()
+        public override string GetTagName()
         {
-            return "<c>";
-        }
-
-        public override string GetEndTag()
-        {
-            return "</c>";
+            return "c";
         }
     }
 
@@ -1697,7 +2079,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         {
         }
 
-        public string ToXml(int currentLineLength, int maxLineLength)
+        public string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             return Word;
         }
@@ -1718,7 +2100,7 @@ namespace AgentSmith.Comments.Reflow.XmlComments
         {
         }
 
-        public string ToXml(int currentLineLength, int maxLineLength)
+        public string ToXml(int currentLineLength, int maxLineLength, int indent)
         {
             return "\n";
         }
