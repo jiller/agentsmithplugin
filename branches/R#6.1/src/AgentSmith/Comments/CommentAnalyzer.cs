@@ -143,7 +143,12 @@ namespace AgentSmith.Comments
                         {
                             inCode++;
                         }
-                        lexer.Advance();
+
+                        while (lexer.TokenType != lexer.XmlTokenType.TAG_END &&
+                               lexer.TokenType != lexer.XmlTokenType.TAG_END1 &&
+                               lexer.TokenType != null)
+                            lexer.Advance();
+
                         if (lexer.TokenType == lexer.XmlTokenType.TAG_END1)
                         {
                             inCode--;
@@ -221,6 +226,7 @@ namespace AgentSmith.Comments
                     new HighlightingInfo(
                         declaration.GetNameDocumentRange(),
                         new PrivateMemberMissingXmlCommentHighlighting(declaration, match)));
+                return;
             }
 
             match = ComplexMatchEvaluator.IsMatch(declaration, internalMembers, null, true);
@@ -230,13 +236,18 @@ namespace AgentSmith.Comments
                     new HighlightingInfo(
                         declaration.GetNameDocumentRange(),
                         new InternalMemberMissingXmlCommentHighlighting(declaration, match)));
+                return;
             }
 
             match = ComplexMatchEvaluator.IsMatch(declaration, publicMembers, null, true);
-            highlightings.Add(
-                new HighlightingInfo(
-                    declaration.GetNameDocumentRange(),
-                    new PublicMemberMissingXmlCommentHighlighting(declaration, match)));
+            if (match != null)
+            {
+                highlightings.Add(
+                    new HighlightingInfo(
+                        declaration.GetNameDocumentRange(),
+                        new PublicMemberMissingXmlCommentHighlighting(declaration, match)));
+                // return;
+            }
         }
 
     }

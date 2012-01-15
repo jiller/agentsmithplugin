@@ -2,7 +2,6 @@ using System;
 using System.Windows.Forms;
 using AgentSmith.Comments;
 using JetBrains.ActionManagement;
-using JetBrains.Application;
 using JetBrains.Application.DataContext;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -24,9 +23,11 @@ namespace AgentSmith.SmartPaste
         
         public bool Update(IDataContext context, ActionPresentation presentation, DelegateUpdate nextUpdate)
         {
+            bool update = nextUpdate();
+
             if (!IsAvailable(context))
             {
-                return nextUpdate();
+                return update;
             }
             return true;
         }
@@ -39,36 +40,34 @@ namespace AgentSmith.SmartPaste
             }
             else
             {
-                using (ReadLockCookie.Create())
+                
+                ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
+                if (solution == null)
                 {
-                    using (CommandCookie.Create("Smart Paste"))
-                    {
-                        ExecuteEx(context);
-                    }
+                    nextExecute();
+                    return;
                 }
+                PsiManager manager = PsiManager.GetInstance(solution);
+                manager.DoTransaction(
+                    () => ExecuteEx(solution, context), "SmartPaste");
             }
         }
 
-        public void ExecuteEx(IDataContext context)
+        public void ExecuteEx(ISolution solution, IDataContext context)
         {
             ITextControl editor = context.GetData(JetBrains.TextControl.DataContext.DataConstants.TEXT_CONTROL);
             Logger.Assert(editor != null, "Condition (editor != null) is false");
 
-            ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
             IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
 
-            if (editor == null || solution == null || document == null) throw new ArgumentException("context");
+            if (editor == null || document == null) throw new ArgumentException("context");
 
             ICSharpFile file = PsiManager.GetInstance(solution).GetPsiFile<CSharpLanguage>(document) as ICSharpFile;
             if (file == null) return;
             
-            PsiManager manager = PsiManager.GetInstance(solution);
-            manager.DoTransaction(
-                () =>
-                    {
-                        ITreeNode element = file.FindNodeAt(new TreeTextRange(new TreeOffset(editor.Caret.Offset())));
-                        HandleElement(editor, element, editor.Caret.Offset());
-                    }, "SmartPaste");
+            ITreeNode element = file.FindNodeAt(new TreeTextRange(new TreeOffset(editor.Caret.Offset())));
+            HandleElement(editor, element, editor.Caret.Offset());
+
         }
 
         private static void HandleElement(ITextControl editor, ITreeNode element, int offset)

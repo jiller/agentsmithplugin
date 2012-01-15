@@ -1,3 +1,4 @@
+using System;
 using AgentSmith.MemberMatch;
 
 using JetBrains.ReSharper.Daemon;
@@ -29,6 +30,10 @@ namespace AgentSmith.Comments
         {
             _declaration = declaration;
             _match = match;
+            if (_match == null)
+            {
+                throw new Exception();
+            }
         }
 
         /// <summary>
