@@ -13,7 +13,10 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Impl.Caches2;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Xml;
 using JetBrains.ReSharper.Psi.Xml.Tree;
+using JetBrains.ReSharper.Psi.Resx;
+using JetBrains.ReSharper.Psi.Resx.Tree;
 using JetBrains.Util;
 using System.Resources;
 
@@ -93,7 +96,8 @@ namespace AgentSmith.ResX
         private IList<IXmlToken> getStringsToCheck()
         {
             IList<IXmlToken> tokens = new List<IXmlToken>();
-            IXmlFile xmlFile = _file as IXmlFile;
+            IXmlFile xmlFile = _file.GetPsiFile<XmlLanguage>() as IXmlFile;
+
             if (xmlFile != null)
             {
                 IXmlTag root = xmlFile.GetTag(delegate(IXmlTag tag) { return tag.GetTagName() == "root"; });
