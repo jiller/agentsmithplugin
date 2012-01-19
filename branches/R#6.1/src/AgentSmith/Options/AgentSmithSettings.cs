@@ -418,6 +418,57 @@ namespace AgentSmith.Options
         }
     }
 
+    [SettingsKey(typeof(AgentSmithSettings), "Inline Comment Settings")]
+    public class CommentSettings
+    {
+        private bool _wordsToIgnoreChanged = true;
+
+        private string _wordsToIgnore;
+
+        private List<Regex> _cachedWordsToIgnore;
+
+        [SettingsEntry("en-US", "The dictionary/s to use for comments in source code files (use commas to separate dictionary names)")]
+        public string DictionaryName { get; set; }
+
+        public string[] DictionaryNames
+        {
+            get { return DictionaryName.Split(','); }
+        }
+
+        [SettingsEntry("", "Regular expressions for words to ignore (separate with new lines)")]
+        public string WordsToIgnore
+        {
+            get { return _wordsToIgnore; }
+            set
+            {
+                _wordsToIgnoreChanged = true;
+                _wordsToIgnore = value;
+            }
+        }
+
+        public List<Regex> CompiledWordsToIgnore
+        {
+            get
+            {
+                if (_wordsToIgnoreChanged)
+                {
+                    _cachedWordsToIgnore = new List<Regex>();
+                    string[] regexPatterns = _wordsToIgnore.Replace("\r", "").Split('\n');
+
+                    foreach (string regexPattern in regexPatterns)
+                    {
+                        if (string.IsNullOrEmpty(regexPattern)) continue;
+                        Regex re = new Regex(regexPattern);
+                        _cachedWordsToIgnore.Add(re);
+                    }
+                    _wordsToIgnoreChanged = false;
+                }
+                return _cachedWordsToIgnore;
+            }
+        }
+    }
+
+
     [SettingsKey(typeof(AgentSmithSettings), "Resource File Settings")]
     public class ResXSettings
     {
