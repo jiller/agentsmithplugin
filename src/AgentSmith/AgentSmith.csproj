@@ -55,6 +55,8 @@
     <Compile Include="Comments\Reflow\ReflowCodeCleanup.cs" />
     <Compile Include="Comments\Reflow\ReflowMenuAction.cs" />
     <Compile Include="Comments\Reflow\XmlComments\XmlCommentNodeBase.cs" />
+    <Compile Include="InlineCommentScanDaemonStage.cs" />
+    <Compile Include="InlineCommentScanDaemonStageProcess.cs" />
     <Compile Include="IdentifierScanDaemonStageProcess.cs" />
     <Compile Include="IdentifierScanDaemonStage.cs" />
     <Compile Include="Comments\CommentAnalyzer.cs" />
@@ -96,6 +98,9 @@
     <Compile Include="MemberMatch\TypeDeclarationMap.cs" />
     <Compile Include="Options\AgentSmithOptionsUI.xaml.cs">
       <DependentUpon>AgentSmithOptionsUI.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Options\CommentOptionsUI.xaml.cs">
+      <DependentUpon>CommentOptionsUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="Options\ReflowAndRetagOptionsUI.xaml.cs">
       <DependentUpon>ReflowAndRetagOptionsUI.xaml</DependentUpon>
@@ -174,6 +179,10 @@
     <Page Include="Options\AgentSmithOptionsUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Options\CommentOptionsUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Options\ReflowAndRetagOptionsUI.xaml">
       <SubType>Designer</SubType>

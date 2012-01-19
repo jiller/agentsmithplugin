@@ -258,6 +258,30 @@ namespace AgentSmith.Options
         }
     }
 
+    [OptionsPage(PID, "Inline Comments", "AgentSmith.Options.samplePage.gif", ParentId = AgentSmithOptionsPage.PID)]
+    public class CommentOptionsPage : AOptionsPage
+    {
+
+        public const string PID = "AgentSmithInlineCommentId";
+
+        private OptionsSettingsSmartContext _settings;
+
+        private CommentOptionsUI _optionsUI;
+
+        public CommentOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext)
+            : base(lifetime, PID)
+        {
+            _settings = settingsSmartContext;
+            _optionsUI = new CommentOptionsUI();
+            Control = _optionsUI;
+
+            settingsSmartContext.SetBinding<CommentSettings, string>(
+                lifetime, x => x.DictionaryName, _optionsUI.txtDictionaryName, TextBox.TextProperty);
+            settingsSmartContext.SetBinding<CommentSettings, string>(
+                lifetime, x => x.WordsToIgnore, _optionsUI.txtWordsToIgnore, TextBox.TextProperty);
+
+        }
+    }
 
     [OptionsPage(PID, "Identifiers", "AgentSmith.Options.samplePage.gif", ParentId = AgentSmithOptionsPage.PID)]
     public class IdentifierOptionsPage : AOptionsPage
