@@ -1,61 +1,75 @@
 using System;
 using System.Collections.Generic;
-using System.Resources;
+using System.Linq;
+
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+
+using JetBrains.Application.Settings;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Impl.Caches2;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Xml;
 using JetBrains.ReSharper.Psi.Xml.Tree;
+using JetBrains.ReSharper.Psi.Resx;
+using JetBrains.ReSharper.Psi.Resx.Tree;
 using JetBrains.Util;
+using System.Resources;
 
 namespace AgentSmith.ResX
 {
     internal class ResXProcess : IDaemonStageProcess
     {
-        private readonly IProjectFile _file;
+        private readonly IPsiSourceFile _file;
 
-        public ResXProcess(IProjectFile file)
+        private readonly IDaemonProcess _daemonProcess;
+
+        private readonly IContextBoundSettingsStore _settingsStore;
+
+        public ResXProcess(IDaemonProcess process,
+            IContextBoundSettingsStore settingsStore, IPsiSourceFile file)
         {
             _file = file;
+            _daemonProcess = process;
+            _settingsStore = settingsStore;
         }
 
         #region IDaemonStageProcess Members
 
-        public DaemonStageProcessResult Execute()
-        {
-            DaemonStageProcessResult result = new DaemonStageProcessResult();
-            CodeStyleSettings styleSettings = CodeStyleSettings.GetInstance(_file.GetSolution());
-            if (styleSettings == null)
-            {
-                //TODO:This might happen if plugin is activated manually
-                return result;
-            }
+        public void Execute(Action<DaemonStageResult> action)
+        {            
 
-            List<HighlightingInfo> highlightings = new List<HighlightingInfo>();
-            IModuleAttributes moduleAttributes = PsiManager.GetInstance(_file.GetSolution()).GetModuleAttributes(_file.GetProject());
+            List<HighlightingInfo> highlightings = new List<HighlightingInfo>();            
+
+            IPsiModule module = _file.GetPsiModule();
+
+            ResXSettings settings = _settingsStore.GetKey<ResXSettings>(SettingsOptimization.OptimizeDefault);
+
+            IAttributesSet moduleAttributes = _file.GetSolution().GetPsiServices().CacheManager.GetModuleAttributes(module);
             string defaultResXDic = "en-US";
             IList<IAttributeInstance> attributes = moduleAttributes
-                .GetAttributeInstances(new CLRTypeName(typeof (NeutralResourcesLanguageAttribute).FullName));
+                .GetAttributeInstances(new ClrTypeName(typeof(NeutralResourcesLanguageAttribute).FullName), false);
             if (attributes != null &&
                 attributes.Count > 0 &&
-                attributes[0].PositionParameter(0).Value != null)
+                attributes[0].PositionParameter(0).ConstantValue.Value != null)
             {
-                defaultResXDic = attributes[0].PositionParameter(0).Value.ToString();
+                defaultResXDic = attributes[0].PositionParameter(0).ConstantValue.Value.ToString();
             }
 
-            ISpellChecker checker = SpellCheckManager.GetSpellChecker(_file, defaultResXDic);
+            ISpellChecker checker = SpellCheckManager.GetSpellChecker(_settingsStore, _file, defaultResXDic);
             if (checker != null)
             {
-                foreach (IXmlTokenNode token in getStringsToCheck())
+                foreach (IXmlToken token in getStringsToCheck())
                 {
                     WordLexer lexer = new WordLexer(token.GetText());
                     lexer.Start();
                     while (lexer.TokenType != null)
                     {
-                        if (SpellCheckUtil.ShouldSpellCheck(lexer.TokenText) &&
+                        if (SpellCheckUtil.ShouldSpellCheck(lexer.TokenText, settings.CompiledWordsToIgnore) &&
                             !checker.TestWord(lexer.TokenText, false))
                         {
                             DocumentRange docRange = token.GetDocumentRange();
@@ -64,7 +78,7 @@ namespace AgentSmith.ResX
                             DocumentRange range = new DocumentRange(docRange.Document, textRange);
                             
                             ResXSpellHighlighting highlighting =
-                                new ResXSpellHighlighting(lexer.TokenText, _file, checker, range);
+                                new ResXSpellHighlighting(lexer.TokenText, _file, checker, range, _settingsStore);
                             
                             highlightings.Add(new HighlightingInfo(range, highlighting));
                         }
@@ -72,35 +86,36 @@ namespace AgentSmith.ResX
                     }
                 }
             }
-            result.Highlightings = highlightings.ToArray();
-            result.FullyRehighlighted = result.Highlightings.Length > 0;
-            return result;
+            action(new DaemonStageResult(highlightings.ToArray()));            
         }
+
+        public IDaemonProcess DaemonProcess { get { return _daemonProcess; } }
 
         #endregion
 
-        private IList<IXmlTokenNode> getStringsToCheck()
+        private IList<IXmlToken> getStringsToCheck()
         {
-            IList<IXmlTokenNode> tokens = new List<IXmlTokenNode>();
-            IXmlFile xmlFile = PsiManager.GetInstance(_file.GetSolution()).GetPsiFile(_file) as IXmlFile;
+            IList<IXmlToken> tokens = new List<IXmlToken>();
+            IXmlFile xmlFile = _file.GetPsiFile<XmlLanguage>() as IXmlFile;
+
             if (xmlFile != null)
             {
-                IXmlTag root = xmlFile.GetTag(delegate(IXmlTag tag) { return tag.TagName == "root"; });
+                IXmlTag root = xmlFile.GetTag(delegate(IXmlTag tag) { return tag.GetTagName() == "root"; });
 
                 if (root != null)
                 {
-                    IList<IXmlTag> datas = root.GetTags(delegate(IXmlTag tag) { return tag.TagName == "data"; });
+
+                    IEnumerable<IXmlTag> datas = root.GetTags<IXmlTag>().Where(tag => tag.GetTagName() == "data");
                     foreach (IXmlTag data in datas)
                     {
                         if (data.GetAttribute("type") == null)
                         {
-                            IXmlTag val = data.GetTag(delegate(IXmlTag tag) { return tag.TagName == "value"; });
+                            IXmlTag val = data.GetTag(delegate(IXmlTag tag) { return tag.GetTagName() == "value"; });
                             if (val != null)
                             {
-                                IXmlTagNode node = val.ToTreeNode();
-                                if (node.FirstChild != null && node.FirstChild.NextSibling != null)
+                                if (val.FirstChild != null && val.FirstChild.NextSibling != null)
                                 {
-                                    IXmlTokenNode value = node.FirstChild.NextSibling as IXmlTokenNode;
+                                    IXmlToken value = val.FirstChild.NextSibling as IXmlToken;
                                     if (value != null)
                                     {
                                         tokens.Add(value);

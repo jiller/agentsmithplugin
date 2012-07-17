@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
-using JetBrains.ReSharper.Daemon;
+
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
@@ -9,8 +10,8 @@ namespace AgentSmith.Comments
     [QuickFix]
     public class SurroundWithMetatagsQuickFix: IQuickFix
     {
-        private readonly CanBeSurroundedWithMetatagsSuggestion _suggestion;
-        public SurroundWithMetatagsQuickFix(CanBeSurroundedWithMetatagsSuggestion suggestion)
+        private readonly CanBeSurroundedWithMetatagsHighlight _suggestion;
+        public SurroundWithMetatagsQuickFix(CanBeSurroundedWithMetatagsHighlight suggestion)
         {
             _suggestion = suggestion;
         }
@@ -33,10 +34,10 @@ namespace AgentSmith.Comments
                 foreach (string format in replaceFormats)
                 {
                     string replacement = String.Format(format, _suggestion.Word);
-                    items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, replacement));
+                    items.Add(new ReplaceWordWithBulbItem(_suggestion.DocumentRange, replacement));
                 }
 
-                items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
+                items.Add(new ReplaceWordWithBulbItem(_suggestion.DocumentRange, String.Format("<c>{0}</c>", _suggestion.Word)));
                 
                 return items.ToArray();
             }

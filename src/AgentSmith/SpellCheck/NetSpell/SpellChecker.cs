@@ -79,7 +79,7 @@ namespace AgentSmith.SpellCheck.NetSpell
                                          ? _customDictionary.DecodedUserWords.Split('\n')
                                          :
                                              _customDictionary.DecodedUserWords.ToLower().Split('\n');
-                    _userWords.AddAll(words);
+                    _userWords.AddRange(words);
                 }
             }
         }

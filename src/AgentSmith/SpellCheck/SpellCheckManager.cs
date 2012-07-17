@@ -4,9 +4,13 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
 using AgentSmith.Options;
 using AgentSmith.SpellCheck.NetSpell;
+
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Psi;
 using JetBrains.Util;
 
 namespace AgentSmith.SpellCheck
@@ -17,7 +21,7 @@ namespace AgentSmith.SpellCheck
             new Dictionary<string, SpellChecker>();
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static ISpellChecker GetSpellChecker(IProjectFile resxFile, string defaultResXDictionary)
+        public static ISpellChecker GetSpellChecker(IContextBoundSettingsStore settingsStore, IPsiSourceFile resxFile, string defaultResXDictionary)
         {
             if (!resxFile.Name.ToLower().EndsWith(".resx"))
             {
@@ -40,14 +44,14 @@ namespace AgentSmith.SpellCheck
                 {
                     return _dictionaryCache[dictName];
                 }
-                return loadSpellChecker(dictName, resxFile.GetSolution());
+                return loadSpellChecker(settingsStore, dictName, resxFile.GetSolution());
             }
 
-            return GetSpellChecker(resxFile.GetSolution(), defaultResXDictionary);
+            return GetSpellChecker(settingsStore, resxFile.GetSolution(), defaultResXDictionary);
         }
 
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static ISpellChecker GetSpellChecker(ISolution solution, string dictionaryName)
+        public static ISpellChecker GetSpellChecker(IContextBoundSettingsStore settingsStore, ISolution solution, string dictionaryName)
         {
             if (dictionaryName == null)
             {
@@ -56,7 +60,7 @@ namespace AgentSmith.SpellCheck
 
             if (!_dictionaryCache.ContainsKey(dictionaryName))
             {
-                SpellChecker spellChecker = loadSpellChecker(dictionaryName, solution);
+                SpellChecker spellChecker = loadSpellChecker(settingsStore, dictionaryName, solution);
                 if (spellChecker != null)
                 {
                     _dictionaryCache.Add(dictionaryName, spellChecker);
@@ -69,7 +73,7 @@ namespace AgentSmith.SpellCheck
             return _dictionaryCache[dictionaryName];
         }
 
-        public static ISpellChecker GetSpellChecker(ISolution solution, string[] dictionaryNames)
+        public static ISpellChecker GetSpellChecker(IContextBoundSettingsStore settingsStore, ISolution solution, string[] dictionaryNames)
         {
             if (dictionaryNames == null || dictionaryNames.Length == 0)
             {
@@ -78,13 +82,13 @@ namespace AgentSmith.SpellCheck
 
             if (dictionaryNames.Length == 1)
             {
-                return GetSpellChecker(solution, dictionaryNames[0]);
+                return GetSpellChecker(settingsStore, solution, dictionaryNames[0]);
             }
 
             List<ISpellChecker> checkers = new List<ISpellChecker>();
             foreach (string dictionaryName in dictionaryNames)
             {
-                ISpellChecker checker = GetSpellChecker(solution, dictionaryName);
+                ISpellChecker checker = GetSpellChecker(settingsStore, solution, dictionaryName);
                 if (checker != null)
                 {
                     checkers.Add(checker);
@@ -99,19 +103,13 @@ namespace AgentSmith.SpellCheck
             _dictionaryCache.Clear();
         }
 
-        private static SpellChecker loadSpellChecker(string name, ISolution solution)
+        private static SpellChecker loadSpellChecker(IContextBoundSettingsStore settingsStore, string name, ISolution solution)
         {
-            CodeStyleSettings settings = CodeStyleSettings.GetInstance(solution);
-            if (settings == null)
-            {
-                return null;
-            }
-            
             string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
                                  String.Format("Agent Smith\\dic\\{0}.dic", name));
             if (!File.Exists(path))
             {
-                path = getDictPath(name);
+                path = GetDictPath(name);
                 if (!File.Exists(path))
                 {
                     return null;
@@ -123,8 +121,12 @@ namespace AgentSmith.SpellCheck
                 using (TextReader reader = File.OpenText(path))
                 {
                     WordDictionary dictionary = new WordDictionary(reader);
-                    CustomDictionary customDictionary =
-                        settings.CustomDictionaries.GetOrCreateCustomDictionary(name);
+
+                    CustomDictionary customDictionary = settingsStore.GetIndexedValue<CustomDictionarySettings, string, CustomDictionary>(x => x.CustomDictionaries, name);
+                    if (customDictionary == null)
+                    {
+                        customDictionary = new CustomDictionary() { Name = name };
+                    }
 
                     return new SpellChecker(dictionary, customDictionary);
                 }
@@ -136,7 +138,7 @@ namespace AgentSmith.SpellCheck
             }
         }
 
-        private static string getDictPath(string dictionaryName)
+        private static string GetDictPath(string dictionaryName)
         {
             return Path.Combine(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
                 String.Format("dic\\{0}.dic", dictionaryName));
