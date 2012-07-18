@@ -17,7 +17,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace AgentSmith.Comments
 {
     /// <summary>
-    /// A highlight for public members which don't have xml documentation comments
+    /// A highlight for private members which don't have xml documentation comments
     /// </summary>
     [ConfigurableSeverityHighlighting(SEVERITY_ID, CSharpLanguage.Name)]
     public class PrivateMemberMissingXmlCommentHighlighting : MissingXmlCommentHighlight

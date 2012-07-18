@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.DeclaredElements;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.MemberMatch

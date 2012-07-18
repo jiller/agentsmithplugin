@@ -4,21 +4,16 @@ using JetBrains.Application;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.InplaceRefactorings.Rename;
-using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Refactorings.CSharp.Rename;
 using JetBrains.ReSharper.Refactorings.Function2Property;
 using JetBrains.ReSharper.Refactorings.Rename;
-using JetBrains.ReSharper.Refactorings.RenameNamespace;
-using JetBrains.ReSharper.Refactorings.Workflow;
 using JetBrains.TextControl;
 
 namespace AgentSmith.Identifiers
 {
-    internal class RenameBulbItem : IBulbItem
+    internal class RenameBulbItem : IBulbAction
     {
         private readonly IDeclaration _declaration;
 

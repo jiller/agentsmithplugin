@@ -33,10 +33,9 @@ namespace AgentSmith.SpellCheck
 
         public override bool IsKeyword { get { throw new NotImplementedException(); } }
 
-        public override PsiLanguageType LanguageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+	    public override string TokenRepresentation {
+		    get { throw new NotImplementedException(); }
+	    }
 
         public override LeafElementBase Create(IBuffer buffer, TreeOffset startOffset, TreeOffset endOffset)
         {

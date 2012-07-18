@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AgentSmith</RootNamespace>
     <AssemblyName>AgentSmith</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -41,6 +41,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -96,18 +97,25 @@
     <Compile Include="MemberMatch\MatchDeclarationDescription.cs" />
     <Compile Include="MemberMatch\ParamDirection.cs" />
     <Compile Include="MemberMatch\TypeDeclarationMap.cs" />
+    <Compile Include="Options\AgentSmithGeneralPage.cs" />
+    <Compile Include="Options\AgentSmithOptionsPage.cs" />
     <Compile Include="Options\AgentSmithOptionsUI.xaml.cs">
       <DependentUpon>AgentSmithOptionsUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Options\CommentOptionsPage.cs" />
     <Compile Include="Options\CommentOptionsUI.xaml.cs">
       <DependentUpon>CommentOptionsUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Options\IdentifierOptionsPage.cs" />
+    <Compile Include="Options\ReflowAndRetagOptionsPage.cs" />
     <Compile Include="Options\ReflowAndRetagOptionsUI.xaml.cs">
       <DependentUpon>ReflowAndRetagOptionsUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Options\ResourceOptionsPage.cs" />
     <Compile Include="Options\ResXOptionsUI.xaml.cs">
       <DependentUpon>ResXOptionsUI.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Options\StringOptionsPage.cs" />
     <Compile Include="Options\StringOptionsUI.xaml.cs">
       <DependentUpon>StringOptionsUI.xaml</DependentUpon>
     </Compile>
@@ -115,7 +123,10 @@
       <DependentUpon>IdentifierOptionsUI.xaml</DependentUpon>
     </Compile>
     <Compile Include="Options\IntegerTextBox.cs" />
+    <Compile Include="Options\ThemedIcons.Options.Generated.cs" />
     <Compile Include="Options\WhitespaceOptionsList.cs" />
+    <Compile Include="Options\XmlDocumentationGeneralOptionsPage.cs" />
+    <Compile Include="Options\XmlDocumentationOptionsPage.cs" />
     <Compile Include="Options\XmlDocumentationOptionsUI.xaml.cs">
       <DependentUpon>XmlDocumentationOptionsUI.xaml</DependentUpon>
     </Compile>
@@ -168,7 +179,6 @@
     <Compile Include="Strings\StringSpellCheckHighlighting.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Options\samplePage.gif" />
     <EmbeddedResource Include="Actions.xml" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -200,6 +210,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Options\ThemedIcons.Options.Generated.Xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Options\XmlDocumentationOptionsUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -213,9 +227,30 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <ThemedIconPng Include="Options\samplePage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dic\de-DE.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dic\en-AU.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dic\en-CA.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dic\en-GB.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="dic\en-US.dic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
-    <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v6.1</ReSharperSdkTargets>
+    <ReSharperSdkTargets Condition=" '$(ReSharperSdkTargets)' == '' ">$(MSBuildExtensionsPath)\JetBrains\ReSharper.SDK\v7.0</ReSharperSdkTargets>
   </PropertyGroup>
   <Import Project="$(ReSharperSdkTargets)\Plugin.Targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(ReSharperSdkTools)\MSBuild\JetBrains.Build.Platform.ThemedIconsConverter.Targets" />
 </Project>

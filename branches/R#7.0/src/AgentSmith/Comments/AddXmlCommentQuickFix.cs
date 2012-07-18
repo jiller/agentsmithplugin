@@ -1,8 +1,10 @@
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Intentions.Extensibility.Menu;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
@@ -32,7 +34,11 @@ namespace AgentSmith.Comments
 
         #region IQuickFix Members
 
-        /// <summary>
+	    public void CreateBulbItems(BulbMenu menu, Severity severity) {
+			menu.ArrangeQuickFix(new AddCommentBulbItem(_declaration), severity);
+	    }
+
+	    /// <summary>
         /// Check if this action is available at the constructed context.
         ///             Actions could store pre-calculated info in <paramref name="cache"/> to share it between different actions
         /// </summary>
@@ -44,21 +50,13 @@ namespace AgentSmith.Comments
             return true;
         }
 
-        /// <summary>
-        /// An array of bulb items that this bulb action supports.
-        /// </summary>
-        public IBulbItem[] Items
-        {
-            get { return new IBulbItem[] { new AddCommentBulbItem(_declaration) }; }
-        }
-
         #endregion
     }
 
     /// <summary>
     /// Bulb item which allows the user to add a new, empty XML documentation comment to a declaration.
     /// </summary>
-    internal class AddCommentBulbItem : IBulbItem
+    internal class AddCommentBulbItem : IBulbAction
     {
         /// <summary>
         /// Internal storage for the declaration to add the comment to
