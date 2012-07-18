@@ -8,12 +8,12 @@ using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck
 {
-    public class AddToDictionaryBulbItem : IBulbItem
+    public class AddToDictionaryBulbItem : IBulbAction
     {
         private readonly string _word;
         private readonly string _dictName;

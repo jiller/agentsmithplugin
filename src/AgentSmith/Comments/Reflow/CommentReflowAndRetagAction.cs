@@ -1,15 +1,14 @@
 using System;
 
 using AgentSmith.Options;
-using JetBrains.ActionManagement;
-using JetBrains.Annotations;
+
 using JetBrains.Application;
-using JetBrains.Application.DataContext;
 using JetBrains.Application.Progress;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.CSharp.Bulbs;
+using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -19,7 +18,7 @@ using JetBrains.Util;
 namespace AgentSmith.Comments.Reflow
 {
     [ContextAction(Group = "C#", Name = "Reflow & Retag Comment", Description = "Reflow & Retag Comment.")]
-    internal class CommentReflowAndRetagAction : BulbItemImpl, IContextAction
+    internal class CommentReflowAndRetagAction : ContextActionBase
     {
 
         protected readonly IContextActionDataProvider Provider;
@@ -126,7 +125,7 @@ namespace AgentSmith.Comments.Reflow
             return Provider.GetSelectedElement<T>(true, true);
         }
 
-        public bool IsAvailable(IUserDataHolder cache)
+        public override bool IsAvailable(IUserDataHolder cache)
         {
             using (ReadLockCookie.Create())
             {

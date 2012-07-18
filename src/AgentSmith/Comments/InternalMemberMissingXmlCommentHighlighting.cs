@@ -36,7 +36,7 @@ namespace AgentSmith.Comments
         /// <summary>
         /// The ID of this highlight - used to uniquely identify this highlight in the options.
         /// </summary>
-        public const string SEVERITY_ID = "PrivateMembersMustHaveComments";
+		public const string SEVERITY_ID = "InternalMembersMustHaveComments";
 
     }
 }

@@ -59,16 +59,13 @@ namespace AgentSmith
         /// <param name="commiter">The function to call when we've finished the stage to report the results.</param>
         public void Execute(Action<DaemonStageResult> commiter)
         {
-
-            var highlightings = new List<HighlightingInfo>();
-
-            IFile file = this._daemonProcess.SourceFile.GetPsiFile(CSharpLanguage.Instance);
+            IFile file = _daemonProcess.SourceFile.GetNonInjectedPsiFile(CSharpLanguage.Instance);
             if (file == null)
             {
                 return;
             }
-
-            CommentSettings commentSettings = _settingsStore.GetKey<CommentSettings>(SettingsOptimization.OptimizeDefault);
+			var highlightings = new List<HighlightingInfo>();
+            var commentSettings = _settingsStore.GetKey<CommentSettings>(SettingsOptimization.OptimizeDefault);
 
 
             file.ProcessChildren<ICSharpCommentNode>(commentNode => CheckComment(commentNode, highlightings, commentSettings));

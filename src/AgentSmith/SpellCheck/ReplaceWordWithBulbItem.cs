@@ -1,17 +1,14 @@
 using System;
 
-using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.TextControl;
-using JetBrains.Util;
 
 namespace AgentSmith.SpellCheck
 {
-    public class ReplaceWordWithBulbItem : BulbItemImpl
+    public class ReplaceWordWithBulbItem : BulbActionBase
     {
         private readonly string _option;
         private readonly DocumentRange _documentRange;

@@ -58,11 +58,11 @@ namespace AgentSmith.SmartPaste
             ITextControl editor = context.GetData(JetBrains.TextControl.DataContext.DataConstants.TEXT_CONTROL);
             Logger.Assert(editor != null, "Condition (editor != null) is false");
 
-            IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
+			IDocument document = context.GetData(JetBrains.DocumentModel.DataConstants.DOCUMENT);
 
             if (editor == null || document == null) throw new ArgumentException("context");
 
-            ICSharpFile file = PsiManager.GetInstance(solution).GetPsiFile<CSharpLanguage>(document) as ICSharpFile;
+			ICSharpFile file = PsiManager.GetInstance(solution).GetPsiFile<CSharpLanguage>(new DocumentRange(editor.Document, editor.Caret.Offset())) as ICSharpFile;
             if (file == null) return;
             
             ITreeNode element = file.FindNodeAt(new TreeTextRange(new TreeOffset(editor.Caret.Offset())));
@@ -189,7 +189,7 @@ namespace AgentSmith.SmartPaste
         private static bool IsAvailable(IDataContext context)
         {
             ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
-            IDocument document = context.GetData(JetBrains.IDE.DataConstants.DOCUMENT);
+			IDocument document = context.GetData(JetBrains.DocumentModel.DataConstants.DOCUMENT);
             IPsiSourceFile file = null;
             if (solution != null && document != null) file = document.GetPsiSourceFile(solution);
             return solution != null && document != null && file != null && file.PrimaryPsiLanguage.Is<CSharpLanguage>() ;

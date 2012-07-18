@@ -8,7 +8,7 @@ using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.CSharp.Bulbs;
-using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -19,7 +19,7 @@ namespace AgentSmith.Comments.Reflow
 {
         
     [ContextAction(Group = "C#", Name = "Reflow comment", Description = "Reflow comment.")]
-    internal class CommentReflowAction : BulbItemImpl, IContextAction
+    internal class CommentReflowAction : ContextActionBase
     {
 
         protected readonly IContextActionDataProvider Provider;
@@ -122,7 +122,7 @@ namespace AgentSmith.Comments.Reflow
             return Provider.GetSelectedElement<T>(true, true);
         }
 
-        public bool IsAvailable(IUserDataHolder cache)
+        public override bool IsAvailable(IUserDataHolder cache)
         {
             using (ReadLockCookie.Create())
             {

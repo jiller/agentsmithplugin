@@ -40,12 +40,12 @@ namespace AgentSmith.Comments.Reflow
 
         public bool IsAvailable(IPsiSourceFile sourceFile)
         {
-            return sourceFile.GetPsiFile<CSharpLanguage>() != null;
+			return sourceFile.GetNonInjectedPsiFile<CSharpLanguage>() != null;
         }
 
         public void Process(IPsiSourceFile sourceFile, IRangeMarker rangeMarker, CodeCleanupProfile profile, IProgressIndicator progressIndicator)
         {
-            var file = sourceFile.GetPsiFile<CSharpLanguage>();
+			var file = sourceFile.GetNonInjectedPsiFile<CSharpLanguage>();
             if (file == null)
                 return;
 
