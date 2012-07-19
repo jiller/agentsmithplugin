@@ -1,15 +1,15 @@
-using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using NUnit.Framework;
 
 namespace AgentSmith.Test.SpellCheck {
 
-	[TestClass]
+	[TestFixture]
 	public class CamelHumpLexerTest {
-		public TestContext TestContext { get; set; }
+		
 
-		[TestMethod()]
+		[Test]
 		public void Test() {
 			testTokens("SimpleCase", "Simple", "Case");
 			testTokens("aSimpleCase", "a", "Simple", "Case");
