@@ -1,13 +1,13 @@
 using JetBrains.ReSharper.Psi.Parsing;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
+
 
 namespace AgentSmith.SpellCheck {
-	[TestClass]
+	[TestFixture]
 	public class WordLexerTest {
-		public TestContext TestContext { get; set; }
-
-		[TestMethod]
+		
+		[Test]
 		public void Test() {
 			testTokens(" hello 256th (seconds", "hello", "256th", "seconds");
 			testTokens(" 'word1''  ''word2''", "word1", "word2");
