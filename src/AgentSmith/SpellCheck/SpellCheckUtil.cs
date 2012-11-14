@@ -1,11 +1,22 @@
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AgentSmith.SpellCheck
 {
     public static class SpellCheckUtil
     {
-        public static bool ShouldSpellCheck(string word)
+        public static bool ShouldSpellCheck(string word, List<Regex> ignoreRegexes = null)
         {
+
+            if (ignoreRegexes != null)
+            {
+                foreach (Regex re in ignoreRegexes)
+                {
+                    if (re.IsMatch(word)) return false;
+                }
+            }
+
             return word != word.ToUpper() && !containsDigit(word);
         }
 

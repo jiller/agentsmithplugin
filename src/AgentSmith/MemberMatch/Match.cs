@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using JetBrains.ProjectModel;
@@ -194,21 +193,24 @@ namespace AgentSmith.MemberMatch
             _markedWithAttributeType = null;
             _inheritedFromType = null;
             _isOfTypeType = null;
-            DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
-            IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
+
+            CacheManager cacheManager = solution.GetPsiServices().CacheManager;
+                    
+            IDeclarationsCache cache = cacheManager.GetDeclarationsCache(DeclarationCacheLibraryScope.FULL, true);
             if (!string.IsNullOrEmpty(_markedWithAttribute))
             {
-                _markedWithAttributeType = cache[_markedWithAttribute] as ITypeElement;
+                
+                _markedWithAttributeType = cache.GetTypeElementByCLRName(_markedWithAttribute);
             }
 
             if (!string.IsNullOrEmpty(_inheritedFrom))
             {
-                _inheritedFromType = cache[_inheritedFrom] as ITypeElement;
+                _inheritedFromType = cache.GetTypeElementByCLRName(_inheritedFrom);
             }
 
             if (!string.IsNullOrEmpty(_isOfType))
             {
-                _isOfTypeType = cache[_isOfType] as ITypeElement;
+                _isOfTypeType = cache.GetTypeElementByCLRName(_isOfType);
             }
         }
 
@@ -268,7 +270,7 @@ namespace AgentSmith.MemberMatch
             {
                 sb.AppendFormat("{0} ", ParamDirection);
             }
-            sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration " : description.Name.ToLower());
+            sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration" : description.Name.ToLower());
             if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
             {
                 sb.AppendFormat("inherited from '{0}' ", _inheritedFrom);
@@ -401,7 +403,7 @@ namespace AgentSmith.MemberMatch
 
             if (declaration is IParameterDeclaration)
             {
-                declaration = ((IParameterDeclaration) declaration).GetContainingTypeMemberDeclaration();
+                declaration = declaration.GetContainingNode<ITypeMemberDeclaration>();
             }
             
             if (!(declaration is IModifiersOwner))

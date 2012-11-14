@@ -1,24 +1,35 @@
 using System;
-using JetBrains.ReSharper.Psi;
+using System.Text.RegularExpressions;
+
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Xml.XmlDocComments;
+using JetBrains.Text;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments
 {
     public class XmlDocLexer : ILexer
     {
-        public readonly XmlTokenTypes XmlTokenType = XmlTokenTypeFactory.GetTokenTypes(PsiLanguageType.UNKNOWN);
+        public readonly XmlTokenTypes XmlTokenType = XmlTokenTypes.GetInstance(XmlDocLanguage.Instance);
         private readonly IDocCommentBlockNode _myDocCommentBlock;
+        private ITreeNode _myCurrentNode;
         private IDocCommentNode _myCurrentCommentNode;
         private XmlLexerGenerated _myLexer;
 
+        private int _commentStartLength = -1;
+
         public XmlDocLexer(IDocCommentBlockNode docCommentBlock)
         {
+            
             _myDocCommentBlock = docCommentBlock;
             Start();
+        }
+
+        public ITreeNode CurrentNode
+        {
+            get { return _myCurrentNode; }
         }
 
         public IDocCommentNode CurrentCommentNode
@@ -30,12 +41,11 @@ namespace AgentSmith.Comments
         {
             get
             {
-                if (_myCurrentCommentNode == null)
+                if (_myCurrentNode == null)
                 {
                     return TextRange.InvalidRange;
                 }
-                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
-                int offset = leaf.Offset - leaf.GetDocumentRange().TextRange.StartOffset;
+                int offset = _myCurrentNode.GetTreeStartOffset().Offset;// - leaf.GetDocumentRange().TextRange.StartOffset;
                 return new TextRange(TokenStart - offset, TokenEnd - offset);
             }
         }
@@ -44,17 +54,20 @@ namespace AgentSmith.Comments
 
         public void Advance()
         {
-            if (_myCurrentCommentNode != null)
+            if (_myCurrentNode != null)
             {
-                uint state = _myLexer.LexerState;
+                uint state = _myLexer.LexerStateEx;
+
                 _myLexer.Advance();
                 if (_myLexer.TokenType == null)
                 {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);
+                    restartLexer(_myCurrentNode.NextSibling, state);
                     Logger.LogMessage("TokenStart=" + TokenStart);
                 }
             }
         }
+
+        public object CurrentPosition { get { return _myLexer.CurrentPosition; } set { _myLexer.CurrentPosition = (XmlLexerState)value; } }
 
         public void RestoreState(object state)
         {
@@ -68,7 +81,29 @@ namespace AgentSmith.Comments
 
         public void Start()
         {
+            _myCurrentNode = null;
             _myCurrentCommentNode = null;
+
+            // Our technique for inserting the comment requires extra space at the start so we only chop off the actual ///
+
+            // Work out the base indent for the comment
+            // Regex re = new Regex(@"^\s*///\s*");
+            /*
+            int minLength = -1;
+            foreach (IDocCommentNode node in _myDocCommentBlock.Children<IDocCommentNode>())
+            {
+                string text = node.GetText();
+                Match m = re.Match(text);
+                if (!m.Success) continue;
+
+                int len = m.Groups[0].Value.Length;
+                if (len == text.Length) continue; // Ignore short empty lines.
+
+                if (minLength < 0 || len < minLength) minLength = len;
+            }
+            _commentStartLength = minLength;
+            */
+            _commentStartLength = 3;
             restartLexer(_myDocCommentBlock.FirstChild, 0);
         }
 
@@ -114,7 +149,7 @@ namespace AgentSmith.Comments
             {
                 if (_myLexer != null)
                 {
-                    return _myLexer.TokenText;
+                    return _myLexer.GetCurrTokenText();
                 }
                 return null;
             }
@@ -136,30 +171,39 @@ namespace AgentSmith.Comments
 
         private void restartLexer(ITreeNode child, uint state)
         {
+            _myCurrentNode = null;
             _myCurrentCommentNode = null;
             while (child != null)
             {
+                _myCurrentNode = child;
+
                 _myCurrentCommentNode = child as IDocCommentNode;
                 if (_myCurrentCommentNode != null)
                 {
-                    break;
+                    //LeafElementBase leaf = (LeafElementBase)_myCurrentCommentNode;
+
+                    _myLexer = new XmlLexerGenerated(_myCurrentCommentNode.GetTextAsBuffer(), XmlTokenType);
+                    //_myLexer.Start(leaf.GetTreeStartOffset().Offset + 3, leaf.GetTreeStartOffset().Offset + leaf.GetTextLength(), state);
+                    _myLexer.Start(_commentStartLength, _myCurrentCommentNode.GetTextLength(), state);
+                    if (_myLexer.TokenType == null)
+                    {
+                        restartLexer(_myCurrentCommentNode.NextSibling, state);
+                    }
+                    return;
                 }
+
+                IWhitespaceNode whitespaceNode = child as IWhitespaceNode;
+                if (whitespaceNode != null && whitespaceNode.IsNewLine)
+                {
+                    _myLexer = new XmlLexerGenerated(new StringBuffer("\n"), XmlTokenType);
+                    //_myLexer.Start(leaf.GetTreeStartOffset().Offset + 3, leaf.GetTreeStartOffset().Offset + leaf.GetTextLength(), state);
+                    _myLexer.Start(0, 1, state);
+                    return;
+                }
+
                 child = child.NextSibling;
             }
-            if (_myCurrentCommentNode != null)
-            {
-                LeafElement leaf = (LeafElement)_myCurrentCommentNode;
-                _myLexer = new XmlLexerGenerated(leaf.Buffer);
-                _myLexer.Start(leaf.Offset + 3, leaf.Offset + leaf.Length, state);
-                if (_myLexer.TokenType == null)
-                {
-                    restartLexer(_myCurrentCommentNode.NextSibling, state);
-                }
-            }
-            else
-            {
-                _myLexer = null;
-            }
+            _myLexer = null;
         }
     }
 }
