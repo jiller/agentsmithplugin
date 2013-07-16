@@ -1,5 +1,6 @@
 using System;
 using JetBrains.ReSharper.Psi.Parsing;
+using JetBrains.Text;
 using JetBrains.Util;
 
 namespace AgentSmith.SpellCheck
@@ -51,6 +52,8 @@ namespace AgentSmith.SpellCheck
             }
         }
 
+        public object CurrentPosition { get { return _tokenStart; } set { _tokenStart = (int)value; } }
+
         public object SaveState()
         {
             throw new NotImplementedException();
@@ -83,14 +86,14 @@ namespace AgentSmith.SpellCheck
 
         public IBuffer Buffer
         {
-            get { throw new NotImplementedException(); }
+            get { return new StringBuffer(_data); }
         }
 
         #endregion
 
         private bool isSeparator(int i)
         {
-            return !(char.IsLetterOrDigit(_data, i) || _data[i] == '_') || _data[i] == '-';
+            return !(char.IsLetterOrDigit(_data, i) || _data[i] == '_' || _data[i] == '\'' || _data[i] == '&') || _data[i] == '-';
         }
 
         #region Nested type: WordTokenType
