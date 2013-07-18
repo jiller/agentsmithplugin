@@ -40,28 +40,27 @@ namespace AgentSmith.Comments.Reflow
 
         public bool IsAvailable(IPsiSourceFile sourceFile)
         {
-            return sourceFile.GetNonInjectedPsiFile<CSharpLanguage>() != null;
+			return sourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance) != null;
         }
 
 
         public void Process(IPsiSourceFile sourceFile, IRangeMarker rangeMarker, CodeCleanupProfile profile, IProgressIndicator progressIndicator)
         {
-			IFile file = sourceFile.GetNonInjectedPsiFile<CSharpLanguage>();
+			IFile file = sourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance);
             if (file == null)
                 return;
 
             if (!profile.GetSetting(DescriptorInstance))
                 return;
 
-            file.GetPsiServices().PsiManager.DoTransaction(
+            file.GetPsiServices().Transactions.Execute("Reflow & Retag XML Documentation Comments",
                 () =>
                 {
                     using (_shellLocks.UsingWriteLock())
                         file.ProcessChildren<IDocCommentBlockOwnerNode>(x =>
                             CommentReflowAndRetagAction.ReflowAndRetagCommentBlockNode(x.GetSolution(), null, x.GetDocCommentBlockNode())
                             );
-                },
-                "Reflow & Retag XML Documentation Comments");
+                });
         }
 
         public PsiLanguageType LanguageType

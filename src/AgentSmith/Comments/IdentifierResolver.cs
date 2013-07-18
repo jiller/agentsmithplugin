@@ -2,11 +2,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using AgentSmith.Options;
+
+using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 
@@ -125,11 +128,13 @@ namespace AgentSmith.Comments
             return inFileResults;
         }
 
-        private static List<TypeAndNamespace> getDeclaredElements(string word, ICSharpTypeMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries)
-        {
-            CacheManager cacheManager = solution.GetPsiServices().CacheManager;
-            IDeclarationsCache declarationsCache = cacheManager.GetDeclarationsCache(scope.AsLibraryScope(), true);
-            IClrDeclaredElement[] declaredElements = declarationsCache.GetElementsByShortName(word);
+        private static List<TypeAndNamespace>
+			getDeclaredElements(string word, ICSharpTypeMemberDeclaration declaration, ISolution solution, IdentifierLookupScopes scope = IdentifierLookupScopes.ProjectAndReferencedLibraries) {
+			//solution.GetPsiServices().SolutionProject.ProjectFile.
+	        IModuleReferenceResolveContext context = declaration.DeclaredElement.ResolveContext;
+	        IClrDeclaredElement[] declaredElements = solution.GetPsiServices()
+	                                 .Symbols.GetSymbolScope(scope.AsLibrarySymbolScope(), true, context)
+	                                 .GetElementsByShortName(word);
             return getTypeAndNamespaces(declaredElements, declaration, solution, scope);
         }
 
@@ -152,9 +157,10 @@ namespace AgentSmith.Comments
                 
             }
 
-            CacheManager cacheManager = solution.GetPsiServices().CacheManager;
-            IDeclarationsCache declarationsCache = cacheManager.GetDeclarationsCache(scope.AsLibraryScope(), true);
-            ICollection<IClrDeclaredElement> declaredElements = declarationsCache.GetElementsByQualifiedName(crefText);
+			IModuleReferenceResolveContext context = declaration.DeclaredElement.ResolveContext;
+			ICollection<IClrDeclaredElement> declaredElements = solution.GetPsiServices()
+									 .Symbols.GetSymbolScope(scope.AsLibrarySymbolScope(), true, context)
+									 .GetElementsByQualifiedName(crefText);
             if (declaredElements.Count == 0)
             {
                 return crefText;

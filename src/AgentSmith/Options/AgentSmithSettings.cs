@@ -274,21 +274,19 @@ namespace AgentSmith.Options
 
     public static class IdentifierLookupScopesEx
     {
-        public static DeclarationCacheLibraryScope AsLibraryScope(this IdentifierLookupScopes scope)
-        {
-            switch (scope)
-            {
-                case IdentifierLookupScopes.ProjectOnly:
-                    return DeclarationCacheLibraryScope.NONE;
-                case IdentifierLookupScopes.ProjectAndUsings:
-                    return DeclarationCacheLibraryScope.TRANSITIVE;
-                case IdentifierLookupScopes.ProjectAndReferencedLibraries:
-                    return DeclarationCacheLibraryScope.REFERENCED;
-                case IdentifierLookupScopes.ProjectAndAllLibraries:
-                    return DeclarationCacheLibraryScope.FULL;
-            }
-            return DeclarationCacheLibraryScope.NONE;
-        }
+		public static LibrarySymbolScope AsLibrarySymbolScope(this IdentifierLookupScopes scope) {
+			switch (scope) {
+				case IdentifierLookupScopes.ProjectOnly:
+					return LibrarySymbolScope.NONE; //DeclarationCacheLibraryScope.NONE;
+				case IdentifierLookupScopes.ProjectAndUsings:
+					return LibrarySymbolScope.TRANSITIVE; // DeclarationCacheLibraryScope.TRANSITIVE;
+				case IdentifierLookupScopes.ProjectAndReferencedLibraries:
+					return LibrarySymbolScope.REFERENCED; //DeclarationCacheLibraryScope.REFERENCED;
+				case IdentifierLookupScopes.ProjectAndAllLibraries:
+					return LibrarySymbolScope.FULL; //DeclarationCacheLibraryScope.FULL;
+			}
+			return LibrarySymbolScope.NONE; //DeclarationCacheLibraryScope.NONE;
+		}
     }
 
     [SettingsKey(typeof(AgentSmithSettings), "Identifier Settings")]
