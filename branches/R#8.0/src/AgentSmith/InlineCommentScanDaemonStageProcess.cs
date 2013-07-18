@@ -59,7 +59,7 @@ namespace AgentSmith
         /// <param name="commiter">The function to call when we've finished the stage to report the results.</param>
         public void Execute(Action<DaemonStageResult> commiter)
         {
-            IFile file = _daemonProcess.SourceFile.GetNonInjectedPsiFile(CSharpLanguage.Instance);
+            IFile file = _daemonProcess.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance);
             if (file == null)
             {
                 return;

@@ -6,6 +6,7 @@ using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
+using JetBrains.UI.Application;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.Helpers;
 
@@ -21,8 +22,8 @@ namespace AgentSmith.Options
 
         private CustomDictionariesOptionsUI _optionsUI;
 
-        public CustomDictionariesOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext)
-            : base(lifetime, PID)
+		public CustomDictionariesOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext, IUIApplication environment)
+            : base(lifetime, environment, PID)
         {
             _settings = settingsSmartContext;
             _optionsUI = new CustomDictionariesOptionsUI();

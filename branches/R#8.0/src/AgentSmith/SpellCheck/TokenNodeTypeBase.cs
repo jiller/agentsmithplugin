@@ -8,7 +8,7 @@ namespace AgentSmith.SpellCheck
 {
     public class TokenNodeTypeBase: TokenNodeType
     {
-        public TokenNodeTypeBase(string name) : base(name)
+        public TokenNodeTypeBase(string name, int index) : base(name, index)
         {
         }
 

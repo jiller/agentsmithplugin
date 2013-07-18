@@ -2,6 +2,7 @@ using System.Reflection;
 
 using JetBrains.Annotations;
 using JetBrains.DataFlow;
+using JetBrains.UI.Application;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.Helpers;
 
@@ -15,8 +16,8 @@ namespace AgentSmith.Options {
 
 		private AgentSmithOptionsUI _optionsUI;
 
-		public AgentSmithGeneralPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext)
-			: base(lifetime, PID) {
+		public AgentSmithGeneralPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext, IUIApplication environment)
+			: base(lifetime, environment, PID) {
 			_settings = settingsSmartContext;
 			_optionsUI = new AgentSmithOptionsUI();
 

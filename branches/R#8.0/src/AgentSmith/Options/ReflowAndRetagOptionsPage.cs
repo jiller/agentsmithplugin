@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JetBrains.DataFlow;
+using JetBrains.UI.Application;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.Helpers;
 
@@ -14,8 +15,8 @@ namespace AgentSmith.Options {
 
 		private ReflowAndRetagOptionsUI _optionsUI;
 
-		public ReflowAndRetagOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext)
-			: base(lifetime, PID)
+		public ReflowAndRetagOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settingsSmartContext, IUIApplication environment)
+			: base(lifetime, environment, PID)
 		{
 			_settings = settingsSmartContext;
 			_optionsUI = new ReflowAndRetagOptionsUI(_settings);

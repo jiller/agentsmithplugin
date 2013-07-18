@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using AgentSmith.SpellCheck;
 
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Intentions.Extensibility;
 using JetBrains.ReSharper.Intentions.Extensibility.Menu;
 using JetBrains.Util;
-
-using System.Linq;
 
 namespace AgentSmith.Comments {
 	[QuickFix]
@@ -19,9 +16,9 @@ namespace AgentSmith.Comments {
 			_suggestion = suggestion;
 		}
 
-		public void CreateBulbItems(BulbMenu menu, Severity severity) {
-			IEnumerable<IBulbAction> items = CreateItems();
-			menu.ArrangeQuickFixes(items.Select(i => new Pair<IBulbAction, Severity>(i, severity)));
+		public IEnumerable<IntentionAction> CreateBulbItems() {
+			return CreateItems()
+				.ToContextAction();
 		}
 
 		public bool IsAvailable(IUserDataHolder cache) {
