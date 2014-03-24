@@ -126,18 +126,25 @@ namespace AgentSmith
                             if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value, settings.CompiledWordsToIgnore) &&
                                 !spellChecker.TestWord(humpToken.Value, true))
                             {
-                                int start = token.GetTreeStartOffset().Offset + wordLexer.TokenStart;
-                                int end = start + tokenText.Length;
+								//int start = token.GetTreeStartOffset().Offset + wordLexer.TokenStart;
+								//int end = start + tokenText.Length;
 
-                                TextRange range = new TextRange(start, end);
-                                DocumentRange documentRange = new DocumentRange(document, range);
+								//var range = new TextRange(start, end);
+								//var documentRange = new DocumentRange(document, range);
+	                            DocumentRange documentRange =
+		                            token.GetContainingFile().TranslateRangeForHighlighting(token.GetTreeTextRange());
+								documentRange = documentRange.ExtendLeft(-wordLexer.TokenStart);
+								documentRange = documentRange.ExtendRight(-1*(documentRange.GetText().Length - tokenText.Length));
+
+
                                 TextRange textRange = new TextRange(humpToken.Start - wordLexer.TokenStart,
                                     humpToken.End - wordLexer.TokenStart);
-
+	                            //string word = document.GetText(range);
+	                            string word = documentRange.GetText();
                                 highlightings.Add(
                                     new HighlightingInfo(
                                         documentRange,
-                                        new StringSpellCheckHighlighting(document.GetText(range), documentRange,
+                                        new StringSpellCheckHighlighting(word, documentRange,
                                             humpToken.Value, textRange,
                                             solution, spellChecker, settingsStore)));
 
