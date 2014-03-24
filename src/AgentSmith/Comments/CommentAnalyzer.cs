@@ -1,119 +1,132 @@
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Xml;
+
 using AgentSmith.MemberMatch;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+
+using JetBrains.Application.Settings;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Editor;
+using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
+
+using Match = AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Comments
 {
-    public class CommentAnalyzer : IDeclarationAnalyzer
+    public class CommentAnalyzer
     {
-        private readonly CommentsSettings _settings;
+        private readonly XmlDocumentationSettings _xmlDocumentationSettings;
+        private readonly IdentifierSettings _identifierSettings;
         private readonly ISolution _solution;
-        private readonly ISpellChecker _spellChecker;
-        
-        public CommentAnalyzer(CommentsSettings settings, ISolution solution)
+        private readonly ISpellChecker _xmlDocumentationSpellChecker;
+
+        private readonly IContextBoundSettingsStore _settingsStore;
+
+        public CommentAnalyzer(ISolution solution, IContextBoundSettingsStore settingsStore)
         {
-            _settings = settings;
+            _settingsStore = settingsStore;
             _solution = solution;
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution, _settings.DictionaryName == null ? null : _settings.DictionaryName.Split(','));
+            _xmlDocumentationSettings = _settingsStore.GetKey<XmlDocumentationSettings>(SettingsOptimization.OptimizeDefault);
+            _identifierSettings = _settingsStore.GetKey<IdentifierSettings>(SettingsOptimization.OptimizeDefault);
+            _xmlDocumentationSpellChecker = SpellCheckManager.GetSpellChecker(
+                _settingsStore,
+                _solution,
+                this._xmlDocumentationSettings.DictionaryName == null
+                    ? null
+                    : this._xmlDocumentationSettings.DictionaryNames
+                );
+        }
 
-            ComplexMatchEvaluator.Prepare(solution, _settings.CommentMatch, _settings.CommentNotMatch);
-        }        
+                #region Nested type: Range
 
-        #region IDeclarationAnalyzer Members
-
-        public SuggestionBase[] Analyze(IDeclaration declaration, bool spellCheck)
+        private struct Range
         {
-            if (!(declaration is IClassMemberDeclaration) ||
-                !CanBeSurroundedWithMetatagsSuggestion.Enabled && !WordIsNotInDictionarySuggestion.Enabled)
+            public readonly TreeTextRange TreeTextRange;
+            public readonly string Word;
+
+            public Range(string word, TreeTextRange range)
             {
-                return new SuggestionBase[0];
+                Word = word;
+                TreeTextRange = range;
             }
-
-            List<SuggestionBase> highlightings = new List<SuggestionBase>();
-
-            checkCommentSpelling((IClassMemberDeclaration)declaration, highlightings, spellCheck);
-            checkMembersHaveComments((IClassMemberDeclaration)declaration, highlightings);
-
-            return highlightings.ToArray();
         }
 
         #endregion
 
-        private IDocCommentBlockNode getDocBlock(IClassMemberDeclaration decl)
+
+
+        public void CheckCommentSpelling(IClassMemberDeclaration decl, IDocCommentBlockNode docNode,
+                                  List<HighlightingInfo> highlightings, bool spellCheck)
         {
-            IMultipleDeclarationMemberNode node = decl as IMultipleDeclarationMemberNode;
-            if (node != null)
+
+            if (docNode == null) return;
+
+            IFile file = decl.GetContainingFile();
+            if (file == null) return;
+
+            foreach (Range wordRange in this.GetWordsFromXmlComment(docNode))
             {
-                return SharedImplUtil.GetDocCommentBlockNode(node.MultipleDeclaration);
-            }
-            else
-            {
-                return SharedImplUtil.GetDocCommentBlockNode(decl.ToTreeNode());
+                DocumentRange range = file.GetDocumentRange(wordRange.TreeTextRange);
+                string word = wordRange.Word;
+
+                if (decl.DeclaredName != word)
+                {
+                    if ((IdentifierResolver.IsIdentifier(decl, _solution, word, _identifierSettings.IdentifierLookupScope) ||
+                         IdentifierResolver.IsKeyword(decl, _solution, word)) &&
+                        IdentifierResolver.AnalyzeForMetaTagging(word, _xmlDocumentationSettings.CompiledWordsToIgnoreForMetatagging))
+                    {
+                        highlightings.Add(
+                            new HighlightingInfo(
+                                range, new CanBeSurroundedWithMetatagsHighlight(word,
+                            range, decl, _solution)));
+                    }
+                    else if (spellCheck)
+                    {
+                        this.CheckWordSpelling(decl, wordRange, highlightings, range);
+                    }
+                }
             }
         }
 
-        private void checkCommentSpelling(IClassMemberDeclaration decl,
-                                          ICollection<SuggestionBase> highlightings, bool spellCheck)
+        private void CheckWordSpelling(IClassMemberDeclaration decl, Range wordRange,
+                                       List<HighlightingInfo> highlightings, DocumentRange range)
         {
-            if (_spellChecker == null)
+
+            // If we dont have a spell checker then go no further
+            if (this._xmlDocumentationSpellChecker == null) return;
+
+            // First check the whole word range.
+            if (!SpellCheckUtil.ShouldSpellCheck(wordRange.Word, _xmlDocumentationSettings.CompiledWordsToIgnore) ||
+                this._xmlDocumentationSpellChecker.TestWord(wordRange.Word, true))
             {
                 return;
             }
 
-            foreach (Range wordRange in getWordsFromXmlComment(getDocBlock(decl)))
-            {
-                if (!SpellCheckUtil.ShouldSpellCheck(wordRange.Word) ||
-                    _spellChecker.TestWord(wordRange.Word, true))
-                {
-                    continue;
-                }
-
-                DocumentRange range = decl.GetContainingFile().GetDocumentRange(wordRange.TextRange);
-                if (decl.DeclaredName != wordRange.Word)
-                {
-                    if (IdentifierResolver.IsIdentifier(decl, _solution, wordRange.Word))
-                    {
-                        highlightings.Add(new CanBeSurroundedWithMetatagsSuggestion(wordRange.Word,
-                            range, decl, _solution));
-                    }
-                    else if (spellCheck)
-                    {
-                        checkWordSpelling(decl, wordRange, highlightings, range);
-                    }
-                }
-            }
-        }
-
-        private void checkWordSpelling(IClassMemberDeclaration decl, Range wordRange,
-                                       ICollection<SuggestionBase> highlightings, DocumentRange range)
-        {
+            // We are checking this word and the whole range doesn't spell anything so try breaking the word into bits.
             CamelHumpLexer camelHumpLexer = new CamelHumpLexer(wordRange.Word, 0, wordRange.Word.Length);
             foreach (LexerToken humpToken in camelHumpLexer)
             {
-                if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value) &&
-                    !_spellChecker.TestWord(humpToken.Value, true))
+                if (SpellCheckUtil.ShouldSpellCheck(humpToken.Value, _xmlDocumentationSettings.CompiledWordsToIgnore) &&
+                    !this._xmlDocumentationSpellChecker.TestWord(humpToken.Value, true))
                 {
-                    DocumentRange tokenRange = decl.GetContainingFile().GetDocumentRange(range.TextRange);
 
-                    highlightings.Add(new WordIsNotInDictionarySuggestion(wordRange.Word, tokenRange,
-                                                                          humpToken, _solution, _spellChecker));
-
+                    highlightings.Add(
+                        new HighlightingInfo(
+                            range, new WordIsNotInDictionaryHighlight(wordRange.Word, range,
+                                                                          humpToken, _solution, this._xmlDocumentationSpellChecker, _settingsStore)));
                     break;
                 }
             }
         }
 
-        private IEnumerable<Range> getWordsFromXmlComment(IDocCommentBlockNode docBlock)
+        private IEnumerable<Range> GetWordsFromXmlComment(IDocCommentBlockNode docBlock)
         {
             if (docBlock != null)
             {
@@ -130,7 +143,12 @@ namespace AgentSmith.Comments
                         {
                             inCode++;
                         }
-                        lexer.Advance();
+
+                        while (lexer.TokenType != lexer.XmlTokenType.TAG_END &&
+                               lexer.TokenType != lexer.XmlTokenType.TAG_END1 &&
+                               lexer.TokenType != null)
+                            lexer.Advance();
+
                         if (lexer.TokenType == lexer.XmlTokenType.TAG_END1)
                         {
                             inCode--;
@@ -151,10 +169,11 @@ namespace AgentSmith.Comments
                         wordLexer.Start();
                         while (wordLexer.TokenType != null)
                         {
-                            int start = lexer.TokenLocalRange.StartOffset + wordLexer.TokenStart;
-                            int end = start + wordLexer.TokenText.Length;
-                            yield return new Range(wordLexer.TokenText, new TextRange(start, end));
 
+                            int start = lexer.CurrentNode.GetTreeStartOffset().Offset + lexer.TokenStart + wordLexer.TokenStart;
+                            int end = start + wordLexer.GetCurrTokenText().Length;
+                            yield return new Range(wordLexer.GetCurrTokenText(), new TreeTextRange(new TreeOffset(start), new TreeOffset(end)));
+                            
                             wordLexer.Advance();
                         }
                     }
@@ -163,44 +182,76 @@ namespace AgentSmith.Comments
             }
         }
 
-        private void checkMembersHaveComments(IClassMemberDeclaration declaration,
-                                              List<SuggestionBase> highlightings)
+
+
+        /// <summary>
+        /// Check that the given declaration has an xml documentation comment.
+        /// </summary>
+        /// <param name="declaration">The declaration to check</param>
+        /// <param name="docNode">The documentation node to check.</param>
+        /// <param name="highlightings">The list of highlights (errors) that were found - add to this any new issues</param>
+        public void CheckMemberHasComment(IClassMemberDeclaration declaration, XmlNode docNode,
+                                                List<HighlightingInfo> highlightings)
         {
-            if (declaration is IConstructorDeclaration && declaration.IsStatic)
+
+            // Only process this one if its range is invalid.
+            //if (!_daemonProcess.IsRangeInvalidated(declaration.GetDocumentRange())) return;
+
+            // Check if the parent doco is null
+            if (_xmlDocumentationSettings.SuppressIfBaseHasComment)
             {
-                //TODO: probably need to put this somewhere in settings.
-                //Static constructors have no visibility so not clear how to check them.
+                if (docNode == null && declaration.GetXMLDoc(true) != null) return;
+            }
+
+
+            if (docNode != null) return;
+
+            Match[] publicMembers = new[]
+                {
+                    new Match(
+                        Declaration.Any, AccessLevels.Public | AccessLevels.Protected | AccessLevels.ProtectedInternal)
+                };
+
+
+            Match[] internalMembers = new[] { new Match(Declaration.Any, AccessLevels.Internal) };
+
+            Match[] privateMembers = new[] { new Match(Declaration.Any, AccessLevels.Private) };
+
+
+
+            Match match = ComplexMatchEvaluator.IsMatch(declaration, privateMembers, null, true);
+            if (match != null)
+            {
+                highlightings.Add(
+                    new HighlightingInfo(
+						declaration.GetContainingFile().TranslateRangeForHighlighting(declaration.GetNameRange()),
+                        //declaration.GetNameDocumentRange(),
+                        new PrivateMemberMissingXmlCommentHighlighting(declaration, match)));
                 return;
             }
 
-            if (declaration.GetXMLDoc(_settings.SuppressIfBaseHasComment) == null)
+            match = ComplexMatchEvaluator.IsMatch(declaration, internalMembers, null, true);
+            if (match != null)
             {
-                Match match = ComplexMatchEvaluator.IsMatch(declaration,
-                    _settings.CommentMatch, _settings.CommentNotMatch, true);
+                highlightings.Add(
+                    new HighlightingInfo(
+						declaration.GetContainingFile().TranslateRangeForHighlighting(declaration.GetNameRange()),
+                        //declaration.GetNameDocumentRange(),
+                        new InternalMemberMissingXmlCommentHighlighting(declaration, match)));
+                return;
+            }
 
-                if (match != null)
-                {
-                    FixCommentSuggestion suggestion = new FixCommentSuggestion(declaration, match);
-                    highlightings.Add(suggestion);
-                    return;
-                }
-            }            
-        }
-
-        #region Nested type: Range
-
-        private struct Range
-        {            
-            public readonly TextRange TextRange;
-            public readonly string Word;
-
-            public Range(string word, TextRange range)
+            match = ComplexMatchEvaluator.IsMatch(declaration, publicMembers, null, true);
+            if (match != null)
             {
-                Word = word;
-                TextRange = range;
+                highlightings.Add(
+                    new HighlightingInfo(
+						declaration.GetContainingFile().TranslateRangeForHighlighting(declaration.GetNameRange()),
+                        //declaration.GetNameDocumentRange(),
+                        new PublicMemberMissingXmlCommentHighlighting(declaration, match)));
+                // return;
             }
         }
 
-        #endregion
     }
 }

@@ -1,41 +1,57 @@
-using System;
-using System.Collections.Generic;
-using AgentSmith.MemberMatch;
+﻿using System.Collections.Generic;
+
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Naming.Interfaces;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
 
 namespace AgentSmith.Identifiers
 {
-    public class IdentifierSpellCheckAnalyzer : IDeclarationAnalyzer
+    public class IdentifierSpellCheckAnalyzer
     {
-        private readonly ISolution _solution;        
-        private readonly ISpellChecker _spellChecker;
-        private readonly CodeStyleSettings _settings;
+        private readonly ISolution _solution;
+        private readonly ISpellChecker _identifierSpellChecker;
 
-        private const int MAX_LENGTH_TO_SKIP = 3;
+        private readonly IContextBoundSettingsStore _settingsStore;
+        private readonly IdentifierSettings _identifierSettings;
 
-        public IdentifierSpellCheckAnalyzer(string dictionaryName, ISolution solution, CodeStyleSettings settings)
+        private readonly INamingPolicyProvider _policyProvider;
+
+        //private const int MAX_LENGTH_TO_SKIP = 0;
+
+        public IdentifierSpellCheckAnalyzer(ISolution solution, IContextBoundSettingsStore settingsStore, IPsiSourceFile file)
         {
-            _solution = solution;            
-            _spellChecker = SpellCheckManager.GetSpellChecker(solution, dictionaryName);
-            _settings = settings;
+            _identifierSettings = settingsStore.GetKey<IdentifierSettings>(SettingsOptimization.OptimizeDefault);
+            _settingsStore = settingsStore;
+            _solution = solution;
 
-            ComplexMatchEvaluator.Prepare(solution, settings.IdentifiersToSpellCheck,
-                settings.IdentifiersNotToSpellCheck);
+            _policyProvider = file.GetPsiServices().Naming.Policy.GetPolicyProvider(CSharpLanguage.Instance, file, _settingsStore);
+
+            _identifierSpellChecker = SpellCheckManager.GetSpellChecker(
+                _settingsStore,
+                _solution,
+                _identifierSettings.DictionaryName == null
+                    ? null
+                    : _identifierSettings.DictionaryNames
+                );
+        }
+        
+        private bool IsAbbreviation(string word)
+        {
+            return _policyProvider.IsAbbreviation(word.ToUpper(), _solution);
         }
 
-        public SuggestionBase[] Analyze(IDeclaration declaration, bool spellCheck)
+        public void CheckMemberSpelling(IDeclaration declaration, List<HighlightingInfo> highlightings, bool spellCheck)
         {
-            if (!IdentifierSpellCheckSuggestion.Enabled || _spellChecker == null || !spellCheck)
-            {
-                return null;
-            }
+            if (this._identifierSpellChecker == null || !spellCheck) return;
 
             if (declaration is IIndexerDeclaration ||
                 declaration is IDestructorDeclaration ||
@@ -43,29 +59,30 @@ namespace AgentSmith.Identifiers
                 declaration is IConstructorDeclaration ||
                 (declaration.DeclaredName.Contains(".") && !(declaration is INamespaceDeclaration)))
             {
-                return null;
+                return;
             }
 
-            if (ComplexMatchEvaluator.IsMatch(declaration, _settings.IdentifiersToSpellCheck,
+            /*if (ComplexMatchEvaluator.IsMatch(declaration, _settings.IdentifiersToSpellCheck,
                     _settings.IdentifiersNotToSpellCheck, true) == null)
             {
                 return null;
-            }
+            }*/
 
             HashSet<string> localNames = getLocalNames(declaration);
 
             CamelHumpLexer lexer =
                 new CamelHumpLexer(declaration.DeclaredName, 0, declaration.DeclaredName.Length);
 
-            List<SuggestionBase> suggestions = new List<SuggestionBase>();
             foreach (LexerToken token in lexer)
             {
                 string val = token.Value;
                 string lowerVal = val.ToLower();
-                if (val.Length > MAX_LENGTH_TO_SKIP &&
-                    SpellCheckUtil.ShouldSpellCheck(val) &&
+                //val.Length > MAX_LENGTH_TO_SKIP &&
+                if (
+                    !IsAbbreviation(val) &&
+                    SpellCheckUtil.ShouldSpellCheck(val, _identifierSettings.CompiledWordsToIgnore) &&
                     !localNames.Contains(lowerVal) &&
-                    !_spellChecker.TestWord(val, false))
+                    !this._identifierSpellChecker.TestWord(val, false))
                 {
                     bool found = false;
                     foreach (string entry in localNames)
@@ -78,12 +95,14 @@ namespace AgentSmith.Identifiers
                     }
                     if (!found)
                     {
-                        suggestions.Add(new IdentifierSpellCheckSuggestion(declaration, token, _solution, _spellChecker));
+                        highlightings.Add(
+                            new HighlightingInfo(
+								declaration.GetContainingFile().TranslateRangeForHighlighting(declaration.GetNameRange()),
+						//declaration.GetNameDocumentRange(),
+                            new IdentifierSpellCheckHighlighting(declaration, token, _solution, this._identifierSpellChecker, _settingsStore)));
                     }
                 }
             }
-
-            return suggestions.ToArray();
         }
 
         private HashSet<string> getLocalNames(IDeclaration declaration)

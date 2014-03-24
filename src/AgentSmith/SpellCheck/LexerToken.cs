@@ -1,5 +1,3 @@
-using System;
-
 namespace AgentSmith.SpellCheck
 {
     public struct LexerToken
