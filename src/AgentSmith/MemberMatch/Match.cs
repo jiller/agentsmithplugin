@@ -1,10 +1,10 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.MemberMatch
@@ -189,28 +189,31 @@ namespace AgentSmith.MemberMatch
             set { _paramDirection = value; }
         }
 
-        public void Prepare(ISolution solution, PsiManager manager)
-        {
-            _markedWithAttributeType = null;
-            _inheritedFromType = null;
-            _isOfTypeType = null;
-            DeclarationsCacheScope scope = DeclarationsCacheScope.SolutionScope(solution, true);
-            IDeclarationsCache cache = manager.GetDeclarationsCache(scope, true);
-            if (!string.IsNullOrEmpty(_markedWithAttribute))
-            {
-                _markedWithAttributeType = cache[_markedWithAttribute] as ITypeElement;
-            }
+		//public void Prepare(ISolution solution, PsiManager manager)
+		//{
+		//	_markedWithAttributeType = null;
+		//	_inheritedFromType = null;
+		//	_isOfTypeType = null;
+			
+		//	IPsiModule psiModule = new EmptyPsiModule(solution);
+		//	ISymbolScope symbolScope = solution.GetPsiServices()
+		//							 .Symbols.GetSymbolScope(LibrarySymbolScope.FULL, true, psiModule.GetContextFromModule());
+		//	if (!string.IsNullOrEmpty(_markedWithAttribute))
+		//	{
+                
+		//		_markedWithAttributeType = symbolScope.GetTypeElementByCLRName(_markedWithAttribute);
+		//	}
 
-            if (!string.IsNullOrEmpty(_inheritedFrom))
-            {
-                _inheritedFromType = cache[_inheritedFrom] as ITypeElement;
-            }
+		//	if (!string.IsNullOrEmpty(_inheritedFrom))
+		//	{
+		//		_inheritedFromType = symbolScope.GetTypeElementByCLRName(_inheritedFrom);
+		//	}
 
-            if (!string.IsNullOrEmpty(_isOfType))
-            {
-                _isOfTypeType = cache[_isOfType] as ITypeElement;
-            }
-        }
+		//	if (!string.IsNullOrEmpty(_isOfType))
+		//	{
+		//		_isOfTypeType = symbolScope.GetTypeElementByCLRName(_isOfType);
+		//	}
+		//}
 
         public bool IsMatch(IDeclaration declaration, bool useEffectiveRights)
         {
@@ -268,7 +271,7 @@ namespace AgentSmith.MemberMatch
             {
                 sb.AppendFormat("{0} ", ParamDirection);
             }
-            sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration " : description.Name.ToLower());
+            sb.AppendFormat("{0} ", description.Declaration == Declaration.Any ? "declaration" : description.Name.ToLower());
             if (description.CanInherit && !string.IsNullOrEmpty(_inheritedFrom))
             {
                 sb.AppendFormat("inherited from '{0}' ", _inheritedFrom);
@@ -378,7 +381,7 @@ namespace AgentSmith.MemberMatch
 
             foreach (IAttributeInstance attribute in attributesOwner.GetAttributeInstances(false))
             {
-                if (attribute.AttributeType.GetTypeElement() == _markedWithAttributeType)
+                if (Equals(attribute.GetAttributeType().GetTypeElement(), _markedWithAttributeType))
                 {
                     return true;
                 }
@@ -401,7 +404,7 @@ namespace AgentSmith.MemberMatch
 
             if (declaration is IParameterDeclaration)
             {
-                declaration = ((IParameterDeclaration) declaration).GetContainingTypeMemberDeclaration();
+                declaration = declaration.GetContainingNode<ITypeMemberDeclaration>();
             }
             
             if (!(declaration is IModifiersOwner))

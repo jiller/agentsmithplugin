@@ -1,65 +1,63 @@
-using System;
 using System.Collections.Generic;
-using AgentSmith.NamingConventions;
+using System.Linq;
+
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
+
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Intentions.Extensibility.Menu;
 using JetBrains.Util;
 
-namespace AgentSmith.Identifiers
-{
-    [QuickFix]
-    public class IdentifierSpellCheckQuickFix : IQuickFix
-    {
-        private const uint MAX_SUGGESTION_COUNT = 5;
+namespace AgentSmith.Identifiers {
+	[QuickFix]
+	public class IdentifierSpellCheckQuickFix : IQuickFix {
+		private const uint MAX_SUGGESTION_COUNT = 5;
 
-        private readonly IdentifierSpellCheckSuggestion _suggestion;
+		private readonly IdentifierSpellCheckHighlighting _highlighting;
 
-        public IdentifierSpellCheckQuickFix(IdentifierSpellCheckSuggestion suggestion)
-        {
-            _suggestion = suggestion;
-        }
+		public IdentifierSpellCheckQuickFix(IdentifierSpellCheckHighlighting highlighting) {
+			_highlighting = highlighting;
+		}
 
-        public bool IsAvailable(IUserDataHolder cache)
-        {
-            return true;
-        }
+		public IEnumerable<IntentionAction> CreateBulbItems() {
+			return CreateItems()
+				.ToContextAction();
+		}
 
-        public IBulbItem[] Items
-        {
-            get
-            {
-                List<IBulbItem> items = new List<IBulbItem>();
+		public bool IsAvailable(IUserDataHolder cache) {
+			return true;
+		}
 
-                ISpellChecker spellChecker = _suggestion.SpellChecker;
+		private IEnumerable<IBulbAction> CreateItems() {
+			var items = new List<IBulbAction>();
 
-                if (spellChecker != null)
-                {
-                    foreach (string newWord in spellChecker.Suggest(_suggestion.LexerToken.Value, MAX_SUGGESTION_COUNT))
-                    {
-                        if (newWord.IndexOf(" ") > 0)
-                        {
-                            continue;
-                        }
-                        string declaredName = _suggestion.Declaration.DeclaredName;
-                        string nameWithMisspelledWordDeleted = declaredName.Remove(_suggestion.LexerToken.Start,
-                            _suggestion.LexerToken.Length);
-                        string newName = nameWithMisspelledWordDeleted.Insert(_suggestion.LexerToken.Start, newWord);
+			ISpellChecker spellChecker = _highlighting.SpellChecker;
 
-                        items.Add(new NamingConventionsBulbItem(_suggestion.Declaration, newName));
-                    }
-                }
-                items.Add(new RenameBulbItem(_suggestion.Declaration));
+			if (spellChecker != null) {
+				foreach (string newWord in spellChecker.Suggest(_highlighting.LexerToken.Value, MAX_SUGGESTION_COUNT)) {
+					if (newWord.IndexOf(" ") > 0) {
+						continue;
+					}
+					string declaredName = _highlighting.Declaration.DeclaredName;
+					string nameWithMisspelledWordDeleted = declaredName.Remove(
+						_highlighting.LexerToken.Start, _highlighting.LexerToken.Length);
+					string newName = nameWithMisspelledWordDeleted.Insert(_highlighting.LexerToken.Start, newWord);
 
-                if (spellChecker != null)
-                {
-                    foreach (CustomDictionary dict in spellChecker.CustomDictionaries)
-                    {
-                        items.Add(new AddToDictionaryBulbItem(_suggestion.MisspelledWord, dict, _suggestion.Range));
-                    }
-                }
-                return items.ToArray();
-            }
-        }
-    }
+					items.Add(new RenameBulbItem(_highlighting.Declaration, newName));
+				}
+			}
+			items.Add(new RenameBulbItem(_highlighting.Declaration));
+
+			if (spellChecker != null) {
+				foreach (CustomDictionary dict in spellChecker.CustomDictionaries) {
+					items.Add(
+						new AddToDictionaryBulbItem(
+							_highlighting.MisspelledWord, dict.Name, _highlighting.DocumentRange, _highlighting.SettingsStore));
+				}
+			}
+			return items;
+		}
+	}
 }
