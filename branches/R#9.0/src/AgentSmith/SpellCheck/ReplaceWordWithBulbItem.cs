@@ -3,7 +3,7 @@ using System;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck

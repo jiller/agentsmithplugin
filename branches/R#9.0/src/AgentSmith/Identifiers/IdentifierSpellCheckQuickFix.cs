@@ -1,13 +1,11 @@
 using System.Collections.Generic;
-using System.Linq;
 
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Intentions.Extensibility;
-using JetBrains.ReSharper.Intentions.Extensibility.Menu;
+using JetBrains.ReSharper.Feature.Services.Intentions;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.Util;
 
 namespace AgentSmith.Identifiers {

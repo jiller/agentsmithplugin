@@ -8,12 +8,13 @@ using AgentSmith.Options;
 
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace AgentSmith
 {
@@ -86,7 +87,7 @@ namespace AgentSmith
 
             // Documentation doesn't work properly on multiple declarations (as of R# 6.1) so see if we can get it from the parent
             XmlNode docNode = null;
-            IDocCommentBlockNode commentBlock;
+            IDocCommentBlock commentBlock;
             IMultipleDeclarationMember multipleDeclarationMember = declaration as IMultipleDeclarationMember;
             if (multipleDeclarationMember != null)
             {
@@ -134,9 +135,11 @@ namespace AgentSmith
             CommentAnalyzer commentAnalyzer = new CommentAnalyzer(_solution, _settingsStore);
             IdentifierSpellCheckAnalyzer identifierAnalyzer = new IdentifierSpellCheckAnalyzer(_solution, _settingsStore, _daemonProcess.SourceFile);
 
-            file.ProcessChildren<IClassMemberDeclaration>(declaration => this.CheckMember(declaration, highlightings, commentAnalyzer, identifierAnalyzer));
+	        foreach (var classMemberDeclaration in file.Descendants<IClassMemberDeclaration>()) {
+		        CheckMember(classMemberDeclaration, highlightings, commentAnalyzer, identifierAnalyzer);
+	        }
 
-            if (_daemonProcess.InterruptFlag) return;
+	        if (_daemonProcess.InterruptFlag) return;
             try
             {
                 commiter(new DaemonStageResult(highlightings));
@@ -145,9 +148,6 @@ namespace AgentSmith
                 // Do nothing if it doesn't work.
             }
         }
-
-
-
         #endregion
     }
 }

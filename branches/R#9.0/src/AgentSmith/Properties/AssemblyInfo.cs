@@ -1,6 +1,5 @@
 using System.Reflection;
 using JetBrains.ActionManagement;
-using JetBrains.Application.PluginSupport;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -10,16 +9,16 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AgentSmith")]
-[assembly: AssemblyCopyright("Copyright © ., 2012-2013")]
+[assembly: AssemblyCopyright("Copyright © ., 2012-2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.9.0.0")]
-[assembly: AssemblyFileVersion("1.9.0.0")]
+[assembly: AssemblyVersion("1.10.0.6")]
+[assembly: AssemblyFileVersion("1.10.0.6")]
 
 [assembly: ActionsXml("AgentSmith.Actions.xml")]
 
 // The following information is displayed by ReSharper in the Plugins dialog
-[assembly: PluginTitle("AgentSmith")]
-[assembly: PluginDescription("Comment assistance and Spell Checking")]
-[assembly: PluginVendor("http://code.google.com/p/agentsmithplugin/")]
+//[assembly: PluginTitle("AgentSmith")]
+//[assembly: PluginDescription("Comment assistance and Spell Checking")]
+//[assembly: PluginVendor("http://code.google.com/p/agentsmithplugin/")]

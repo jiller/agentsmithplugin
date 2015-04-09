@@ -1,6 +1,8 @@
 using System;
 using System.Windows.Forms;
+
 using AgentSmith.Comments;
+
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.DocumentModel;
@@ -9,19 +11,22 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
-using JetBrains.Util;
+using JetBrains.UI.ActionsRevised;
+using JetBrains.UI.RichText;
+using JetBrains.Util.dataStructures.TypedIntrinsics;
 using JetBrains.Util.Logging;
 
-using MessageBox=JetBrains.Util.MessageBox;
-
-using JetBrains.ReSharper.Psi.Files;
+using DataConstants = JetBrains.ProjectModel.DataContext.DataConstants;
+using MessageBox = JetBrains.Util.MessageBox;
 
 namespace AgentSmith.SmartPaste
 {
-    [ActionHandler(new[] { "AgentSmith.SmartPaste" })]
-    internal class SmartInsertAction : IActionHandler
+	//[ActionHandler(new[] { "AgentSmith.SmartPaste" })]
+	[Action("AgentSmith.SmartPaste")]
+    internal class SmartInsertAction : IExecutableAction
     {
         #region IActionHandler Members
         
@@ -45,7 +50,7 @@ namespace AgentSmith.SmartPaste
             else
             {
                 
-                ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
+                ISolution solution = context.GetData(DataConstants.SOLUTION);
                 if (solution == null)
                 {
                     nextExecute();
@@ -83,7 +88,7 @@ namespace AgentSmith.SmartPaste
             IDocCommentNode docCommentNode = element as IDocCommentNode;
             if (docCommentNode != null)
             {
-                JetBrains.Util.dataStructures.TypedIntrinsics.Int32<DocLine> currentLineNumber =
+                Int32<DocLine> currentLineNumber =
                     editor.Document.GetCoordsByOffset(editor.Caret.Offset()).Line;
                 string currentLine = editor.Document.GetLineText(currentLineNumber);
                 int index = currentLine.IndexOf("///", StringComparison.Ordinal);
@@ -94,10 +99,10 @@ namespace AgentSmith.SmartPaste
                 string prefix = currentLine.Substring(0, index);
 
                 if (ShallEscape(docCommentNode, editor.Caret.Offset()) &&
-                    JetBrains.UI.RichText.RichTextBlockToHtml.HtmlEncode(stringToInsert) != stringToInsert &&
+                    RichTextBlockToHtml.HtmlEncode(stringToInsert) != stringToInsert &&
                     MessageBox.ShowYesNo("Do you want the text to be escaped?"))
                 {
-                    stringToInsert = JetBrains.UI.RichText.RichTextBlockToHtml.HtmlEncode(stringToInsert);
+                    stringToInsert = RichTextBlockToHtml.HtmlEncode(stringToInsert);
                 }
 
                 stringToInsert = stringToInsert.Replace("\n", "\n" + prefix + "///");
@@ -136,7 +141,7 @@ namespace AgentSmith.SmartPaste
 
         private static bool ShallEscape(IDocCommentNode node, int offset)
         {
-            IDocCommentBlockNode docBlock = node.GetContainingNode<IDocCommentBlockNode>(true);
+            IDocCommentBlock docBlock = node.GetContainingNode<IDocCommentBlock>(true);
             if (docBlock == null)
             {
                 return false;
@@ -190,7 +195,7 @@ namespace AgentSmith.SmartPaste
 
         private static bool IsAvailable(IDataContext context)
         {
-            ISolution solution = context.GetData(JetBrains.ProjectModel.DataContext.DataConstants.SOLUTION);
+            ISolution solution = context.GetData(DataConstants.SOLUTION);
 			IDocument document = context.GetData(JetBrains.DocumentModel.DataConstants.DOCUMENT);
             IPsiSourceFile file = null;
             if (solution != null && document != null) file = document.GetPsiSourceFile(solution);

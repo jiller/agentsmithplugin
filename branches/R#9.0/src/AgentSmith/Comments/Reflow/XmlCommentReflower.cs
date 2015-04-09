@@ -38,7 +38,7 @@ namespace AgentSmith.Comments.Reflow
             _reflowSettings = reflowAndRetagSettings;
         }
 
-        public IEnumerable<Paragraph> Parse(IDocCommentBlockNode blockNode)
+        public IEnumerable<Paragraph> Parse(IDocCommentBlock blockNode)
         {
             // Create a lexer which can read the comment
             XmlCommentReflowableBlockLexer lexer = new XmlCommentReflowableBlockLexer(blockNode);
@@ -58,7 +58,7 @@ namespace AgentSmith.Comments.Reflow
         /// <param name="blockNode"></param>
         /// <param name="maxLineLength"></param>
         /// <returns></returns>
-        public string Reflow(IDocCommentBlockNode blockNode, int maxLineLength)
+        public string Reflow(IDocCommentBlock blockNode, int maxLineLength)
         {
             return ReflowToLineLength(Parse(blockNode), maxLineLength);
         }
@@ -174,7 +174,7 @@ namespace AgentSmith.Comments.Reflow
         /// <param name="blockNode">The comment block to reflow</param>
         /// <param name="maxLineLength">The maximum line length</param>
         /// <returns>The text for the new reflown comment.</returns>
-        public string ReflowAndRetag(IDocCommentBlockNode blockNode, int maxLineLength)
+        public string ReflowAndRetag(IDocCommentBlock blockNode, int maxLineLength)
         {
             ITreeNode parent = blockNode.Parent;
             ICSharpTypeMemberDeclaration parentDeclaration = parent as IClassMemberDeclaration;

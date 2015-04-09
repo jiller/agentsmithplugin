@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 
 using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 
 namespace AgentSmith.ResX

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 using AgentSmith.SpellCheck.NetSpell;
@@ -7,7 +6,7 @@ using AgentSmith.SpellCheck.NetSpell;
 using JetBrains.Application.Settings;
 using JetBrains.Application.Settings.Store;
 using JetBrains.ReSharper.Psi.Caches;
-using JetBrains.ReSharper.Settings;
+using JetBrains.ReSharper.Resources.Settings;
 
 namespace AgentSmith.Options
 {
