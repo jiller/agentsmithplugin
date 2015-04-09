@@ -1,7 +1,9 @@
 using System;
 using AgentSmith.MemberMatch;
 
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace AgentSmith.Comments
@@ -46,7 +48,14 @@ namespace AgentSmith.Comments
         /// </summary>
         public Match Match { get { return _match; } }
 
-        /// <summary>
+	    /// <summary>
+	    /// Calculates range of a highlighting.
+	    /// </summary>
+	    public DocumentRange CalculateRange() {
+		    return _declaration.GetDocumentRange();
+	    }
+
+	    /// <summary>
         /// Message for this highlighting to show in tooltip and in status bar (if <see cref="P:JetBrains.ReSharper.Daemon.HighlightingAttributeBase.ShowToolTipInStatusBar"/> is <c>true</c>)
         ///             To override the default mechanism of tooltip, mark the implementation class with 
         ///             <see cref="T:JetBrains.ReSharper.Daemon.DaemonTooltipProviderAttribute"/> attribute, and then this property will not be called

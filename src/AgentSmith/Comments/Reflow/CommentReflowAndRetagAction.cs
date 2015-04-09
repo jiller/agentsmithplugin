@@ -2,16 +2,15 @@ using System;
 
 using AgentSmith.Options;
 
-using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Feature.Services.CSharp.Bulbs;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.ContextActions;
+using JetBrains.ReSharper.Feature.Services.CSharp.Analyses.Bulbs;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.Util;
 
@@ -30,7 +29,7 @@ namespace AgentSmith.Comments.Reflow
             Provider = provider;
         }
 
-        private static int CalcLineOffset(IDocCommentBlockOwnerNode node)
+        private static int CalcLineOffset(IDocCommentBlockOwner node)
         {
             ITreeNode prev = node.PrevSibling;
             if (prev != null && prev is IWhitespaceNode &&
@@ -45,15 +44,15 @@ namespace AgentSmith.Comments.Reflow
         {
             if (docCommentNode == null) return;
 
-            IDocCommentBlockNode blockNode =
-                docCommentNode.GetContainingNode<IDocCommentBlockNode>();
+            IDocCommentBlock blockNode =
+                docCommentNode.GetContainingNode<IDocCommentBlock>();
 
             if (blockNode == null) return;
 
             ReflowAndRetagCommentBlockNode(solution, progress, blockNode);
         }
 
-        public static void ReflowAndRetagCommentBlockNode(ISolution solution, IProgressIndicator progress,  IDocCommentBlockNode docCommentBlockNode)
+        public static void ReflowAndRetagCommentBlockNode(ISolution solution, IProgressIndicator progress,  IDocCommentBlock docCommentBlockNode)
         {
             if (docCommentBlockNode == null) return;
 
@@ -66,8 +65,8 @@ namespace AgentSmith.Comments.Reflow
             int maxLength = settings.MaxCharactersPerLine;
 
             // Get the comment block owner (ie the part of the declaration which will own the comment).
-            IDocCommentBlockOwnerNode ownerNode =
-                docCommentBlockNode.GetContainingNode<IDocCommentBlockOwnerNode>();
+            IDocCommentBlockOwner ownerNode =
+                docCommentBlockNode.GetContainingNode<IDocCommentBlockOwner>();
 
             // If we didn't get an owner then give up
             if (ownerNode == null) return;
@@ -79,7 +78,7 @@ namespace AgentSmith.Comments.Reflow
             int startPos = CalcLineOffset(ownerNode) + 4;
 
             // Create a new comment block with the adjusted text
-            IDocCommentBlockNode comment = docCommentBlockNode; //factory.CreateDocCommentBlock(text);
+            IDocCommentBlock comment = docCommentBlockNode; //factory.CreateDocCommentBlock(text);
 
             string reflownText = new XmlCommentReflower(settings, reflowSettings).ReflowAndRetag(comment, maxLength - startPos);
 
@@ -104,14 +103,14 @@ namespace AgentSmith.Comments.Reflow
             return null;
         }
 
-        public static void SetDocComment(IDocCommentBlockOwnerNode docCommentBlockOwnerNode, string text, ISolution solution)
+        public static void SetDocComment(IDocCommentBlockOwner docCommentBlockOwnerNode, string text, ISolution solution)
         {
             text = String.Format("/// {0}\r\nclass Tmp {{}}", text.Replace("\n", "\n/// "));
 
             ICSharpTypeMemberDeclaration declaration =
                 CSharpElementFactory.GetInstance(docCommentBlockOwnerNode.GetPsiModule()).CreateTypeMemberDeclaration(text, new object[0]);
-            docCommentBlockOwnerNode.SetDocCommentBlockNode(
-                ((IDocCommentBlockOwnerNode)declaration).GetDocCommentBlockNode());
+            docCommentBlockOwnerNode.SetDocCommentBlock(
+                ((IDocCommentBlockOwner)declaration).DocCommentBlock);
         }
 
 

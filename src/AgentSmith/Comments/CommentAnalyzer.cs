@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Xml;
 
 using AgentSmith.MemberMatch;
@@ -11,12 +10,11 @@ using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Tree;
-
-using Match = AgentSmith.MemberMatch.Match;
 
 namespace AgentSmith.Comments
 {
@@ -62,7 +60,7 @@ namespace AgentSmith.Comments
 
 
 
-        public void CheckCommentSpelling(IClassMemberDeclaration decl, IDocCommentBlockNode docNode,
+        public void CheckCommentSpelling(IClassMemberDeclaration decl, IDocCommentBlock docNode,
                                   List<HighlightingInfo> highlightings, bool spellCheck)
         {
 
@@ -126,7 +124,7 @@ namespace AgentSmith.Comments
             }
         }
 
-        private IEnumerable<Range> GetWordsFromXmlComment(IDocCommentBlockNode docBlock)
+        private IEnumerable<Range> GetWordsFromXmlComment(IDocCommentBlock docBlock)
         {
             if (docBlock != null)
             {
@@ -217,9 +215,7 @@ namespace AgentSmith.Comments
 
             Match[] privateMembers = new[] { new Match(Declaration.Any, AccessLevels.Private) };
 
-
-
-            Match match = ComplexMatchEvaluator.IsMatch(declaration, privateMembers, null, true);
+	        Match match = ComplexMatchEvaluator.IsMatch(declaration, privateMembers, null, true);
             if (match != null)
             {
                 highlightings.Add(

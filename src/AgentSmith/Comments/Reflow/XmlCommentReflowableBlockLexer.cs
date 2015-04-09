@@ -10,7 +10,7 @@ namespace AgentSmith.Comments.Reflow
     {
         private readonly XmlDocLexer _docLexer;
 
-        public XmlCommentReflowableBlockLexer(IDocCommentBlockNode docCommentBlock)
+        public XmlCommentReflowableBlockLexer(IDocCommentBlock docCommentBlock)
         {
             _docLexer = new XmlDocLexer(docCommentBlock);
             _docLexer.Start();

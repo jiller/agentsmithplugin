@@ -1,15 +1,19 @@
 using System.Collections.Generic;
 
-using JetBrains.Application;
+using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Feature.Services.Refactorings.Specific.Rename;
 using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Refactorings.Function2Property;
 using JetBrains.ReSharper.Refactorings.Rename;
 using JetBrains.TextControl;
+
+using DataConstants = JetBrains.ReSharper.Psi.Services.DataConstants;
+using ShellComponentsEx = JetBrains.ActionManagement.ShellComponentsEx;
 
 namespace AgentSmith.Identifiers
 {
@@ -33,7 +37,7 @@ namespace AgentSmith.Identifiers
             IList<IDataRule> provider =
                 DataRules.AddRule(
                     "ManualRenameRefactoringItem",
-                    JetBrains.ReSharper.Psi.Services.DataConstants.DECLARED_ELEMENTS,
+                    DataConstants.DECLARED_ELEMENTS,
                     DataConstantsEx.ToDeclaredElementsDataConstant(this._declaration.DeclaredElement)
                 ).AddRule(
                     "ManualRenameRefactoringItem",
@@ -57,11 +61,12 @@ namespace AgentSmith.Identifiers
                 "ManualRenameRefactoringItem",
                 RenameWorkflow.RenameDataProvider, new SimpleRenameDataProvider(_targetName));
 
-            Lifetimes.Using(
-                (lifetime =>
-                    RenameRefactoringService.Instance.ExcuteRename(
-                        JetBrains.ActionManagement.ShellComponentsEx.ActionManager(
-                            Shell.Instance.Components).DataContexts.CreateWithDataRules(lifetime, provider))));
+	        Lifetimes.Using(
+		        (lifetime => {
+			        var actionManager = solution.GetComponent<IActionManager>();
+			        var context = actionManager.DataContexts.CreateWithDataRules(lifetime, provider);
+			        RenameRefactoringService.Instance.ExecuteRename(context);
+		        }));
         }
 
         public string Text

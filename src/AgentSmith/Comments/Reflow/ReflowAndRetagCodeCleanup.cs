@@ -8,6 +8,7 @@ using JetBrains.ReSharper.Feature.Services.CodeCleanup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace AgentSmith.Comments.Reflow
 {
@@ -56,10 +57,14 @@ namespace AgentSmith.Comments.Reflow
             file.GetPsiServices().Transactions.Execute("Reflow & Retag XML Documentation Comments",
                 () =>
                 {
-                    using (_shellLocks.UsingWriteLock())
-                        file.ProcessChildren<IDocCommentBlockOwnerNode>(x =>
-                            CommentReflowAndRetagAction.ReflowAndRetagCommentBlockNode(x.GetSolution(), null, x.GetDocCommentBlockNode())
-                            );
+	                using (_shellLocks.UsingWriteLock()) {
+		                foreach (var documentBlockOwner in file.Descendants<IDocCommentBlockOwner>()) {
+			                CommentReflowAndRetagAction.ReflowAndRetagCommentBlockNode(
+				                documentBlockOwner.GetSolution(),
+				                null,
+				                documentBlockOwner.DocCommentBlock);
+		                }
+	                };
                 });
         }
 
@@ -79,7 +84,7 @@ namespace AgentSmith.Comments.Reflow
         }
 
         [DefaultValue(false)]
-        [DisplayName("Reflow & Retag XML Documentation Comments")]
+        [DisplayName(@"Reflow & Retag XML Documentation Comments")]
         [Category(CSharpCategory)]
         private class Descriptor : CodeCleanupBoolOptionDescriptor
         {

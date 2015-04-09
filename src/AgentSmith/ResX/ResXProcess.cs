@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
@@ -8,18 +9,14 @@ using AgentSmith.SpellCheck.NetSpell;
 
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
-using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.Metadata.Reader.Impl;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Impl.Caches2;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Xml;
 using JetBrains.ReSharper.Psi.Xml.Tree;
-using JetBrains.ReSharper.Psi.Resx;
-using JetBrains.ReSharper.Psi.Resx.Tree;
 using JetBrains.Util;
-using System.Resources;
 
 namespace AgentSmith.ResX
 {

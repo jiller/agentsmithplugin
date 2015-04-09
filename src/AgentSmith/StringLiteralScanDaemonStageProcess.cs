@@ -8,13 +8,14 @@ using AgentSmith.Strings;
 
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace AgentSmith
 {
@@ -67,8 +68,9 @@ namespace AgentSmith
 
             StringSettings stringSettings = this._settingsStore.GetKey<StringSettings>(SettingsOptimization.OptimizeDefault);
 
-
-            file.ProcessChildren<ICSharpLiteralExpression>(literalExpression => this.CheckString(literalExpression, highlightings, stringSettings));
+	        foreach (var literalExpression in file.Descendants<ICSharpLiteralExpression>()) {
+		        CheckString(literalExpression, highlightings, stringSettings, _solution, _settingsStore, _daemonProcess);
+	        }
 
             try
             {
@@ -81,13 +83,13 @@ namespace AgentSmith
         }
 
 
-        public void CheckString(ICSharpLiteralExpression literalExpression,
-                                List<HighlightingInfo> highlightings, StringSettings settings)
+        public static void CheckString(ICSharpLiteralExpression literalExpression,
+								List<HighlightingInfo> highlightings, StringSettings settings, ISolution _solution, IContextBoundSettingsStore _settingsStore, IDaemonProcess _daemonProcess = null)
         {
             //ConstantValue val = literalExpression.ConstantValue;
 
             // Ignore it unless it's something we're re-evalutating
-            if (!this._daemonProcess.IsRangeInvalidated(literalExpression.GetDocumentRange())) return;
+            if (_daemonProcess != null && !_daemonProcess.IsRangeInvalidated(literalExpression.GetDocumentRange())) return;
 
 
 
@@ -100,13 +102,13 @@ namespace AgentSmith
 
             if (tokenNode.GetTokenType() == CSharpTokenType.STRING_LITERAL)
             {
-                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(this._settingsStore, this._solution, settings.DictionaryNames);
+                ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_settingsStore, _solution, settings.DictionaryNames);
 
                 StringSpellChecker.SpellCheck(
                     literalExpression.GetDocumentRange().Document,
                     tokenNode,
                     spellChecker,
-                    this._solution, highlightings, this._settingsStore, settings);
+                    _solution, highlightings, _settingsStore, settings);
             }
         }
         #endregion

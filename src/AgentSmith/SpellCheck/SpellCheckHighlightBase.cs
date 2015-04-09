@@ -1,10 +1,11 @@
 using System;
+
 using AgentSmith.SpellCheck.NetSpell;
 
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 
 namespace AgentSmith.SpellCheck
 {
@@ -68,7 +69,14 @@ namespace AgentSmith.SpellCheck
             return true;
         }
 
-        /// <summary>
+	    /// <summary>
+	    /// Calculates range of a highlighting.
+	    /// </summary>
+	    public DocumentRange CalculateRange() {
+		    return _range;
+	    }
+
+	    /// <summary>
         /// Message for this highlighting to show in tooltip and in status bar (if <see cref="P:JetBrains.ReSharper.Daemon.HighlightingAttributeBase.ShowToolTipInStatusBar"/> is <c>true</c>)
         ///             To override the default mechanism of tooltip, mark the implementation class with 
         ///             <see cref="T:JetBrains.ReSharper.Daemon.DaemonTooltipProviderAttribute"/> attribute, and then this property will not be called

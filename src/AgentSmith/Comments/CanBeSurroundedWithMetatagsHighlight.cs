@@ -2,7 +2,7 @@ using AgentSmith.Comments;
 
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -66,7 +66,14 @@ namespace AgentSmith.Comments
             return true;
         }
 
-        public string ToolTip { get { return string.Format(SUGGESTION_TEXT, _word); } }
+	    /// <summary>
+	    /// Calculates range of a highlighting.
+	    /// </summary>
+	    public DocumentRange CalculateRange() {
+		    return _range;
+	    }
+
+	    public string ToolTip { get { return string.Format(SUGGESTION_TEXT, _word); } }
 
         public string ErrorStripeToolTip { get { return ToolTip; } }
 

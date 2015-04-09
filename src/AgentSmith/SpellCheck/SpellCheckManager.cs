@@ -25,7 +25,7 @@ namespace AgentSmith.SpellCheck
         {
             if (!resxFile.Name.ToLower().EndsWith(".resx"))
             {
-                throw new ArgumentException("Should be a resx file", "resxFile");
+                throw new ArgumentException(@"Should be a resx file", "resxFile");
             }
 
             string[] parts = resxFile.Name.Split('.');

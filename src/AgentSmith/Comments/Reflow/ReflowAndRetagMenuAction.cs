@@ -5,11 +5,15 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.UI.ActionsRevised;
+using JetBrains.Util;
 
 namespace AgentSmith.Comments.Reflow
 {
-    [ActionHandler(new[] { "AgentSmith.ReflowAndRetag" })]
-    public class ReflowAndRetagMenuAction : IActionHandler
+	//[ActionHandler(new[] { "AgentSmith.ReflowAndRetag" })]
+	[Action("AgentSmith.ReflowAndRetag")]
+    public class ReflowAndRetagMenuAction : IExecutableAction
     {
         #region Implementation of IActionHandler
 
@@ -43,10 +47,11 @@ namespace AgentSmith.Comments.Reflow
             file.GetPsiServices().Transactions.Execute("Reflow & Retag XML Documentation Comments",
                 () =>
                 {
-                    using (WriteLockCookie.Create())
-                        file.ProcessChildren<IDocCommentBlockOwnerNode>(x =>
-                                                                        CommentReflowAndRetagAction.ReflowAndRetagCommentBlockNode(x.GetSolution(), null, x.GetDocCommentBlockNode())
-                            );
+	                using (WriteLockCookie.Create()) {
+						foreach (var docCommentBlockOwner in file.Descendants<IDocCommentBlockOwner>()) {
+							CommentReflowAndRetagAction.ReflowAndRetagCommentBlockNode(docCommentBlockOwner.GetSolution(), null, docCommentBlockOwner.DocCommentBlock);
+						}
+	                }
                 });
         }
 

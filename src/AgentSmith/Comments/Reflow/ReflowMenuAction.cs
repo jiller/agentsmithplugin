@@ -5,11 +5,15 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.UI.ActionsRevised;
+using JetBrains.Util;
 
 namespace AgentSmith.Comments.Reflow
 {
-    [ActionHandler(new[] { "AgentSmith.Reflow" })]
-    public class ReflowMenuAction : IActionHandler
+	//[ActionHandler(new[] { "AgentSmith.Reflow" })]
+	[Action("AgentSmith.Reflow")]
+    public class ReflowMenuAction : IExecutableAction
     {
         #region Implementation of IActionHandler
 
@@ -40,16 +44,19 @@ namespace AgentSmith.Comments.Reflow
 			IFile file = sourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance);
             if (file == null) return;
 
-            file.GetPsiServices().Transactions.Execute(
-				"Reflow XML Documentation Comments",
-                () =>
-                    {
-                        using (WriteLockCookie.Create())
-                            file.ProcessChildren<IDocCommentBlockOwnerNode>(x =>
-                                                                            CommentReflowAction.ReFlowCommentBlockNode(x.GetSolution(), null, x.GetDocCommentBlockNode())
-                                );
-                    }
-                );
+	        file.GetPsiServices()
+	            .Transactions.Execute(
+		            "Reflow XML Documentation Comments",
+		            () => {
+			            using (WriteLockCookie.Create()) {
+				            foreach (var docCommentBlockOwner in file.Descendants<IDocCommentBlockOwner>()) {
+					            CommentReflowAction.ReFlowCommentBlockNode(
+						            docCommentBlockOwner.GetSolution(),
+						            null,
+						            docCommentBlockOwner.DocCommentBlock);
+				            }
+			            }
+		            });
         }
 
         #endregion

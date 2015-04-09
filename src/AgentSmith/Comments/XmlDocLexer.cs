@@ -14,14 +14,14 @@ namespace AgentSmith.Comments
     public class XmlDocLexer : ILexer
     {
         public readonly XmlTokenTypes XmlTokenType = XmlTokenTypes.GetInstance(XmlDocLanguage.Instance);
-        private readonly IDocCommentBlockNode _myDocCommentBlock;
+        private readonly IDocCommentBlock _myDocCommentBlock;
         private ITreeNode _myCurrentNode;
         private IDocCommentNode _myCurrentCommentNode;
         private XmlLexerGenerated _myLexer;
 
         private int _commentStartLength = -1;
 
-        public XmlDocLexer(IDocCommentBlockNode docCommentBlock)
+        public XmlDocLexer(IDocCommentBlock docCommentBlock)
         {
             
             _myDocCommentBlock = docCommentBlock;

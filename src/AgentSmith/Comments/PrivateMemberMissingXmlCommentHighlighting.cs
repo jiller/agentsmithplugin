@@ -2,6 +2,7 @@ using AgentSmith.Comments;
 using AgentSmith.MemberMatch;
 
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 

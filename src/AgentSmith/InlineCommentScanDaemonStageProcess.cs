@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+
 using AgentSmith.Comments;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck;
@@ -10,12 +11,11 @@ using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
-using JetBrains.ReSharper.Psi.Services;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
@@ -67,9 +67,10 @@ namespace AgentSmith
 			var highlightings = new List<HighlightingInfo>();
             var commentSettings = _settingsStore.GetKey<CommentSettings>(SettingsOptimization.OptimizeDefault);
 
-
-            file.ProcessChildren<ICSharpCommentNode>(commentNode => CheckComment(commentNode, highlightings, commentSettings));
-
+	        foreach (var commentNode in file.Descendants<ICSharpCommentNode>()) {
+		        CheckComment(commentNode, highlightings, commentSettings);
+	        }
+            
             try
             {
                 commiter(new DaemonStageResult(highlightings));

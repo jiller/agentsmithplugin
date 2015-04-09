@@ -1,6 +1,6 @@
-using JetBrains.ReSharper.Features.Common.Options;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Options;
+using JetBrains.UI.Options.OptionPages.ToolsPages;
 
 namespace AgentSmith.Options {
 	[OptionsPage(PID, "AgentSmith", typeof(OptionsThemedIcons.SamplePage), ParentId = ToolsPage.PID)]

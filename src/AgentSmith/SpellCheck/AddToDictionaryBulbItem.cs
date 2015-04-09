@@ -3,12 +3,11 @@ using System;
 using AgentSmith.Options;
 using AgentSmith.SpellCheck.NetSpell;
 
-using JetBrains.Application;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Intentions.Extensibility;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck
@@ -33,7 +32,7 @@ namespace AgentSmith.SpellCheck
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            ISettingsStore store = Shell.Instance.GetComponent<ISettingsStore>();
+            ISettingsStore store = solution.GetComponent<ISettingsStore>();
 
             // Get the dictionary
             CustomDictionary dictionary =
@@ -54,7 +53,7 @@ namespace AgentSmith.SpellCheck
             boundStore.SetIndexedValue<CustomDictionarySettings, string, CustomDictionary>(x => x.CustomDictionaries, _dictName, dictionary);
             SpellCheckManager.Reset(); // Clear the cache.
             solution.SaveSettings();
-            Daemon.GetInstance(solution).ForceReHighlight(_documentRange.Document);
+			solution.GetComponent<IDaemon>().ForceReHighlight(_documentRange.Document);
         }
 
         public string Text

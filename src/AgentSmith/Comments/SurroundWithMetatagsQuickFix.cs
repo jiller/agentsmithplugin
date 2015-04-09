@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+
 using AgentSmith.SpellCheck;
 
 using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Intentions.Extensibility;
-using JetBrains.ReSharper.Intentions.Extensibility.Menu;
+using JetBrains.ReSharper.Feature.Services.Intentions;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.Util;
 
 namespace AgentSmith.Comments {

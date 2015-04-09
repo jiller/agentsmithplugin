@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
-using JetBrains.ReSharper.Intentions.Extensibility;
-using JetBrains.ReSharper.Intentions.Extensibility.Menu;
+using JetBrains.ReSharper.Feature.Services.Intentions;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -108,7 +107,7 @@ namespace AgentSmith.Comments
         public void ExecuteEx(ISolution solution, ITextControl textControl)
         {
             // Get the comment block owner (ie the part of the declaration which will own the comment).
-            IDocCommentBlockOwnerNode docCommentBlockOwnerNode =
+            IDocCommentBlockOwner docCommentBlockOwnerNode =
                 XmlDocTemplateUtil.FindDocCommentOwner(_declaration as ITypeMemberDeclaration);
 
             // If we didn't get an owner then give up
@@ -124,10 +123,10 @@ namespace AgentSmith.Comments
             CSharpElementFactory factory = CSharpElementFactory.GetInstance(docCommentBlockOwnerNode.GetPsiModule());
 
             // Create the comment block
-            IDocCommentBlockNode comment = factory.CreateDocCommentBlock(text);
+            IDocCommentBlock comment = factory.CreateDocCommentBlock(text);
 
             // And set the comment on the declaration.
-            docCommentBlockOwnerNode.SetDocCommentBlockNode(comment);
+            docCommentBlockOwnerNode.SetDocCommentBlock(comment);
         }
     }
 }
