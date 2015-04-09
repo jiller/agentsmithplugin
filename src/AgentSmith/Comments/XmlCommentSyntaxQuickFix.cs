@@ -1,62 +1,59 @@
 using System;
 using System.Collections.Generic;
+
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
-using JetBrains.ReSharper.Daemon;
+
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.ReSharper.Feature.Services.Intentions;
+using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.Util;
 
-namespace AgentSmith.Comments
-{
-    [QuickFix]
-    public class XmlCommentSyntaxQuickFix : IQuickFix
-    {
-        private const uint MAX_SUGGESTION_COUNT = 5;
+namespace AgentSmith.Comments {
+	[QuickFix]
+	public class XmlCommentSyntaxQuickFix : IQuickFix {
+		private const uint MAX_SUGGESTION_COUNT = 5;
 
-        private readonly WordIsNotInDictionarySuggestion _suggestion;
+		private readonly WordIsNotInDictionaryHighlight _highlight;
 
-        public XmlCommentSyntaxQuickFix(WordIsNotInDictionarySuggestion suggestion)
-        {
-            _suggestion = suggestion;
-        }
+		public XmlCommentSyntaxQuickFix(WordIsNotInDictionaryHighlight highlight) {
+			_highlight = highlight;
+		}
 
-        #region IQuickFix Members
+		#region IQuickFix Members
 
-        public bool IsAvailable(IUserDataHolder cache)
-        {
-            return true;
-        }
+		public IEnumerable<IntentionAction> CreateBulbItems() {
+			return CreateItems()
+				.ToContextAction();
+		}
 
-        public IBulbItem[] Items
-        {
-            get
-            {
-                List<IBulbItem> items = new List<IBulbItem>();
+		public bool IsAvailable(IUserDataHolder cache) {
+			return true;
+		}
 
-                ISpellChecker spellChecker = _suggestion.SpellChecker;
+		private IEnumerable<IBulbAction> CreateItems() {
+			var items = new List<IBulbAction>();
 
-                if (spellChecker != null)
-                {
-                    foreach (string suggestText in spellChecker.Suggest(_suggestion.MisspelledWord, MAX_SUGGESTION_COUNT))
-                    {
-                        string wordWithMisspelledWordDeleted = _suggestion.Word.Remove(_suggestion.Token.Start,
-                           _suggestion.Token.Length);
-                        string newWord = wordWithMisspelledWordDeleted.Insert(_suggestion.Token.Start, suggestText);
-                        items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, newWord));
-                    }
-                }
+			ISpellChecker spellChecker = _highlight.SpellChecker;
 
-                items.Add(new ReplaceWordWithBulbItem(_suggestion.Range, String.Format("<c>{0}</c>", _suggestion.Word)));
-                if (spellChecker != null)
-                {
-                    foreach (CustomDictionary customDict in spellChecker.CustomDictionaries)
-                    {
-                        items.Add(new AddToDictionaryBulbItem(_suggestion.Token.Value, customDict, _suggestion.Range));
-                    }
-                }
-                return items.ToArray();
-            }
-        }
+			if (spellChecker != null) {
+				foreach (string suggestText in spellChecker.Suggest(_highlight.MisspelledWord, MAX_SUGGESTION_COUNT)) {
+					string wordWithMisspelledWordDeleted = _highlight.Word.Remove(_highlight.Token.Start, _highlight.Token.Length);
+					string newWord = wordWithMisspelledWordDeleted.Insert(_highlight.Token.Start, suggestText);
+					items.Add(new ReplaceWordWithBulbItem(_highlight.DocumentRange, newWord));
+				}
+			}
 
-        #endregion
-    }
+			items.Add(new ReplaceWordWithBulbItem(_highlight.DocumentRange, String.Format("<c>{0}</c>", _highlight.Word)));
+			if (spellChecker != null) {
+				foreach (CustomDictionary customDict in spellChecker.CustomDictionaries) {
+					items.Add(
+						new AddToDictionaryBulbItem(
+							_highlight.Token.Value, customDict.Name, _highlight.DocumentRange, _highlight.SettingsStore));
+				}
+			}
+			return items;
+		}
+		#endregion
+	}
 }
