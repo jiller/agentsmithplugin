@@ -9,14 +9,14 @@ using JetBrains.ActionManagement;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AgentSmith")]
-[assembly: AssemblyCopyright("Copyright © ., 2012-2014")]
+[assembly: AssemblyCopyright("Copyright © ., 2012-2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.10.0.6")]
-[assembly: AssemblyFileVersion("1.10.0.6")]
+[assembly: AssemblyVersion("1.11.3.0")]
+[assembly: AssemblyFileVersion("1.11.3.0")]
 
-[assembly: ActionsXml("AgentSmith.Actions.xml")]
+//[assembly: ActionsXml("AgentSmith.Actions.xml")]
 
 // The following information is displayed by ReSharper in the Plugins dialog
 //[assembly: PluginTitle("AgentSmith")]

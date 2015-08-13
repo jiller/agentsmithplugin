@@ -75,7 +75,7 @@ namespace AgentSmith
 
 
         private void CheckMember(IClassMemberDeclaration declaration,
-                                                List<HighlightingInfo> highlightings, CommentAnalyzer commentAnalyzer, IdentifierSpellCheckAnalyzer identifierAnalyzer)
+                                                DefaultHighlightingConsumer consumer, CommentAnalyzer commentAnalyzer, IdentifierSpellCheckAnalyzer identifierAnalyzer)
         {
             if (declaration is IConstructorDeclaration && declaration.IsStatic)
             {
@@ -107,9 +107,9 @@ namespace AgentSmith
 
             }
 
-            commentAnalyzer.CheckMemberHasComment(declaration, docNode, highlightings);
-            commentAnalyzer.CheckCommentSpelling(declaration, commentBlock, highlightings, true);
-            identifierAnalyzer.CheckMemberSpelling(declaration, highlightings, true);
+            commentAnalyzer.CheckMemberHasComment(declaration, docNode, consumer);
+            commentAnalyzer.CheckCommentSpelling(declaration, commentBlock, consumer, true);
+            identifierAnalyzer.CheckMemberSpelling(declaration, consumer, true);
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace AgentSmith
         public void Execute(Action<DaemonStageResult> commiter)
         {
 
-            var highlightings = new List<HighlightingInfo>();
+			var consumer = new DefaultHighlightingConsumer(this, _settingsStore);  
 
             IFile file = _daemonProcess.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance);
             if (file == null)
@@ -136,13 +136,13 @@ namespace AgentSmith
             IdentifierSpellCheckAnalyzer identifierAnalyzer = new IdentifierSpellCheckAnalyzer(_solution, _settingsStore, _daemonProcess.SourceFile);
 
 	        foreach (var classMemberDeclaration in file.Descendants<IClassMemberDeclaration>()) {
-		        CheckMember(classMemberDeclaration, highlightings, commentAnalyzer, identifierAnalyzer);
+		        CheckMember(classMemberDeclaration, consumer, commentAnalyzer, identifierAnalyzer);
 	        }
 
 	        if (_daemonProcess.InterruptFlag) return;
             try
             {
-                commiter(new DaemonStageResult(highlightings));
+                commiter(new DaemonStageResult(consumer.Highlightings));
             } catch
             {
                 // Do nothing if it doesn't work.

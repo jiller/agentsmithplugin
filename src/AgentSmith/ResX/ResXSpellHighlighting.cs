@@ -1,3 +1,4 @@
+using AgentSmith.ResX;
 using AgentSmith.SpellCheck;
 using AgentSmith.SpellCheck.NetSpell;
 
@@ -7,8 +8,18 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 
+[assembly: RegisterConfigurableSeverity(
+ResXSpellHighlighting.NAME,
+null,
+HighlightingGroupIds.CodeSmell,
+"Spelling errors in resx",
+"Spelling errors in resx",
+Severity.SUGGESTION,
+false)]
+
 namespace AgentSmith.ResX
 {
+
     [ConfigurableSeverityHighlighting(NAME, CSharpLanguage.Name)]
     public class ResXSpellHighlighting : SpellCheckHighlightBase
     {

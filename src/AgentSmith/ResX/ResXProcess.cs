@@ -39,9 +39,9 @@ namespace AgentSmith.ResX
         #region IDaemonStageProcess Members
 
         public void Execute(Action<DaemonStageResult> action)
-        {            
+        {
 
-            List<HighlightingInfo> highlightings = new List<HighlightingInfo>();            
+			var consumer = new DefaultHighlightingConsumer(this, _settingsStore);           
 
             IPsiModule module = _file.GetPsiModule();
 
@@ -78,13 +78,14 @@ namespace AgentSmith.ResX
                             ResXSpellHighlighting highlighting =
                                 new ResXSpellHighlighting(lexer.TokenText, _file, checker, range, _settingsStore);
                             
-                            highlightings.Add(new HighlightingInfo(range, highlighting));
+                            consumer.AddHighlighting(highlighting, range, _file.GetTheOnlyPsiFile(XmlLanguage.Instance));
                         }
                         lexer.Advance();
                     }
                 }
             }
-            action(new DaemonStageResult(highlightings.ToArray()));            
+			
+            action(new DaemonStageResult(consumer.Highlightings));            
         }
 
         public IDaemonProcess DaemonProcess { get { return _daemonProcess; } }

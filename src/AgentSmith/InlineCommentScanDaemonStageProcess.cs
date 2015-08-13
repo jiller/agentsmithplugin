@@ -64,16 +64,16 @@ namespace AgentSmith
             {
                 return;
             }
-			var highlightings = new List<HighlightingInfo>();
+			var consumer = new DefaultHighlightingConsumer(this, _settingsStore);       
             var commentSettings = _settingsStore.GetKey<CommentSettings>(SettingsOptimization.OptimizeDefault);
 
 	        foreach (var commentNode in file.Descendants<ICSharpCommentNode>()) {
-		        CheckComment(commentNode, highlightings, commentSettings);
+		        CheckComment(commentNode, consumer, commentSettings);
 	        }
             
             try
             {
-                commiter(new DaemonStageResult(highlightings));
+                commiter(new DaemonStageResult(consumer.Highlightings));
             }
             catch
             {
@@ -83,7 +83,7 @@ namespace AgentSmith
 
 
         public void CheckComment(ICSharpCommentNode commentNode,
-                                List<HighlightingInfo> highlightings, CommentSettings settings)
+                                DefaultHighlightingConsumer consumer, CommentSettings settings)
         {
             // Ignore it unless it's something we're re-evalutating
             if (!_daemonProcess.IsRangeInvalidated(commentNode.GetDocumentRange())) return;
@@ -98,12 +98,12 @@ namespace AgentSmith
                 commentNode.GetDocumentRange().Document,
                 commentNode,
                 spellChecker,
-                _solution, highlightings, _settingsStore, settings);
+                _solution, consumer, _settingsStore, settings);
             
         }
 
         public static void SpellCheck(IDocument document, ITokenNode token, ISpellChecker spellChecker,
-                                               ISolution solution, List<HighlightingInfo> highlightings, IContextBoundSettingsStore settingsStore, CommentSettings settings)
+                                               ISolution solution, DefaultHighlightingConsumer consumer, IContextBoundSettingsStore settingsStore, CommentSettings settings)
         {
             if (spellChecker == null) return;
 
@@ -142,14 +142,17 @@ namespace AgentSmith
                                     humpToken.End - wordLexer.TokenStart);
 	                            //string word = document.GetText(range);
 	                            string word = documentRange.GetText();
-                                highlightings.Add(
-                                    new HighlightingInfo(
-                                        documentRange,
-                                        new StringSpellCheckHighlighting(word, documentRange,
-                                            humpToken.Value, textRange,
-                                            solution, spellChecker, settingsStore)));
-
-
+	                            consumer.AddHighlighting(
+		                            new StringSpellCheckHighlighting(
+			                            word,
+			                            documentRange,
+			                            humpToken.Value,
+			                            textRange,
+			                            solution,
+			                            spellChecker,
+			                            settingsStore),
+		                            documentRange,
+		                            token.GetContainingFile());
                                 break;
                             }
                         }

@@ -58,7 +58,7 @@ namespace AgentSmith
         public void Execute(Action<DaemonStageResult> commiter)
         {
 
-            var highlightings = new List<HighlightingInfo>();
+			var consumer = new DefaultHighlightingConsumer(this, _settingsStore);  
 
             IFile file = this._daemonProcess.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance);
             if (file == null)
@@ -69,12 +69,12 @@ namespace AgentSmith
             StringSettings stringSettings = this._settingsStore.GetKey<StringSettings>(SettingsOptimization.OptimizeDefault);
 
 	        foreach (var literalExpression in file.Descendants<ICSharpLiteralExpression>()) {
-		        CheckString(literalExpression, highlightings, stringSettings, _solution, _settingsStore, _daemonProcess);
+		        CheckString(literalExpression, consumer, stringSettings, _solution, _settingsStore, _daemonProcess);
 	        }
 
             try
             {
-                commiter(new DaemonStageResult(highlightings));
+                commiter(new DaemonStageResult(consumer.Highlightings));
             }
             catch
             {
@@ -84,7 +84,7 @@ namespace AgentSmith
 
 
         public static void CheckString(ICSharpLiteralExpression literalExpression,
-								List<HighlightingInfo> highlightings, StringSettings settings, ISolution _solution, IContextBoundSettingsStore _settingsStore, IDaemonProcess _daemonProcess = null)
+								DefaultHighlightingConsumer consumer, StringSettings settings, ISolution _solution, IContextBoundSettingsStore _settingsStore, IDaemonProcess _daemonProcess = null)
         {
             //ConstantValue val = literalExpression.ConstantValue;
 
@@ -100,7 +100,7 @@ namespace AgentSmith
             ITokenNode tokenNode = literalExpression.Literal;
             if (tokenNode == null) return;
 
-            if (tokenNode.GetTokenType() == CSharpTokenType.STRING_LITERAL)
+            if (tokenNode.GetTokenType() == CSharpTokenType.STRING_LITERAL_REGULAR)
             {
                 ISpellChecker spellChecker = SpellCheckManager.GetSpellChecker(_settingsStore, _solution, settings.DictionaryNames);
 
@@ -108,7 +108,7 @@ namespace AgentSmith
                     literalExpression.GetDocumentRange().Document,
                     tokenNode,
                     spellChecker,
-                    _solution, highlightings, _settingsStore, settings);
+                    _solution, consumer, _settingsStore, settings);
             }
         }
         #endregion

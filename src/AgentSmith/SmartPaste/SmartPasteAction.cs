@@ -111,8 +111,9 @@ namespace AgentSmith.SmartPaste
             ITokenNode token = element as ITokenNode;
             if (token != null)
             {
-                if (token.GetTokenType() == CSharpTokenType.STRING_LITERAL &&
-                    offset < token.GetTreeTextRange().EndOffset.Offset)
+                if ((token.GetTokenType() == CSharpTokenType.STRING_LITERAL_REGULAR
+					|| token.GetTokenType() == CSharpTokenType.STRING_LITERAL_VERBATIM) 
+					&& offset < token.GetTreeTextRange().EndOffset.Offset)
                 {
                     string text = token.GetText();
                     if (text.StartsWith("@") && offset > token.GetTreeTextRange().StartOffset.Offset + 1)

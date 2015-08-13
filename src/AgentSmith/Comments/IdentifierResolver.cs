@@ -226,7 +226,7 @@ namespace AgentSmith.Comments
 
             // Get the namespace it belongs to.
             INamespace namespaceElement = typeElement.GetContainingNamespace();
-            string namespaceName = namespaceElement.QualifiedName;
+			string namespaceName = namespaceElement.QualifiedName;
 
             // Check if we're ignoring this namespace
             foreach (string namespacePrefix in NamespacePrefixesToIgnore)
@@ -252,7 +252,7 @@ namespace AgentSmith.Comments
 
             
             // Check if the given namespace is already imported in this file.
-            if (UsingUtil.CheckAlreadyImported(file, namespaceElement) || declaration.GetContainingNamespaceDeclaration().QualifiedName.StartsWith(namespaceName))
+            if (UsingUtil.CheckAlreadyImported(file, new DeclaredElementInstance(namespaceElement)) || declaration.GetContainingNamespaceDeclaration().QualifiedName.StartsWith(namespaceName))
             {
                 string newDocId = docId[1] == ':' ? docId.Substring(2) : docId;
                 if (newDocId.StartsWith(namespaceName + ".")) newDocId = newDocId.Substring(namespaceName.Length + 1);
