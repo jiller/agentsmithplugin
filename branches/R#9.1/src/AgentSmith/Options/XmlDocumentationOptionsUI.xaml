@@ -14,7 +14,7 @@
         <Options:IntegerTextBox Height="23" Margin="192,112,15,0" x:Name="txtMaxCharsPerLine" VerticalAlignment="Top"/>
         <Label Content="Regular Expression patterns to ignore while spell checking (use new lines to separate):" Height="28" Margin="14,144,15,0" Name="label3" VerticalAlignment="Top" />
         <TextBox Margin="14,178,10,0" Name="txtWordsToIgnore" AcceptsReturn="True" Height="116" VerticalAlignment="Top" />
-        <CheckBox Content="Suppress missing comment erorrs if base identifier has a comment?" Height="16" Margin="14,79,12,0" Name="chkSuppressIfBaseHasComment" VerticalAlignment="Top" />
+        <CheckBox Content="Suppress missing comment errors if base identifier has a comment?" Height="16" Margin="14,79,12,0" Name="chkSuppressIfBaseHasComment" VerticalAlignment="Top" />
         <Label Content="Regular Expression patterns to ignore for metatagging (use new lines to separate):" Height="28" Margin="12,300,15,0" Name="label4" VerticalAlignment="Top" />
         <TextBox AcceptsReturn="True" Margin="12,334,15,12" Name="txtWordsToIgnoreForMetatagging" />
     </Grid>

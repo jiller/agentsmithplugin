@@ -37,7 +37,7 @@ namespace AgentSmith.Strings
         }
 
         public static void SpellCheck(IDocument document, ITokenNode token, ISpellChecker spellChecker,
-                                                       ISolution solution, List<HighlightingInfo> highlightings, IContextBoundSettingsStore settingsStore, StringSettings settings)
+                                                       ISolution solution, DefaultHighlightingConsumer consumer, IContextBoundSettingsStore settingsStore, StringSettings settings)
         {
             if (spellChecker == null) return;
 
@@ -77,20 +77,22 @@ namespace AgentSmith.Strings
 
 								//string word = document.GetText(range);
 	                            string word = documentRange.GetText();
-	                            highlightings.Add(
-                                    new HighlightingInfo(
-                                        documentRange,
-                                        new StringSpellCheckHighlighting(word, documentRange,
-                                            humpToken.Value, textRange,
-                                            solution, spellChecker, settingsStore)));
-
-
+	                            consumer.AddHighlighting(
+		                            new StringSpellCheckHighlighting(
+			                            word,
+			                            documentRange,
+			                            humpToken.Value,
+			                            textRange,
+			                            solution,
+			                            spellChecker,
+			                            settingsStore),
+		                            documentRange,
+		                            token.GetContainingFile());
                                 break;
                             }
                         }
                     }
                 }
-
                 wordLexer.Advance();
             }
         }

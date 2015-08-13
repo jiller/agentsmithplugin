@@ -6,11 +6,7 @@
              xmlns:Controls="clr-namespace:JetBrains.UI.Controls;assembly=JetBrains.Platform.UI"
              xmlns:Options="clr-namespace:AgentSmith.Options"
              mc:Ignorable="d" 
-             d:DesignHeight="469" d:DesignWidth="538"
-             xmlns:av="http://schemas.codeplex.com/wpfcontrib/xaml/presentation">
-    <UserControl.Resources>
-        <av:EnumToStringConverter x:Key="ScopeEnumToStringConverter"/>
-    </UserControl.Resources>
+             d:DesignHeight="469" d:DesignWidth="538">
     <Grid>
         <Label Content="Spell check dictionary name/s (use commas to separate):" Height="28" Margin="12,12,12,0" Name="label1" VerticalAlignment="Top" />
         <TextBox Height="23" Margin="12,43,12,0" Name="txtDictionaryName" VerticalAlignment="Top" />

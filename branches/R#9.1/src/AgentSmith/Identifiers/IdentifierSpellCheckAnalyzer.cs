@@ -50,7 +50,7 @@ namespace AgentSmith.Identifiers
             return _policyProvider.IsAbbreviation(word.ToUpper(), _solution);
         }
 
-        public void CheckMemberSpelling(IDeclaration declaration, List<HighlightingInfo> highlightings, bool spellCheck)
+        public void CheckMemberSpelling(IDeclaration declaration, DefaultHighlightingConsumer consumer, bool spellCheck)
         {
             if (this._identifierSpellChecker == null || !spellCheck) return;
 
@@ -96,11 +96,16 @@ namespace AgentSmith.Identifiers
                     }
                     if (!found)
                     {
-                        highlightings.Add(
-                            new HighlightingInfo(
-								declaration.GetContainingFile().TranslateRangeForHighlighting(declaration.GetNameRange()),
-						//declaration.GetNameDocumentRange(),
-                            new IdentifierSpellCheckHighlighting(declaration, token, _solution, this._identifierSpellChecker, _settingsStore)));
+	                    var containingFile = declaration.GetContainingFile();
+	                    consumer.AddHighlighting(
+		                    new IdentifierSpellCheckHighlighting(
+			                    declaration,
+			                    token,
+			                    _solution,
+			                    this._identifierSpellChecker,
+			                    _settingsStore),
+		                    containingFile.TranslateRangeForHighlighting(declaration.GetNameRange()),
+		                    containingFile);
                     }
                 }
             }
