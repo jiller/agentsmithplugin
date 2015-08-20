@@ -1,14 +1,14 @@
 using System;
+
+using JetBrains.Application.Progress;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Editor;
-using JetBrains.ReSharper.TextControl;
-using JetBrains.Shell;
-using JetBrains.Util;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
+using JetBrains.TextControl;
 
 namespace AgentSmith.SpellCheck
 {
-    public class ReplaceWordWithBulbItem : IBulbItem
+    public class ReplaceWordWithBulbItem : BulbActionBase
     {
         private readonly string _option;
         private readonly DocumentRange _documentRange;
@@ -21,21 +21,22 @@ namespace AgentSmith.SpellCheck
 
         #region IBulbItem Members
 
-        public void Execute(ISolution solution, ITextControl textControl)
+        /*public void Execute(ISolution solution, ITextControl textControl)
         {
-            using (CommandCookie.Create(Text))
+            PsiManager manager = solution.GetPsiServices().PsiManager;
+
+
+            using (IProjectModelTransactionCookie cookie = solution.CreateTransactionCookie(DefaultAction.Commit, Text, NullProgressIndicator.Instance))
             {
-                using (ModificationCookie ensureWritable = _documentRange.Document.EnsureWritable())
-                {
-                    if (ensureWritable.EnsureWritableResult == EnsureWritableResult.SUCCESS)
-                    {
-                        textControl.Document.ReplaceText(_documentRange.TextRange, _option);
-                    }
-                }
             }
+        }*/
+
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            return control => _documentRange.Document.ReplaceText(_documentRange.TextRange, _option);
         }
 
-        public string Text
+        public override string Text
         {
             get { return String.Format("Replace with '{0}'.", _option); }
         }
